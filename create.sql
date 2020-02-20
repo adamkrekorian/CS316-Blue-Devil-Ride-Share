@@ -5,7 +5,8 @@ CREATE TABLE User
  phone_number INTEGER NOT NULL,
  affiliation VARCHAR(256) NOT NULL CHECK(affiliation IN ('Undergradaute', 'Graduate')),
  school VARCHAR(256) NOT NULL CHECK(school IN ('Trinity', 'Pratt', 'Nicolas', 'Law', 'Fuqua', 
-                'Nursing', 'Medicine', 'Other')));
+                'Nursing', 'Medicine', 'Other')),
+  password VARCHAR(256) NOT NULL);
 
 CREATE TABLE Driver
 (netid VARCHAR(7) NOT NULL PRIMARY KEY REFERENCES User(netid),
