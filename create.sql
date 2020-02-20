@@ -1,5 +1,5 @@
 CREATE TABLE User
-(netid VARCHAR(7) NOT NULL PRIMARY KEY,
+(netid VARCHAR(7) NOT NULL UNIQUE PRIMARY KEY,
  name VARCHAR(256) NOT NULL,
  duke_email VARCHAR(256) NOT NULL,
  phone_number INTEGER NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE Driver
  plate_state VARCHAR(3) NOT NULL);
 
 CREATE TABLE Ride
-(ride_no INTEGER NOT NULL PRIMARY KEY,
+(ride_no INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
  origin VARCHAR(100) NOT NULL,
  destination VARCHAR(100) NOT NULL CHECK(destination <> origin), -- check this -- if this doesnt work make a trigger
  driver_netid VARCHAR(7) NOT NULL REFERENCES Driver(netid),
@@ -78,9 +78,9 @@ CREATE TRIGGER TG_Not_enough_Seats
 CREATE FUNCTION TF_No_time_given() RETURNS TRIGGER AS $$
 BEGIN
   WHEN Ride.earliest_time IS NULL
-  SET Ride.earliest_time = 00:00:00,
+  SET Ride.earliest_time = 00:00:00; -- unsure about semicolon
   WHEN Ride.latest_time IS NULL
-  SET Ride.latest_time = 23:59:59
+  SET Ride.latest_time = 23:59:59;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -92,28 +92,39 @@ CREATE TRIGGER TG_No_time_given
 
 ------
 
-CREATE FUNCTION TF_One_res_at_a_time() RETURNS TRIGGER AS $$
+CREATE FUNCTION TF_Seats_left() RETURNS TRIGGER AS $$
 BEGIN
-  WITH (SELECT earliest_time, latest_time
-              FROM Ride
-              WHERE NEW.ride_no = ride_no) AS DT
+  SET (SELECT seats_available
+      FROM Ride
+      WHERE NEW.ride_no = ride_no) -= NEW.seats_needed;
+  RETURN NEW; -- unsure about return
+END;
+$$ LANGUAGE plpgsql;
 
-  IF EXISTS (SELECT rider_netid
-             FROM Reserve
-             WHERE NEW.rider_netid = rider_netid)
-    AND DT.earliest_time
+CREATE TRIGGER TG_Seats_left
+  AFTER INSERT OR UPDATE ON Reserve
+  FOR EACH ROW
+  EXECUTE PROCEDURE TF_Seats_left();
 
-  
+------
 
-  THEN
+CREATE FUNCTION TF_One_res_per_date() RETURNS TRIGGER AS $$
+BEGIN
+  WITH Dates AS (SELECT RD.date
+      FROM Ride RD, Reserve RS
+      WHERE RD.ride_no = RS.ride_no 
+      AND RS.rider_netid = NEW.rider_netid),
+      rideDate AS(SELECT R.date
+      FROM Ride R
+      WHERE R.ride_no = NEW.ride_no),
 
-
-  RAISE EXCEPTION 'Not enough seats available in ride'
+  IF rideDate IN(Dates)
+  RAISE EXCEPTION 'Cannot book ride on same date'
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER TG_One_res_at_a_time
+CREATE TRIGGER TG_One_res_per_date
   BEFORE INSERT OR UPDATE ON Reserve
   FOR EACH ROW
-  EXECUTE PROCEDURE TF_One_res_at_a_time();
+  EXECUTE PROCEDURE TF_One_res_per_date();
