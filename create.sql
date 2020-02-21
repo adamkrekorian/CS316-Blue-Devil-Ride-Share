@@ -4,7 +4,7 @@ CREATE TABLE User
  duke_email VARCHAR(256) NOT NULL,
  phone_number INTEGER NOT NULL,
  affiliation VARCHAR(256) NOT NULL CHECK(affiliation IN ('Undergraduate', 'Graduate')),
- school VARCHAR(256) NOT NULL CHECK(school IN ('Trinit', 'Pratt', 'Nicolas', 'Law', 'Fuqua', 
+ school VARCHAR(256) NOT NULL CHECK(school IN ('Trinity', 'Pratt', 'Nicolas', 'Law', 'Fuqua', 
                 'Nursing', 'Medicine', 'Other')))
  password VARCHAR(256) NOT NULL);
 
