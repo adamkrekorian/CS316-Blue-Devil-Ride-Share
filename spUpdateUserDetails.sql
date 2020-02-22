@@ -1,3 +1,5 @@
+
+
 CREATE PROCEDURE SP_User_details
     (@netid VARCHAR(7),
     @name VARCHAR(256),

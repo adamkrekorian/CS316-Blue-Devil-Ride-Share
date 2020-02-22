@@ -1,8 +1,9 @@
---searching for rides
+
+
 USE dbName --need to change this when name db
 GO
 
-CREATE PROCEDURE dbp.SP_Search_rides 
+CREATE PROCEDURE SP_Search_rides 
     (@origin VARCHAR(100),
     @destination VARCHAR(100),
     @earliest_time TIME,
@@ -10,10 +11,8 @@ CREATE PROCEDURE dbp.SP_Search_rides
     @date DATE,
     @spots_needed INTEGER)
 
-OUTPUT 
 AS
 
--- unsure if also should select the ride number for us to use afterwards
 SELECT ride_no, origin, destination, earliest_time, latest_time, gas_price, seats_available, comments 
 FROM Ride 
 WHERE (origin = @origin) AND
@@ -24,6 +23,3 @@ WHERE (origin = @origin) AND
     (seats_available >= @spots_needed)
 
 GO
-
---to call 
-EXEC SP_Search_rides

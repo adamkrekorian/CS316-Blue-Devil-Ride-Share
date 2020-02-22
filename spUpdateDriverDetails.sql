@@ -1,3 +1,4 @@
+
 CREATE PROCEDURE SP_User_details
     (@netid VARCHAR(7),
     @license_no INTEGER,
