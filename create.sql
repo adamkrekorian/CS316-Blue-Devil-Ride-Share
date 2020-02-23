@@ -77,12 +77,14 @@ CREATE TRIGGER TG_Not_enough_Seats
 ------
 
 CREATE FUNCTION TF_No_time_given() RETURNS TRIGGER AS $$
+WHEN (Ride.earliest_time IS NULL)
 BEGIN
-  WHEN (Ride.earliest_time IS NULL)
   SET Ride.earliest_time = '00:00:00'; -- unsure about semicolon
-  WHEN (Ride.latest_time IS NULL)
+END;
+WHEN (Ride.latest_time IS NULL)
+BEGIN
   SET Ride.latest_time = '23:59:59';
-  RETURN NEW;
+RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
