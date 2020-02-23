@@ -20,7 +20,10 @@ INSERT INTO [dbo].[Reserve]
     (@ride_no,
     @rider_netid,
     @seats_needed,
-    @note)
+    @note);
+
+UPDATE Ride SET [seats_available] -= @seats_needed
+WHERE ride_no = @ride_no;
 
 GO
 

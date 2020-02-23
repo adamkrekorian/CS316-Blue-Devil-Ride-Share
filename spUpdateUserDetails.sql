@@ -14,14 +14,14 @@ BEGIN
 
 SET NOCOUNT ON
 
-    UPDATE User
-    SET name = @name,
-        duke_email = @duke_email,
-        phone_number = @phone_number,
-        affiliation = @affiliation,
-        school = @school,
-        password = @password
+UPDATE User
+SET name = @name,
+    duke_email = @duke_email,
+    phone_number = @phone_number,
+    affiliation = @affiliation,
+    school = @school,
+    password = @password
 
-    WHERE netid = @netid
+WHERE netid = @netid
 
 END
