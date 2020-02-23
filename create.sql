@@ -77,14 +77,14 @@ CREATE TRIGGER TG_Not_enough_Seats
 ------
 
 CREATE FUNCTION TF_No_time_given() RETURNS TRIGGER AS $$
-WHEN (Ride.earliest_time IS NULL)
 BEGIN
-  SET Ride.earliest_time = '00:00:00'; -- unsure about semicolon
-END;
-WHEN (Ride.latest_time IS NULL)
-BEGIN
+  IF (Ride.earliest_time IS NULL) THEN
+  SET Ride.earliest_time = '00:00:00';
+  END IF;
+  IF (Ride.latest_time IS NULL) THEN
   SET Ride.latest_time = '23:59:59';
-RETURN NEW;
+  END IF;
+  RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -97,9 +97,10 @@ CREATE TRIGGER TG_No_time_given
 
 CREATE FUNCTION TF_Seats_left() RETURNS TRIGGER AS $$
 BEGIN
-  SET (SELECT seats_available
-      FROM Ride
-      WHERE NEW.ride_no = ride_no) -= NEW.seats_needed;
+  UPDATE Ride
+  SET Ride.seats_available = ((SELECT seats_available FROM Ride
+    WHERE NEW.ride_no = ride_no) - NEW.seats_needed)
+  WHERE Ride.ride_no = NEW.ride_no;
   RETURN NEW; -- unsure about return
 END;
 $$ LANGUAGE plpgsql;
@@ -115,8 +116,9 @@ CREATE FUNCTION TF_No_same_ride() RETURNS TRIGGER AS $$
 BEGIN
   IF EXISTS (SELECT *
             FROM Reserve
-            WHERE NEW.ride_no = ride_no AND NEW.rider_netid = rider_netid)
-  RAISE EXCEPTION 'This ride has already been booked'
+            WHERE NEW.ride_no = ride_no AND NEW.rider_netid = rider_netid) THEN
+  RAISE EXCEPTION 'This ride has already been booked';
+  END IF;
   RETURN NEW; -- unsure about return
 END;
 $$ LANGUAGE plpgsql;
@@ -130,16 +132,13 @@ CREATE TRIGGER TG_No_same_ride
 
 CREATE FUNCTION TF_One_res_per_date() RETURNS TRIGGER AS $$
 BEGIN
-  WITH Dates AS (SELECT RD.date
-      FROM Ride RD, Reserve RS
-      WHERE RD.ride_no = RS.ride_no 
-      AND RS.rider_netid = NEW.rider_netid),
-      rideDate AS(SELECT R.date
-      FROM Ride R
-      WHERE R.ride_no = NEW.ride_no),
-
-  IF rideDate IN(Dates)
-  RAISE EXCEPTION 'Cannot book ride on same date'
+  IF ((SELECT MAX(userRideDates.counts) FROM (SELECT RD.date AS dates, COUNT(RD.date) AS counts
+                        FROM Ride RD, Reserve RS
+                        WHERE RD.ride_no = RS.ride_no
+                        AND RS.rider_netid = NEW.rider_netid
+                        GROUP BY RD.date) AS userRideDates) > 1) THEN
+    RAISE EXCEPTION 'Cannot book ride on same date';
+  END IF;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
