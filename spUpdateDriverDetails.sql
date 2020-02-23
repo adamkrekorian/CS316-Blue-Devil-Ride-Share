@@ -14,7 +14,6 @@ UPDATE Driver
 SET license_no = @license_no,
     license_plate_no = @license_plate_no,
     plate_state = @plate_state
-
-WHERE netid = @netid
+WHERE netid = @netid;
 
 END

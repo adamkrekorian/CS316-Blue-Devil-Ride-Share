@@ -34,16 +34,19 @@ INSERT INTO [dbo].[User]
     @school,
     @password);
 
-IF @license_no IS NOT NULL
-    INSERT INTO [dbo].[Driver]
-        ([netid],
-        [license_no],
-        [license_plate_no],
-        [plate_state])
-        VALUES
-        (@netid,
-        @license_no,
-        @license_plate_no,
-        @plate_state);
+
+    IF @license_no IS NOT NULL
+    BEGIN
+        INSERT INTO [dbo].[Driver]
+            ([netid],
+            [license_no],
+            [license_plate_no],
+            [plate_state])
+            VALUES
+            (@netid,
+            @license_no,
+            @license_plate_no,
+            @plate_state);
+    END;
 
 GO

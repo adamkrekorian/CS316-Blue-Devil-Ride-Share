@@ -40,6 +40,8 @@ INSERT INTO [dbo].[Ride]
     @gas_price,
     @comments);
 
+GO
+
 INSERT INTO [dbo].[Post]
     ([driver_netid],
     [ride_no])

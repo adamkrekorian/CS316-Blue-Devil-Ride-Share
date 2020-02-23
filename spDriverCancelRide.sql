@@ -8,8 +8,9 @@ AS
 SET NOCOUNT ON
 
 DELETE FROM Ride 
-WHERE ride_no = @ride_no
+WHERE ride_no = @ride_no;
+GO
 DELETE FROM Post
-WHERE ride_no = @ride_no
+WHERE ride_no = @ride_no;
 
 GO

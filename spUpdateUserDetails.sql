@@ -21,7 +21,6 @@ SET name = @name,
     affiliation = @affiliation,
     school = @school,
     password = @password
-
-WHERE netid = @netid
+WHERE netid = @netid;
 
 END
