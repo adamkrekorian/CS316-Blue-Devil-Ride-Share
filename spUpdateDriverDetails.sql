@@ -8,11 +8,13 @@ CREATE PROCEDURE SP_User_details
 AS
 BEGIN
 
-    UPDATE Driver
-    SET license_no = @license_no,
-        license_plate_no = @license_plate_no,
-        plate_state = @plate_state
+SET NOCOUNT ON
 
-    WHERE netid = @netid
+UPDATE Driver
+SET license_no = @license_no,
+    license_plate_no = @license_plate_no,
+    plate_state = @plate_state
+
+WHERE netid = @netid
 
 END

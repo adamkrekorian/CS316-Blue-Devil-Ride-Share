@@ -6,7 +6,10 @@ CREATE PROCEDURE SP_Rider_sign_up
     @seats_needed INTEGER,
     @note VARCHAR(150))
 
-AS BEGIN
+AS 
+BEGIN
+
+SET NOCOUNT ON
 
 INSERT INTO [dbo].[Reserve]
     ([ride_no],

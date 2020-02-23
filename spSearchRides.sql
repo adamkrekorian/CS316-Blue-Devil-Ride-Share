@@ -13,6 +13,8 @@ CREATE PROCEDURE SP_Search_rides
 
 AS
 
+SET NOCOUNT ON 
+
 SELECT ride_no, origin, destination, earliest_time, latest_time, gas_price, seats_available, comments 
 FROM Ride 
 WHERE (origin = @origin) AND

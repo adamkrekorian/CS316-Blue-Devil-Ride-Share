@@ -12,6 +12,8 @@ CREATE PROCEDURE SP_User_details
 AS
 BEGIN
 
+SET NOCOUNT ON
+
     UPDATE User
     SET name = @name,
         duke_email = @duke_email,
