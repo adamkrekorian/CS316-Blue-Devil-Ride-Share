@@ -29,7 +29,7 @@ ORDER BY gas_price asc;
 -- Rides to DC with a Graduate student as a driver
 
 SELECT *
-FROM Ride R, registered_user U
+FROM Ride R, rideshare_user U
 WHERE R.driver_netid = U.netid AND R.destination = 'Washington, DC' AND R.origin = 'Durham, NC' AND U.affiliation = 'Graduate';
 
 -- Rides from Charlotte to Miami
@@ -54,7 +54,7 @@ WHERE destination = 'Atlanta, GA' AND origin = 'Durham, NC' AND date = '2020-02-
 -- Rides to New Orleans with a Undergraduate student as a driver ordered by most seats available
 
 SELECT *
-FROM Ride R, registered_user U
+FROM Ride R, rideshare_user U
 WHERE R.driver_netid = U.netid AND R.destination = 'New Orleans, LA' AND R.origin = 'Durham, NC' AND U.affiliation = 'Undergraduate';
 ORDER BY R.seats_available desc
 
