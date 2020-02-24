@@ -55,8 +55,8 @@ WHERE destination = 'Atlanta, GA' AND origin = 'Durham, NC' AND date = '2020-02-
 
 SELECT *
 FROM Ride R, rideshare_user U
-WHERE R.driver_netid = U.netid AND R.destination = 'New Orleans, LA' AND R.origin = 'Durham, NC' AND U.affiliation = 'Undergraduate';
-ORDER BY R.seats_available desc
+WHERE R.driver_netid = U.netid AND R.destination = 'New Orleans, LA' AND R.origin = 'Durham, NC' AND U.affiliation = 'Undergraduate'
+ORDER BY R.seats_available desc;
 
 
 -- Rides to Myrtle Beach after May 4th leaving no late than 7 pm
