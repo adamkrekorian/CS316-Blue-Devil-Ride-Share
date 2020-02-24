@@ -2,7 +2,7 @@ Meredith Brown - Meredith met with the team to discuss ideas for the project as 
 
 Grace Llewellyn
 
-Adam Krekorian
+Adam Krekorian - Adam met with the team to discuss project ideas. The group came together and decided to make a ride-sharing website to help students cut down on fossil fuel emissions and reduce the cost of long distance trips by encouraging and facilitating carpooling. Adam wrote the brief description which laid out the objective of the website. Adam also helped modify and complete the create.sql file, including many of the triggers needed. Adam wrote all the example SQL queries for dynamic content that will be displayed in the future on the website, and then met with Meredith to test the queries in the database. Adam went to Sunday office hours to clarify the format of the SQL queries and additionally clarified the structure of the relational schema in preparation for submission of milestone 1.
 
 Isabel Shiff
 
