@@ -1,0 +1,9 @@
+Meredith Brown
+
+Grace Llwellyn
+
+Adam Krekorian
+
+Isabel Shiff
+
+Calleigh Smith - Calleigh has created the sample data tables in Excel, created the E/R diagram for the database design and the related associations. She set up an appointment with Danai Adkisson at the Technology Engagement Center, where she was joined by Grace Llwellyn, to create a group VM which hosts the Postgres Rideshare database that has all of our project’s tables. From this meeting, Calleigh was able to write the “readme.txt” file that explains how to create and load the sample database.  Additionally, Calleigh wrote the initial version of the “load.sql” file, which inserts the sample data from Excel into the Rideshare database. Calleigh has acted as the group’s project manager, where she has coordinated group meetings, allocated work load, and kept track of the group’s progress on the milestone.
