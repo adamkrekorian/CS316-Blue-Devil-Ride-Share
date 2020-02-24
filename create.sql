@@ -26,8 +26,8 @@ CREATE TABLE Ride
  gas_price INTEGER,
  comments VARCHAR(500));
 
- CREATE TABLE Reserve
- (rider_netid VARCHAR(7) NOT NULL,
+CREATE TABLE Reserve
+(rider_netid VARCHAR(7) NOT NULL,
   ride_no INTEGER NOT NULL, 
   seats_needed INTEGER NOT NULL,
   note VARCHAR(150), 
@@ -35,9 +35,6 @@ CREATE TABLE Ride
   FOREIGN KEY (rider_netid) REFERENCES rideshare_user(netid),
   FOREIGN KEY (ride_no) REFERENCES Ride(ride_no));
 
-CREATE TABLE Post -- don't think we need this table
-(driver_netid VARCHAR(7) NOT NULL REFERENCES Driver(netid),
- ride_no INTEGER NOT NULL PRIMARY KEY REFERENCES Ride(ride_no));
 
 -- Triggers
 
