@@ -1,6 +1,6 @@
-Meredith Brown
+Meredith Brown - Meredith met with the team to discuss ideas for the project as well as initial assignment of roles. She met with Grace Llewellyn and wrote the initial version of the “create.sql” file, which she later went back through and fixed syntax errors upon its completion. Using the “readme.txt” created by Calleigh Smith, she entered the team’s virtual machine and created the tables for the database, as well as beginning to upload functions and triggers before passing the task off to Isabel Shiff. Likewise, she met with Adam Krekorian to test the SQL queries written for Task 5, as well as produced the “test-sample.out”.
 
-Grace Llwellyn
+Grace Llewellyn
 
 Adam Krekorian
 
