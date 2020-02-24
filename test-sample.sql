@@ -5,7 +5,7 @@
 
 SELECT *
 FROM Ride
-WHERE destination = 'Washington, DC' AND origin = 'Durham, NC' AND date = 2020-05-05;
+WHERE destination = 'Washington, DC' AND origin = 'Durham, NC' AND date = '2020-05-05';
 
 --Rides to Charlotte with 2 seats available
 
@@ -17,7 +17,7 @@ WHERE destination = 'Charlotte, NC' AND origin = 'Durham, NC' AND seats_availabl
 
 SELECT *
 FROM Ride
-WHERE destination = 'Atlanta, GA' AND origin = 'Durham, NC' AND date > 2020-05-05 AND earliest_time > 12:00:00;
+WHERE destination = 'Atlanta, GA' AND origin = 'Durham, NC' AND date > '2020-05-05' AND earliest_time > '12:00:00';
 
 -- Rides to New York with cheapest gas cost first
 
@@ -49,7 +49,7 @@ ORDER BY earliest_time asc;
 
 SELECT *
 FROM Ride
-WHERE destination = 'Atlanta, GA' AND origin = 'Durham, NC' AND date = 2020-02-29 AND seats_available > 1;
+WHERE destination = 'Atlanta, GA' AND origin = 'Durham, NC' AND date = '2020-02-29' AND seats_available > 1;
  
 -- Rides to New Orleans with a Undergraduate student as a driver ordered by most seats available
 
@@ -63,4 +63,4 @@ ORDER BY R.seats_available desc
 
 SELECT *
 FROM Ride
-WHERE destination = 'Myrtle Beach, SC' AND origin = 'Durham, NC' AND date > 2020-05-04 AND latest_time < 19:00:00;
+WHERE destination = 'Myrtle Beach, SC' AND origin = 'Durham, NC' AND date > '2020-05-04' AND latest_time < '19:00:00';
