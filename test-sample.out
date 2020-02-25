@@ -1,0 +1,88 @@
+--SQL Queries
+--Specific Examples:
+--Rides to DC on May 5th
+SELECT *
+FROM Ride
+WHERE destination = 'Washington, DC' AND origin = 'Durham, NC' AND date = '2020-05-05';
+ ride_no | origin | destination | driver_netid | date | earliest_time | latest_time | seats_available | gas_price | comments
+---------+--------+-------------+--------------+------+---------------+-------------+-----------------+-----------+----------
+(0 rows)
+
+--Rides to Charlotte with 2 seats available
+SELECT *
+FROM Ride
+WHERE destination = 'Charlotte, NC' AND origin = 'Durham, NC' AND seats_available >= 2;
+ ride_no |   origin   |  destination  | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price | comments
+---------+------------+---------------+--------------+------------+---------------+-------------+-----------------+-----------+----------
+      35 | Durham, NC | Charlotte, NC | agk19        | 2020-07-04 | 16:00:00      | 16:15:00    |               6 |        15 |
+(1 row)
+
+-- Rides to Atlanta after May 6th leaving in the afternoon
+SELECT *
+FROM Ride
+WHERE destination = 'Atlanta, GA' AND origin = 'Durham, NC' AND date > '2020-05-05' AND earliest_time > '12:00:00';
+ ride_no | origin | destination | driver_netid | date | earliest_time | latest_time | seats_available | gas_price | comments
+---------+--------+-------------+--------------+------+---------------+-------------+-----------------+-----------+----------
+(0 rows)
+
+-- Rides to New York with cheapest gas cost first
+SELECT *
+FROM Ride
+WHERE destination = 'New York, NY' AND origin = 'Durham, NC'
+ORDER BY gas_price asc;
+ ride_no |   origin   | destination  | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |    comments
+---------+------------+--------------+--------------+------------+---------------+-------------+-----------------+-----------+-----------------
+      38 | Durham, NC | New York, NY | cas175       | 2021-01-01 | 18:00:00      | 19:00:00    |               0 |       100 |
+      40 | Durham, NC | New York, NY | agk19        | 2020-12-25 | 20:00:00      | 23:59:00    |               3 |           | Long drive home
+(2 rows)
+
+-- Rides to DC with a Graduate student as a driver
+SELECT *
+FROM Ride R, rideshare_user U
+WHERE R.driver_netid = U.netid AND R.destination = 'Washington, DC' AND R.origin = 'Durham, NC' AND U.affiliation = 'Graduate';
+ ride_no | origin | destination | driver_netid | date | earliest_time | latest_time | seats_available | gas_price | comments | netid | name | duke_ema$
+---------+--------+-------------+--------------+------+---------------+-------------+-----------------+-----------+----------+-------+------+---------$
+(0 rows)
+
+-- Rides from Charlotte to Miami
+SELECT *
+FROM Ride
+WHERE destination = 'Miami, FL' AND origin = 'Charlotte, NC';
+ ride_no | origin | destination | driver_netid | date | earliest_time | latest_time | seats_available | gas_price | comments
+---------+--------+-------------+--------------+------+---------------+-------------+-----------------+-----------+----------
+(0 rows)
+
+-- Rides from Durham to Philadelphia sorted by earliest departure
+SELECT *
+FROM Ride
+WHERE destination = 'Philadelphia, PA' AND origin = 'Durham, NC'
+ORDER BY earliest_time asc;
+ ride_no |   origin   |   destination    | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price | comments
+---------+------------+------------------+--------------+------------+---------------+-------------+-----------------+-----------+----------
+      41 | Durham, NC | Philadelphia, PA | gal16        | 2020-07-07 | 21:00:00      | 21:45:00    |               1 |        50 |
+(1 row)
+
+-- Rides to Atlanta on February 29th with more than one seat available
+SELECT *
+FROM Ride
+WHERE destination = 'Atlanta, GA' AND origin = 'Durham, NC' AND date = '2020-02-29' AND seats_available > 1;
+ ride_no | origin | destination | driver_netid | date | earliest_time | latest_time | seats_available | gas_price | comments
+---------+--------+-------------+--------------+------+---------------+-------------+-----------------+-----------+----------
+(0 rows)
+
+-- Rides to New Orleans with a Undergraduate student as a driver ordered by most seats available
+SELECT *
+FROM Ride R, rideshare_user U
+WHERE R.driver_netid = U.netid AND R.destination = 'New Orleans, LA' AND R.origin = 'Durham, NC' AND U.affiliation = 'Undergraduate'
+ORDER BY R.seats_available desc;
+ ride_no | origin | destination | driver_netid | date | earliest_time | latest_time | seats_available | gas_price | comments | netid | name | duke_ema$
+---------+--------+-------------+--------------+------+---------------+-------------+-----------------+-----------+----------+-------+------+---------$
+(0 rows)
+
+-- Rides to Myrtle Beach after May 4th leaving no late than 7 pm
+SELECT *
+FROM Ride
+WHERE destination = 'Myrtle Beach, SC' AND origin = 'Durham, NC' AND date > '2020-05-04' AND latest_time < '19:00:00';
+ ride_no | origin | destination | driver_netid | date | earliest_time | latest_time | seats_available | gas_price | comments
+---------+--------+-------------+--------------+------+---------------+-------------+-----------------+-----------+----------
+(0 rows)
