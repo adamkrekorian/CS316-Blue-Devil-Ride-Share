@@ -1,0 +1,111 @@
+--SQL Queries
+--Specific Examples:
+--Rides to DC
+SELECT *
+FROM Ride
+WHERE destination = 'Washington, DC' AND origin = 'Durham, NC';
+ ride_no |   origin   |  destination   | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price | comments
+---------+------------+----------------+--------------+------------+---------------+-------------+-----------------+-----------+----------
+      46 | Durham, NC | Washington, DC | cas175       | 2020-01-19 | 15:00:00      | 15:20:00    |               4 |           |
+(1 row)
+
+--Rides to Charlotte with 2 seats available
+SELECT *
+FROM Ride
+WHERE destination = 'Charlotte, NC' AND origin = 'Durham, NC' AND seats_available >= 2;
+ ride_no |   origin   |  destination  | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price | comments
+---------+------------+---------------+--------------+------------+---------------+-------------+-----------------+-----------+----------
+      35 | Durham, NC | Charlotte, NC | agk19        | 2020-07-04 | 16:00:00      | 16:15:00    |               6 |        15 |
+(1 row)
+
+-- Rides after May 6th leaving in the afternoon
+SELECT *
+FROM Ride
+WHERE origin = 'Durham, NC' AND date > '2020-05-05' AND earliest_time > '12:00:00';
+ ride_no |   origin   |   destination    | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |               comme$
+---------+------------+------------------+--------------+------------+---------------+-------------+-----------------+-----------+--------------------$
+      35 | Durham, NC | Charlotte, NC    | agk19        | 2020-07-04 | 16:00:00      | 16:15:00    |               6 |        15 |
+      36 | Durham, NC | Chicago, IL      | ijs5         | 2020-06-20 | 17:00:00      | 23:40:00    |               2 |           | searching for fello$
+      40 | Durham, NC | New York, NY     | agk19        | 2020-12-25 | 20:00:00      | 23:59:00    |               3 |           | Long drive home
+      41 | Durham, NC | Philadelphia, PA | gal16        | 2020-07-07 | 21:00:00      | 21:45:00    |               1 |        50 |
+      42 | Durham, NC | Houston, TX      | gal16        | 2020-11-25 | 22:00:00      | 22:50:00    |               1 |       300 | Yeehaw
+      47 | Durham, NC | Detroit, MI      | ijs5         | 2020-09-05 | 21:00:00      | 21:45:00    |               1 |       100 | I can drop off at t$
+      38 | Durham, NC | New York, NY     | cas175       | 2021-01-01 | 18:00:00      | 19:00:00    |               0 |       100 |
+(7 rows)
+
+-- Rides to New York with cheapest gas cost first
+SELECT *
+FROM Ride
+WHERE destination = 'New York, NY' AND origin = 'Durham, NC'
+ORDER BY gas_price asc;
+ ride_no |   origin   | destination  | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |    comments
+---------+------------+--------------+--------------+------------+---------------+-------------+-----------------+-----------+-----------------
+      38 | Durham, NC | New York, NY | cas175       | 2021-01-01 | 18:00:00      | 19:00:00    |               0 |       100 |
+      40 | Durham, NC | New York, NY | agk19        | 2020-12-25 | 20:00:00      | 23:59:00    |               3 |           | Long drive home
+(2 rows)
+
+-- Rides from Durham, NC with a Graduate student as a driver
+SELECT *
+FROM Ride R, rideshare_user U
+WHERE R.driver_netid = U.netid AND R.origin = 'Durham, NC' AND U.affiliation = 'Graduate';
+ ride_no |   origin   | destination | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |               comments  $
+---------+------------+-------------+--------------+------------+---------------+-------------+-----------------+-----------+-------------------------$
+      36 | Durham, NC | Chicago, IL | ijs5         | 2020-06-20 | 17:00:00      | 23:40:00    |               2 |           | searching for fellow dee$
+      39 | Durham, NC | Raleigh, NC | ijs5         | 2020-02-03 | 19:00:00      | 23:59:00    |               2 |        25 | going to 123 Main Street$
+      47 | Durham, NC | Detroit, MI | ijs5         | 2020-09-05 | 21:00:00      | 21:45:00    |               1 |       100 | I can drop off at the Mo$
+      44 | Durham, NC | Denver, CO  | ijs5         | 2020-01-08 | 12:00:00      | 12:45:00    |               2 |       250 | Ski trip                $
+(4 rows)
+
+-- Rides from Charlotte to Durham
+SELECT *
+FROM Ride
+WHERE destination = 'Durham, NC' AND origin = 'Charlotte, NC';
+ ride_no |    origin     | destination | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price | comments
+---------+---------------+-------------+--------------+------------+---------------+-------------+-----------------+-----------+----------
+      26 | Charlotte, NC | Durham, NC  | ijs5         | 2020-10-04 | 09:00:00      | 23:59:00    |               0 |        10 |
+(1 row)
+
+-- Rides from Durham to Philadelphia sorted by earliest departure
+SELECT *
+FROM Ride
+WHERE destination = 'Philadelphia, PA' AND origin = 'Durham, NC'
+ORDER BY earliest_time asc;
+ ride_no |   origin   |   destination    | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price | comments
+---------+------------+------------------+--------------+------------+---------------+-------------+-----------------+-----------+----------
+      41 | Durham, NC | Philadelphia, PA | gal16        | 2020-07-07 | 21:00:00      | 21:45:00    |               1 |        50 |
+(1 row)
+
+-- Rides with one seat available
+SELECT *
+FROM Ride
+WHERE seats_available = 1;
+ ride_no |      origin       |   destination    | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |             $
+---------+-------------------+------------------+--------------+------------+---------------+-------------+-----------------+-----------+-------------$
+      16 | San Francisco, CA | Durham, NC       | ijs5         | 2020-01-02 | 00:00:00      | 23:59:59    |               1 |       200 | join me on a$
+      23 | Detroit, MI       | Durham, NC       | agk19        | 2020-02-14 | 06:00:00      | 06:01:00    |               1 |        50 | going to 263$
+      25 | Los Angeles, CA   | Durham, NC       | agk19        | 2020-08-22 | 08:00:00      | 10:00:00    |               1 |       200 | long ride, n$
+      41 | Durham, NC        | Philadelphia, PA | gal16        | 2020-07-07 | 21:00:00      | 21:45:00    |               1 |        50 |
+      42 | Durham, NC        | Houston, TX      | gal16        | 2020-11-25 | 22:00:00      | 22:50:00    |               1 |       300 | Yeehaw
+      43 | Durham, NC        | Phoenix, AZ      | mjb128       | 2020-01-06 | 23:00:00      | 23:10:00    |               1 |       250 | Road trip
+      47 | Durham, NC        | Detroit, MI      | ijs5         | 2020-09-05 | 21:00:00      | 21:45:00    |               1 |       100 | I can drop o$
+      28 | Miami, FL         | Durham, NC       | cas175       | 2020-08-20 | 11:00:00      | 13:30:00    |               1 |           | bring your s$
+      21 | New York, NY      | Durham, NC       | gal16        | 2020-01-10 | 05:00:00      | 20:00:00    |               1 |           | good singers$
+(9 rows)
+
+-- Rides to New Orleans with a Undergraduate student as a driver ordered by most seats available
+SELECT *
+FROM Ride R, rideshare_user U
+WHERE R.driver_netid = U.netid AND R.destination = 'New Orleans, LA' AND R.origin = 'Durham, NC' AND U.affiliation = 'Undergraduate'
+ORDER BY R.seats_available desc;
+ ride_no | origin | destination | driver_netid | date | earliest_time | latest_time | seats_available | gas_price | comments | netid | name | duke_ema$
+---------+--------+-------------+--------------+------+---------------+-------------+-----------------+-----------+----------+-------+------+---------$
+(0 rows)
+
+-- Rides to Miami after May 4th leaving no late than 7 pm
+SELECT *
+FROM Ride
+WHERE destination = 'Miami, FL' AND origin = 'Durham, NC' AND date > '2020-05-04' AND latest_time < '19:00:00';
+ ride_no |   origin   | destination | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |    comments
+---------+------------+-------------+--------------+------------+---------------+-------------+-----------------+-----------+-----------------
+      34 | Durham, NC | Miami, FL   | mjb128       | 2020-05-05 | 15:00:00      | 15:01:00    |               5 |       100 | to sunnier days
+(1 row)
