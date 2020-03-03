@@ -1,0 +1,16 @@
+{% extends 'layout.html' %} 
+{% block content %} 
+<h1>Select Beer</h1> 
+<form method="​post"​ >
+  {{form.csrf_token}} 
+  <p>{{form.beer_sel.label}}
+    <br>
+    <select id="beers">
+      {% for beer in form.beer_sel.data %}
+      <option value="">{% form.name %}</option>
+      {% endfor %}
+    </select>
+  </p> 
+  <p>​<input type="submit" value="Submit"/></p>
+</form>
+{% endblock %}
