@@ -11,4 +11,5 @@ $ psql -h vcm-13365.vm.duke.edu -p 5432 -U rideshare -d production
 The username is rideshare.
 You will be prompted to enter a password. The password is: 316project.
 
-From there, you can use commands such as \dt to view the tables in our database or \l for a list of databases. You can also create and modify tables, run queries, create triggers, etc. since Postgres supports SQL.
+From there, you can use commands such as \dt to view the tables in our database or \l for a list of databases. You can also create and modify tables, run queries, create triggers, etc. in the command line.
+We created our tables by copy and pasting our create.sql file into the command line. We did the same with our insert statements. 
