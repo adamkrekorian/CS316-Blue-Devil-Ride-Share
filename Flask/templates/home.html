@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Duke University Rideshare</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -20,22 +20,27 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
-      <a class="navbar-brand" href="#">Logo</a>
+      <a class="navbar-brand" href="#">Duke University Rideshare</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
+      <!-- commented out the navbar that is left-aligned next to logo-->
+      <!-- <ul class="nav navbar-nav">
         <li class="active"><a href="#">Home</a></li>
         <li><a href="#">About</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="#">Contact</a></li>
-      </ul>
+      </ul> -->
       <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{url_for('home_page')}}"> Home </a></li>
+        <li><a href="{{url_for('find_rides')}}"> Find Rides </a></li>
+        <li><a href="{{url_for('list_rides')}}"> List Rides </a></li>
+        <li><a href="{{url_for('sign_up')}}"> Sign Up </a></li>
         <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
       </ul>
     </div>
   </div>
 </nav>
-  
+{% block content %} 
 <div class="container-fluid text-center">    
   <div class="row content">
     <div class="col-sm-2 sidenav">
@@ -44,11 +49,9 @@
       <p><a href="#">Link</a></p>
     </div>
     <div class="col-sm-8 text-left"> 
-      <h1>Welcome</h1>
+      <h1>Welcome to Duke Rideshare</h1>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
       <hr>
-      <h3>Test</h3>
-      <p>Lorem ipsum...</p>
     </div>
     <div class="col-sm-2 sidenav">
       <div class="well">
@@ -60,7 +63,7 @@
     </div>
   </div>
 </div>
-
+{% endblock %}
 <footer class="container-fluid text-center">
   <p>Footer Text</p>
 </footer>
