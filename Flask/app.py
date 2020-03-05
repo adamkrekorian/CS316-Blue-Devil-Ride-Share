@@ -1,5 +1,6 @@
 
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 #copied this from h4- do we think we need?
