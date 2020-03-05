@@ -1,0 +1,62 @@
+{% extends 'home.html' %}
+{% block heading %}Edit Listed Ride Information: {{ride.ride_no}}{% endblock %} <!-- include driver net id here? -->
+
+{% block content %}
+<div class="container-fluid text-center">    
+    <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <!-- empty left sidebar -->
+        </div>
+        <div class="col-sm-8 text-left"> 
+            <h1>Edit a Ride</h1>
+            <hr>
+            <p>
+                Origin: {{form.origin}}
+                <!-- need this error thing? -->
+                {% if form.origin.errors %}
+                <ul>{% for error in form.origin.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+              </p>
+              <p>
+                Destination: {{form.destination}}
+                {% if form.destination.errors %}
+                <ul>{% for error in form.destination.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+              </p>
+              <p>
+                Earliest time to leave: {{form.earliest_time}}
+                {% if form.earliest_time.errors %}
+                <ul>{% for error in form.earliest_time.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+              </p>
+              <p>
+                Latest time to leave: {{form.latest_time}}
+                {% if form.latest_time.errors %}
+                <ul>{% for error in form.latest_time.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+              </p>
+              <p>
+                Seats Available: {{form.seats_available}}
+                {% if form.seats_available.errors %}
+                <ul>{% for error in form.seats_available.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+              </p>
+              <p>
+                Gas Price: {{form.gas_price}}
+                {% if form.gas_price.errors %}
+                <ul>{% for error in form.gas_price.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+              </p>
+              <p>
+                Comments: {{form.comments}}
+                {% if form.comments.errors %}
+                <ul>{% for error in form.comments.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+              </p>
+        </div>
+        <div class="col-sm-2 sidenav">
+            <!-- empty right sidebar-->
+        </div>
+    </div>
+</div>
+{% endblock %}

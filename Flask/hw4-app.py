@@ -11,7 +11,7 @@ db = SQLAlchemy(app, session_options={'autocommit': False})
 @app.route('/')
 def all_drinkers():
     drinkers = db.session.query(models.Drinker).all()
-    return render_template('all-drinkers.html', drinkers=drinkers)
+    return render_template('all-drinkers.html', drinkers=drinkers) #what is the point of this
 
 @app.route('/serves', methods=['GET', 'POST']) 
 def serves():

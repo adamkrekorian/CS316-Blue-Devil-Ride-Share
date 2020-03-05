@@ -1,7 +1,6 @@
 from sqlalchemy import sql, orm
 from app import db
 
-##why do they do drinker this way
 class Drinker(db.Model):
     __tablename__ = 'drinker'
     name = db.Column('name', db.String(20), primary_key=True)
@@ -31,41 +30,42 @@ class Drinker(db.Model):
             db.session.rollback()
             raise e
 
-class Rideshare_user(db.Model):
-    __tablename__ = 'rideshare_user' 
-    netid = db.Column('netid', db.String(7), primary_key=True)
-    name = db.Column('name', db.String(50))
-    duke_email = db.Column('duke_email', db.String(50)) 
-    phone_number = db.Column('name', db.Integer()) #from reading about this online, I think that it should convert to big num itself
-    affiliation = db.Column('affiliation', db.String(50)) #Jane said we don't make this a drop down menu here, we do it later in forms
-    school = db.Column('school', db.String(50))
-    password = db.Column('password', db.String(50))
+class Beer(db.Model):
+    __tablename__ = 'beer'
+    name = db.Column('name', db.String(20), primary_key=True)
+    brewer = db.Column('brewer', db.String(20))
 
+class Bar(db.Model):
+    __tablename__ = 'bar'
+    name = db.Column('name', db.String(20), primary_key=True)
+    address = db.Column('address', db.String(20))
+    serves = orm.relationship('Serves')
 
-class Driver(db.Model):
-    __tablename__ = 'driver'
-    netid = db.Column('netid', db.String(20), db.ForeignKey('rideshare_user.netid'), rimary_key=True)
-    license_no = db.Column('license_no', db.Integer())
-    license_plate_no = db.Column('license_plate_no', db.String(10))
-    plate_state = db.Column('plate_state', db.String(3))
+class Likes(db.Model):
+    __tablename__ = 'likes'
+    drinker = db.Column('drinker', db.String(20),
+                        db.ForeignKey('drinker.name'),
+                        primary_key=True)
+    beer = db.Column('beer', db.String(20),
+                     db.ForeignKey('beer.name'),
+                     primary_key=True)
 
-class Ride(db.Model):
-    __tablename__ = 'ride'
-    ride_no = db.Column('ride_no', db.Integer(), primary_key=True) #How do I make this increment each time?
-    origin = db.Column('origin', db.String(100))
-    destination = db.Column('destination', db.String(100)) #how to I make not equal origin? triggers?- piazza
-    driver_netid = db.Column('driver_netid', db.String(10), ForeignKey('driver.netid'))
-    earliest_time= db.Column('earliest_time', db.DateTime) 
-    latest_time= db.Column('latest_time', db.DateTime)
-    seats_available= db.Column('seats_available', db.Integer())
-    gas_price = db.Column('gas_price', db.Integer())
-    comments = db.Column('comments', db.String(500))
+class Serves(db.Model):
+    __tablename__ = 'serves'
+    bar = db.Column('bar', db.String(20),
+                    db.ForeignKey('bar.name'),
+                    primary_key=True)
+    beer = db.Column('beer', db.String(20),
+                     db.ForeignKey('beer.name'),
+                     primary_key=True)
+    price = db.Column('price', db.Float())
 
-
-class Reserve(db.Model):
-    __tablename__ = 'reserve'
-    id = odm.CompositeIdField('rider_netid', 'ride_no') #might be wrong- trying to make both primary key?
-    rider_netid = db.Column('rider_netid', ForeignKey('rideshare_user.netid')) #do I have to make separate line like in sql?
-    ride_no = db.Column('ride_no', ForeignKey('ride.ride_no'))
-    seats_needed = db.Column('seats_needed', db.Integer())
-    note = db.Column('note', db.String(150))
+class Frequents(db.Model):
+    __tablename__ = 'frequents'
+    drinker = db.Column('drinker', db.String(20),
+                        db.ForeignKey('drinker.name'),
+                        primary_key=True)
+    bar = db.Column('bar', db.String(20),
+                    db.ForeignKey('bar.name'),
+                    primary_key=True)
+    times_a_week = db.Column('times_a_week', db.Integer())
