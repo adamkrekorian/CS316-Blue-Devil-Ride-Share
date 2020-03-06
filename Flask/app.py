@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 #copied this from h4- do we think we need?
-app.secret_key = 's3cr3t' #probably going to have to change this
+app.secret_key = 's3cr3t' #change this?
 app.config.from_object('config')
 db = SQLAlchemy(app, session_options={'autocommit': False})
 
