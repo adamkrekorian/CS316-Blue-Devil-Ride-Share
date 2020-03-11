@@ -1,14 +1,32 @@
 {% extends 'home.html' %}
 
 {% block content %}
+<html>
 <div class="container-fluid text-center">    
     <div class="row content">
         <div class="col-sm-2 sidenav">
             <!-- empty left sidebar -->
         </div>
-        <div class="col-sm-8 text-left"> 
-            <h1 style="text-align: center">Log In</h1>
+        <div class="col-sm-8 text-center"> 
+            <h1>Login</h1>
             <hr>
+            {% if session['logged_in'] %}
+            You're logged in already!
+            {% else %}
+            <form method="POST" action="/log-in">
+             <input type="text" style="height:50px;font-size:14pt;" placeholder="NetID" name="netid" value="{{
+                request.form.netid }}">
+             <br>
+             <input type="password" style="height:50px;font-size:14pt;" placeholder="Password" name="password" value="{{
+                request.form.password }}">
+             <br>
+             <br>
+             <input class="btn btn-default" style="height:50px;font-size:20pt;" type="submit" value="Login">
+            </form>
+            {% if error %}
+              <p class="error"><strong>Error:</strong> {{ error }}
+            {% endif %}
+            {% endif %}
         </div>
         <div class="col-sm-2 sidenav">
             <!-- empty right sidebar-->

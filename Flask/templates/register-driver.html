@@ -1,0 +1,42 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<div class="container-fluid text-center">    
+    <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <!-- empty left sidebar -->
+        </div>
+        <div class="col-sm-8 text-left"> 
+            <center>
+            <h1>Register as Driver</h1>
+            
+            <form action = "/register-driver"  onsubmit="return validateForm();" method="post">
+                   <div style = font-size:14px; font-weight:bold; margin-left:150px;>
+                   {{ form.csrf_token }}
+                  
+                   {{ form.license_no.label }}<br>
+                   {{ form.license_no }}
+                   <br>
+                       
+                   {{ form.license_plate_no.label }}<br>
+                   {{ form.license_plate_no }}
+                   <br>
+                
+                   {{ form.plate_state.label }}<br>
+                   {{ form.plate_state(placeholder='NC') }}
+                   <br>
+                    
+                   <br>
+                   </div>
+                   <div style = font-size:20px; font-weight:bold; margin-left:150px;>
+                   {{ form.submit }}
+                   </div>
+            </form>
+            </center>
+            </div>
+        <div class="col-sm-2 sidenav">
+            <!-- empty right sidebar-->
+        </div>
+</div>
+</div>
+{% endblock %}

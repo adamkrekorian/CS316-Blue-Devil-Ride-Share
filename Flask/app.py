@@ -1,16 +1,21 @@
 
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from wtforms import Form, BooleanField, StringField, PasswordField, validators
 
 app = Flask(__name__)
-#copied this from h4- do we think we need?
 app.secret_key = 's3cr3t' #change this?
 app.config.from_object('config')
 db = SQLAlchemy(app, session_options={'autocommit': False})
+net = "NETID"
+
+import forms
+import models
 
 @app.route('/')
 def home_page():
-    return render_template('home.html') # are going to have to set some values here equal to something like in beers- to return values?
+    return render_template('home.html')# are going to have to set some values here equal to something like in beers- to return values?
 
 @app.route('/find-rides')
 def find_rides():
@@ -20,20 +25,99 @@ def find_rides():
 def list_rides():
     return render_template('list-rides.html')
 
-@app.route('/sign-up')
+@app.route('/sign-up', methods=['GET','POST'])
 def sign_up():
-    return render_template('sign-up.html')
+    form = forms.RegisterFormFactory()
+    global net
+    driver = models.Driver.query.filter_by(netid=net).first()
+    print(net)
+    if session['logged_in'] == True and not driver:
+        flash("You are signed in but not yet a driver. Redirecting you to driver registration.")
+        return redirect(url_for('register_driver', form=forms.RegisterDriverFormFactory()))
+    if session['logged_in'] and driver:
+        flash("You are signed in and already registered as a driver. Redirecting you to list a ride.")
+        return redirect(url_for('list_rides'))
+    else:
+        
+        #print(form.errors)
 
-@app.route('/log-in')
+        #if form.is_submitted():
+            #print("submitted")
+
+        #if form.validate():
+            #print("valid")
+
+        #print(form.errors)
+        if form.validate_on_submit():
+            netid = request.form['netid']
+            name = request.form['name']
+            duke_email = request.form['duke_email']
+            phone_number = request.form['phone_number']
+            password = request.form['password']
+            affiliation = request.form['affiliation_sel']
+            school = request.form['school']
+
+            register = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, password=password, affiliation=affiliation, school=school)
+            db.session.add(register)
+            db.session.commit()
+
+            return redirect(url_for('log_in'))
+        return render_template('sign-up.html', form=form)
+
+@app.route('/register-driver', methods=['GET','POST'])
+def register_driver():
+    form = forms.RegisterDriverFormFactory()
+    global net
+    driver = models.Driver.query.filter_by(netid=net).first()
+    if session['logged_in'] == True and driver:
+        flash("You are already a driver. Redirecting you to list a ride.")
+        return redirect(url_for('list_rides'))
+    print(form.errors)
+
+    if form.is_submitted():
+        print("submitted")
+
+    if form.validate():
+        print("valid")
+
+    print(form.errors)
+    if form.validate_on_submit():
+        netid = net
+        license_no = request.form['license_no']
+        license_plate_no = request.form['license_plate_no']
+        plate_state = request.form['plate_state']
+            
+        register = models.Driver(netid=netid, license_no=license_no, license_plate_no=license_plate_no, plate_state=plate_state)
+        db.session.add(register)
+        db.session.commit()
+        return redirect(url_for('list_rides'))
+    return render_template('register-driver.html', form=form)
+    
+
+@app.route('/log-in', methods=['GET','POST'])
 def log_in():
-    return render_template('log-in.html')
+    error = None
+    if request.method == 'POST':
+        netid = request.form.get('netid')
+        password = request.form.get('password')
+        user = models.Rideshare_user.query.filter_by(netid=netid).first()
+        if not user or not (user.password==password):
+            error = 'Invalid Credentials. Please try again.'
+        else:
+            session['logged_in'] = True
+            global net
+            net = netid
+            print(net)
+            return redirect(url_for('home_page'))
+    return render_template('log-in.html', error=error)
 
-#can remove if wanted-just trying out
-@app.route('/edit-list-ride')
-def edit_list_ride(ride): #passes in an entire ride object
-    form=forms.listRideForm.form(ride)
-    return render_template('edit-list-ride.html', ride=ride, form=form)
-
+@app.route("/logout")
+def log_out():
+    session['logged_in'] = False
+    global net
+    net = "NETID"
+    print(net)
+    return home_page()
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug = True)
