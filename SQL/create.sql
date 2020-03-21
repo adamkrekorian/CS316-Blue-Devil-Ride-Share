@@ -10,7 +10,7 @@ CREATE TABLE rideshare_user
 
 CREATE TABLE Driver
 (netid VARCHAR(7) NOT NULL PRIMARY KEY REFERENCES rideshare_user(netid),
- license_no INTEGER NOT NULL,
+ license_no VARCHAR(50) NOT NULL,
  license_plate_no VARCHAR(10) NOT NULL,
  plate_state VARCHAR(3) NOT NULL);
 
