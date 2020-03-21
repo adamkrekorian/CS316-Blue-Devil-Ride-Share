@@ -29,10 +29,11 @@ def find_rides():
     ride_destinations = db.session.query(models.Ride.destination).distinct().all()
     form.end_city.choices = ride_destinations
 
-    
-
     if form.validate_on_submit():
-        return render_template('find-rides.html', form=form)
+        start_city = request.form['start_city']
+        end_city = request.form['end_city']
+        spots_needed = request.form['spots_needed']
+        return render_template('find-rides.html', start = start_city, end = end_city, spots = spots_needed)
     return render_template('find-rides.html')
 
 @app.route('/list-rides')

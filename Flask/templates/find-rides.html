@@ -9,9 +9,15 @@
         <div class="col-sm-8 text-left"> 
             <h1>Search for Rides</h1>
             <hr>
-            <form method="POST" action = "/">
+            <form method="POST">
                 {{ form.csrf_token }}
-                
+                {{ form.start_city.name }}
+                {{ form.start_city }}
+                {{ form.end_city.name }}
+                {{ form.end_city }}
+                {{ form.spots_needed.name }}
+                {{ form.spots_needed }}
+                {{ form.submit }}
             </form>
         </div>
         <div class="col-sm-2 sidenav">
