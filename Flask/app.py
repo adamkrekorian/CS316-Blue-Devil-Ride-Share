@@ -3,6 +3,8 @@ from flask import Flask, render_template, redirect, url_for, request, session, f
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
+from sqlalchemy import distinct
+from datetime import date
 
 app = Flask(__name__)
 app.secret_key = 's3cr3t' #change this?
@@ -17,8 +19,20 @@ import models
 def home_page():
     return render_template('home.html')# are going to have to set some values here equal to something like in beers- to return values?
 
-@app.route('/find-rides')
+@app.route('/find-rides', methods=('GET', 'POST'))
 def find_rides():
+    ride_origins = db.session.query(models.Ride.origin) \
+        .filter(models.Ride.date >= date.today()).distinct().all()
+    form = forms.SearchFormFactory()
+    form.start_city.choices = ride_origins
+
+    ride_destinations = db.session.query(models.Ride.destination).distinct().all()
+    form.end_city.choices = ride_destinations
+
+    
+
+    if form.validate_on_submit():
+        return render_template('find-rides.html', form=form)
     return render_template('find-rides.html')
 
 @app.route('/list-rides')

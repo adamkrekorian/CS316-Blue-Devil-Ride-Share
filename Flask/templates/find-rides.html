@@ -7,8 +7,12 @@
             <!-- empty left sidebar -->
         </div>
         <div class="col-sm-8 text-left"> 
-            <h1>Find a Ride</h1>
+            <h1>Search for Rides</h1>
             <hr>
+            <form method="POST" action = "/">
+                {{ form.csrf_token }}
+                
+            </form>
         </div>
         <div class="col-sm-2 sidenav">
             <!-- empty right sidebar-->

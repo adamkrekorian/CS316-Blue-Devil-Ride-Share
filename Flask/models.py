@@ -17,3 +17,16 @@ class Driver(db.Model):
     license_no = db.Column('license_no', db.Integer())
     license_plate_no = db.Column('license_plate_no', db.String(10))
     plate_state = db.Column('plate_state', db.String(3))
+
+class Ride(db.Model):
+    __tablename__= 'Ride'
+    ride_no = db.Column('ride_no', db.Integer(), primary_key = True)
+    origin = db.Column('origin', db.String(100))
+    destination = db.Column('destination', db.String(100))
+    driver_netid = db.Column('driver_netid', db.String(7))
+    date = db.Column('date', db.Date())
+    earliest_time = db.Column('earliest_time', db.Time())
+    latest_time = db.Column('latest_time', db.Time())
+    seats_available = db.Column('seats_available', db.Integer())
+    gas_price = db.Column('gas_price', db.Integer())
+    comments = db.Column('comments', db.String(500))

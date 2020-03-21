@@ -22,6 +22,14 @@ class RegisterDriverFormFactory(FlaskForm):
     license_plate_no = StringField("License Plate Number", validators = [DataRequired(), Length(min=2, max=8)])
     plate_state = StringField("State", validators = [DataRequired(), Length(min=2, max=2), Regexp('^(?-i:A[LKSZRAEP]|C[AOT]|D[EC]|F[LM]|G[AU]|HI|I[ADLN]|K[SY]|LA|M[ADEHINOPST]|N[CDEHJMVY]|O[HKR]|P[ARW]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY])$')])
     submit = SubmitField("Submit")
-    
+
+class SearchFormFactory(FlaskForm):
+    start_city = SelectField("Start City", validators = [DataRequired()], message=("You must select an origin"))
+    end_city = SelectField("Destination") #may need coerce=unicode for this and line above
+    #need to add date picker
+    #need to add start time picker
+    #need to add end time picker
+    spots_needed = IntegerField("Spots Needed")
+    submit = SubmitField("Search")
 
                                        
