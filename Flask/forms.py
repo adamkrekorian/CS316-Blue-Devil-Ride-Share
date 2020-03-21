@@ -19,7 +19,7 @@ class RegisterFormFactory(FlaskForm):
 class RegisterDriverFormFactory(FlaskForm):
     license_no = StringField("License Number", validators = [DataRequired(message='You must enter your license number'), Length(min=5, max=50, message='You must enter a license plate number that is between 5 to 50 characters')])
     license_plate_no = StringField("License Plate Number", validators = [DataRequired(message='You must enter your license plate number'), Length(min=2, max=8, message='You must enter a license plate number between 2 to 8 characters')])
-    plate_state = StringField("State", validators = [DataRequired(message='You must enter the state of your license plate'), Length(min=2, max=2, message='Your license plate state must be your state abbreviation'), Regexp('^(?-i:A[LKSZRAEP]|C[AOT]|D[EC]|F[LM]|G[AU]|HI|I[ADLN]|K[SY]|LA|M[ADEHINOPST]|N[CDEHJMVY]|O[HKR]|P[ARW]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY])$'), message='Your license plate state must be your state abbreviation'])
+    plate_state = StringField("State", validators = [DataRequired(message='You must enter the state of your license plate'), Length(min=2, max=2, message='Your license plate state must be your state abbreviation'), Regexp('^(?-i:A[LKSZRAEP]|C[AOT]|D[EC]|F[LM]|G[AU]|HI|I[ADLN]|K[SY]|LA|M[ADEHINOPST]|N[CDEHJMVY]|O[HKR]|P[ARW]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY])$', message='Your license plate state must be your state abbreviation')])
     submit = SubmitField("Submit")
 
 class SearchFormFactory(FlaskForm):
