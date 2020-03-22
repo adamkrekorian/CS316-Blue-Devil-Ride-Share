@@ -19,7 +19,7 @@ class Driver(db.Model):
     plate_state = db.Column('plate_state', db.String(3))
 
 class Ride(db.Model):
-    __tablename__= 'Ride'
+    __tablename__= 'ride'
     ride_no = db.Column('ride_no', db.Integer(), primary_key = True)
     origin = db.Column('origin', db.String(100))
     destination = db.Column('destination', db.String(100))
