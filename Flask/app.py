@@ -34,7 +34,7 @@ def find_rides():
         end_city = request.form['end_city']
         spots_needed = request.form['spots_needed']
         return render_template('find-rides.html', start = start_city, end = end_city, spots = spots_needed)
-    return render_template('find-rides.html')
+    return render_template('find-rides.html', form=form)
 
 @app.route('/list-rides', methods=['GET','POST'])
 def list_rides():
