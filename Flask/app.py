@@ -17,8 +17,13 @@ import models
 
 @app.route('/')
 def home_page():
+<<<<<<< HEAD
     if session['_flashes'][0][1] == 'You are not logged in. Redirecting you to log in.':
         session['logged_in'] = False
+=======
+    if session['message']=='You are not logged in. Redirecting you to log in.':
+        session['logged_in']=False
+>>>>>>> d67813183c4feaa78857ffbeaea212c387a2f37a
     return render_template('home.html')# are going to have to set some values here equal to something like in beers- to return values?
 
 @app.route('/find-rides', methods=('GET', 'POST'))
