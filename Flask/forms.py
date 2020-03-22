@@ -1,12 +1,11 @@
 from flask_wtf import FlaskForm
 from wtforms import Form, BooleanField, StringField, IntegerField, PasswordField, validators, DateField, SubmitField, SelectField, ValidationError, DecimalField, DateTimeField
 from wtforms_components import TimeField, DateRange
-from wtforms.validators import InputRequired, Length, NumberRange, Regexp, Email, DataRequired
+from wtforms.validators import InputRequired, Length, NumberRange, Regexp, Email, DataRequired, Optional
 from wtforms.fields.html5 import DateTimeLocalField
 from app import db
 import models
 import datetime
-from datetime import datetime
 
 class NotEqualTo(object):  # --> Change to 'NotEqualTo'
     """
@@ -38,6 +37,7 @@ class NotEqualTo(object):  # --> Change to 'NotEqualTo'
                 message = field.gettext('Destination must not be equal to origin.')
 
             raise ValidationError(message % d)
+            
 
 class GreaterThan(object):  # --> Change to 'GreaterThan'
     """
@@ -59,7 +59,7 @@ class GreaterThan(object):  # --> Change to 'GreaterThan'
             other = form[self.fieldname]
         except KeyError:
             raise ValidationError(field.gettext("Invalid field name '%s'.") % self.fieldname)
-        if field.data <= other.data:  #  --> Change to <= from !=
+        if field.data < other.data:  #  --> Change to <= from !=
             d = {
                 'other_label': hasattr(other, 'label') and other.label.text or self.fieldname,
                 'other_name': self.fieldname
@@ -96,12 +96,13 @@ class SearchFormFactory(FlaskForm):
     submit = SubmitField("Search")
                                         
 class ListRideFormFactory(FlaskForm):
+    current_date = DateTimeLocalField("Current Time", default=datetime.datetime.now(), validators = [DataRequired()])
     destination = SelectField("Destination City:", validators = [InputRequired(message='You must select a destination city'), NotEqualTo('origin_city')], choices = [('Albuquerque, NM', 'Albuquerque, NM'), ('Arlington, TX', 'Arlington, TX'), ('Asheville, NC', 'Asheville, NC'), ('Aspen, CO', 'Aspen, CO'), ('Atlanta, GA', 'Atlanta, GA'), ('Austin, TX', 'Austin, TX'), ('Baltimore, MD', 'Baltimore, MD'), ('Boca Grande, FL', 'Boca Grande, FL'), ('Boston, MA', 'Boston, MA'), ('Cary, NC', 'Cary, NC'), ('Charlotte, NC', 'Charlotte, NC'), ('Chicago, IL', 'Chicago, IL'), ('Colorado Springs, CO', 'Colorado Springs, CO'), ('Columbus, OH', 'Columbus, OH'), ('Concord, NC', 'Concord, NC'), ('Dallas, TX', 'Dallas, TX'), ('Denver, CO', 'Denver, CO'), ('Detroit, MI', 'Detroit, MI'), ('Durham, NC', 'Durham, NC'), ('El Paso, TX', 'El Paso, TX'), ('Fayetteville, NC', 'Fayetteville, NC'), ('Fort Worth, TX', 'Fort Worth, TX'), ('Fresno, CA', 'Fresno, CA'), ('Greensboro, NC', 'Greensboro, NC'), ('Greenville, NC', 'Greenville, NC'), ('High Point, NC', 'High Point, NC'), ('Houston, TX', 'Houston, TX'), ('Indianapolis, IN', 'Indianapolis, IN'), ('Jacksonville, FL', 'Jacksonville, FL'), ('Kansas City, MO', 'Kansas City, MO'), ('Las Vegas, NV', 'Las Vegas, NV'), ('Long Beach, CA', 'Long Beach, CA'), ('Los Angeles, CA', 'Los Angeles, CA'), ('Louisville, KY', 'Louisville, KY'), ('Memphis, TN', 'Memphis, TN'), ('Mesa, AZ', 'Mesa, AZ'), ('Miami, FL', 'Miami, FL'), ('Milwaukee, WI', 'Milwaukee, WI'), ('Minneapolis, MN', 'Minneapolis, MN'), ('Myrtle Beach, SC', 'Myrtle Beach, SC'), ('Nashville, TN', 'Nashville, TN'), ('New Orleans, LA', 'New Orleans, LA'), ('New York, NY', 'New York, NY'), ('Oakland, CA', 'Oakland, CA'), ('Oklahoma City, OK', 'Oklahoma City, OK'), ('Omaha, NE', 'Omaha, NE'), ('Philadelphia, PN', 'Philadelphia, PN'), ('Phoenix, AZ', 'Phoenix, AZ'), ('Portland, OR', 'Portland, OR'), ('Raleigh, NC', 'Raleigh, NC'), ('Sacramento, CA', 'Sacramento, CA'), ('San Antonio, TX', 'San Antonio, TX'), ('San Diego, CA', 'San Diego, CA'), ('San Francisco, CA', 'San Francisco, CA'), ('San Jose, CA', 'San Jose, CA'), ('Seattle, WA', 'Seattle, WA'), ('Tucson, AZ', 'Tucson, AZ'), ('Tulsa, OK', 'Tulsa, OK'), ('Virginia Beach, VA', 'Virginia Beach, VA'), ('Washington, DC', 'Washington, DC'), ('Wichita, KS', 'Wichita, KS'), ('Wilmington, NC', 'Wilmington, NC'), ('Winston-Salem, NC', 'Winston-Salem, NC')])
     origin_city = SelectField("Origin City:", coerce=str, choices = [('Albuquerque, NM', 'Albuquerque, NM'), ('Arlington, TX', 'Arlington, TX'), ('Asheville, NC', 'Asheville, NC'), ('Aspen, CO', 'Aspen, CO'), ('Atlanta, GA', 'Atlanta, GA'), ('Austin, TX', 'Austin, TX'), ('Baltimore, MD', 'Baltimore, MD'), ('Boca Grande, FL', 'Boca Grande, FL'), ('Boston, MA', 'Boston, MA'), ('Cary, NC', 'Cary, NC'), ('Charlotte, NC', 'Charlotte, NC'), ('Chicago, IL', 'Chicago, IL'), ('Colorado Springs, CO', 'Colorado Springs, CO'), ('Columbus, OH', 'Columbus, OH'), ('Concord, NC', 'Concord, NC'), ('Dallas, TX', 'Dallas, TX'), ('Denver, CO', 'Denver, CO'), ('Detroit, MI', 'Detroit, MI'), ('Durham, NC', 'Durham, NC'), ('El Paso, TX', 'El Paso, TX'), ('Fayetteville, NC', 'Fayetteville, NC'), ('Fort Worth, TX', 'Fort Worth, TX'), ('Fresno, CA', 'Fresno, CA'), ('Greensboro, NC', 'Greensboro, NC'), ('Greenville, NC', 'Greenville, NC'), ('High Point, NC', 'High Point, NC'), ('Houston, TX', 'Houston, TX'), ('Indianapolis, IN', 'Indianapolis, IN'), ('Jacksonville, FL', 'Jacksonville, FL'), ('Kansas City, MO', 'Kansas City, MO'), ('Las Vegas, NV', 'Las Vegas, NV'), ('Long Beach, CA', 'Long Beach, CA'), ('Los Angeles, CA', 'Los Angeles, CA'), ('Louisville, KY', 'Louisville, KY'), ('Memphis, TN', 'Memphis, TN'), ('Mesa, AZ', 'Mesa, AZ'), ('Miami, FL', 'Miami, FL'), ('Milwaukee, WI', 'Milwaukee, WI'), ('Minneapolis, MN', 'Minneapolis, MN'), ('Myrtle Beach, SC', 'Myrtle Beach, SC'), ('Nashville, TN', 'Nashville, TN'), ('New Orleans, LA', 'New Orleans, LA'), ('New York, NY', 'New York, NY'), ('Oakland, CA', 'Oakland, CA'), ('Oklahoma City, OK', 'Oklahoma City, OK'), ('Omaha, NE', 'Omaha, NE'), ('Philadelphia, PN', 'Philadelphia, PN'), ('Phoenix, AZ', 'Phoenix, AZ'), ('Portland, OR', 'Portland, OR'), ('Raleigh, NC', 'Raleigh, NC'), ('Sacramento, CA', 'Sacramento, CA'), ('San Antonio, TX', 'San Antonio, TX'), ('San Diego, CA', 'San Diego, CA'), ('San Francisco, CA', 'San Francisco, CA'), ('San Jose, CA', 'San Jose, CA'), ('Seattle, WA', 'Seattle, WA'), ('Tucson, AZ', 'Tucson, AZ'), ('Tulsa, OK', 'Tulsa, OK'), ('Virginia Beach, VA', 'Virginia Beach, VA'), ('Washington, DC', 'Washington, DC'), ('Wichita, KS', 'Wichita, KS'), ('Wilmington, NC', 'Wilmington, NC'), ('Winston-Salem, NC', 'Winston-Salem, NC')])
     driver_netid = StringField("Driver NetID:", validators = [InputRequired(message='You must enter your driver netID'), Length(min=4, max=7, message='Your NetID must be between 4 to 7 characters')])
-    earliest_departure = DateTimeLocalField("Earliest Date/Time of Departure:", validators=[InputRequired(message='Please enter the earliest date/time of departure'), DateRange(min=datetime.now())], format='%Y-%m-%dT%H:%M')
-    latest_departure = DateTimeLocalField("Latest Date/Time of Departure:", validators=[InputRequired(message='Please enter the latest date/time of departure'), DateRange(min=earliest_departure)], format='%Y-%m-%dT%H:%M')
+    earliest_departure = DateTimeLocalField("Earliest Date/Time of Departure:", validators=[InputRequired(message='Please enter the earliest date/time of departure'), GreaterThan('current_date')], format='%Y-%m-%dT%H:%M')
+    latest_departure = DateTimeLocalField("Latest Date/Time of Departure:", validators=[InputRequired(message='Please enter the latest date/time of departure'), GreaterThan('earliest_departure')], format='%Y-%m-%dT%H:%M')
     seats_available = IntegerField("Number of Seats Available:", validators = [InputRequired(message='You must enter the number of seats available')])
-    gas_price = DecimalField("Gas Price per Person:", places=2, rounding=None)
+    gas_price = DecimalField("Gas Price per Person:", places=2, rounding=None, validators=[Optional()])
     comments = StringField("Comments:")
     submit = SubmitField("Submit")
