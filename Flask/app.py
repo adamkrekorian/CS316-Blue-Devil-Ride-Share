@@ -17,8 +17,6 @@ import models
 
 @app.route('/')
 def home_page():
-    if session['_flashes'][0][1] == 'You are not logged in. Redirecting you to log in.':
-        session['logged_in'] = False
     return render_template('home.html')# are going to have to set some values here equal to something like in beers- to return values?
 
 @app.route('/find-rides', methods=('GET', 'POST'))
@@ -44,10 +42,11 @@ def list_rides():
     global net
     driver = models.Driver.query.filter_by(netid=net).first()
     print(net)
-    if session['logged_in'] == True and not driver:
-        flash("You are signed in but not yet a driver. Redirecting you to driver registration.") #These flash messages aren't displaying on the site
-        return redirect(url_for('register_driver', form=forms.RegisterDriverFormFactory()))
-    if session['logged_in'] == False:
+    if 'logged_in' in session and not driver:
+        if session['logged_in']:
+            flash("You are signed in but not yet a driver. Redirecting you to driver registration.") #These flash messages aren't displaying on the site
+            return redirect(url_for('register_driver', form=forms.RegisterDriverFormFactory()))
+    if 'logged_in' not in session:
         flash("You are not logged in. Redirecting you to log in.")
         return redirect(url_for('log_in'))
     else:
@@ -70,12 +69,14 @@ def sign_up():
     global net
     driver = models.Driver.query.filter_by(netid=net).first()
     print(net)
-    if session['logged_in'] == True and not driver:
-        flash("You are signed in but not yet a driver. Redirecting you to driver registration.") #These flash messages aren't displaying on the site
-        return redirect(url_for('register_driver', form=forms.RegisterDriverFormFactory()))
-    if session['logged_in'] and driver:
-        flash("You are signed in and already registered as a driver. Redirecting you to list a ride.")
-        return redirect(url_for('list_rides'))
+    if 'logged_in' in session and not driver:
+        if session['logged_in'] == True:
+            flash("You are signed in but not yet a driver. Redirecting you to driver registration.") #These flash messages aren't displaying on the site
+            return redirect(url_for('register_driver', form=forms.RegisterDriverFormFactory()))
+    if 'logged_in' in session and driver:
+        if session['logged_in']:
+            flash("You are signed in and already registered as a driver. Redirecting you to list a ride.")
+            return redirect(url_for('list_rides'))
     else:
         
         #print(form.errors)
@@ -108,8 +109,9 @@ def register_driver():
     form = forms.RegisterDriverFormFactory()
     global net
     driver = models.Driver.query.filter_by(netid=net).first()
-    if session['logged_in'] == True and driver:
-        flash("You are already a driver. Redirecting you to list a ride.")
+    if 'logged_in' in session and driver:
+        if session['logged_in']:
+            flash("You are already a driver. Redirecting you to list a ride.")
         return redirect(url_for('list_rides'))
     print(form.errors)
 
@@ -159,5 +161,4 @@ def log_out():
     return home_page()
 
 if __name__ == "__main__":
-    session['logged_in'] = False
     app.run(host='0.0.0.0', port=5000, debug = True)
