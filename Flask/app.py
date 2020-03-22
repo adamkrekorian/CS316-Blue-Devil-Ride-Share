@@ -17,6 +17,7 @@ import models
 
 @app.route('/')
 def home_page():
+    session['logged_in'] = False
     return render_template('home.html')# are going to have to set some values here equal to something like in beers- to return values?
 
 @app.route('/find-rides', methods=('GET', 'POST'))
@@ -157,5 +158,4 @@ def log_out():
     return home_page()
 
 if __name__ == "__main__":
-    session['logged_in'] = False
     app.run(host='0.0.0.0', port=5000, debug = True)
