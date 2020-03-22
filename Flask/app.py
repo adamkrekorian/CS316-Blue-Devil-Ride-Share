@@ -47,8 +47,12 @@ def list_rides():
             flash("You are signed in but not yet a driver. Redirecting you to driver registration.") #These flash messages aren't displaying on the site
             return redirect(url_for('register_driver', form=forms.RegisterDriverFormFactory()))
     if 'logged_in' not in session:
+        if session['logged_in']==False:
+            flash("You are not logged in. Redirecting you to log in.")
+            return redirect(url_for('log_in'))
+    if 'logged_in' in session and session['logged_in']==False:
         flash("You are not logged in. Redirecting you to log in.")
-        return redirect(url_for('log_in'))
+        return redirect(url_for('log_in'))     
     else:
         print(form.errors)
 
