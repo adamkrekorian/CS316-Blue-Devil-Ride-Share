@@ -38,11 +38,20 @@ def find_rides():
 
 @app.route('/list-rides')
 def list_rides():
+    form = forms.ListRideFormFactory()
     global net
     driver = models.Driver.query.filter_by(netid=net).first()
-    if session['logged_in'] == True and driver:
-        "List Ride Here"
-    return render_template('list-rides.html')
+    print(net)
+    if session['logged_in'] == True and not driver:
+        flash("You are signed in but not yet a driver. Redirecting you to driver registration.") #These flash messages aren't displaying on the site
+        return redirect(url_for('register_driver', form=forms.RegisterDriverFormFactory()))
+    if session['logged_in'] == False:
+        flash("You are not logged in. Redirecting you to log in.")
+        return redirect(url_for('log_in'))
+    else:
+        if form.validate_on_submit():
+            redirect(url_for('home_page'))
+    return render_template('list-rides.html', form=form)
 
 @app.route('/sign-up', methods=['GET','POST'])
 def sign_up():

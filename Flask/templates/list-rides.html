@@ -7,7 +7,51 @@
             <!-- empty left sidebar -->
         </div>
         <div class="col-sm-8 text-left"> 
+            <center>
             <h1>List a Ride</h1>
+            <form action = "/list-rides"  onsubmit="return validateForm();" method="post">
+                   <div style = font-size:14px; font-weight:bold; margin-left:150px;>
+                   {{ form.csrf_token }}
+                  
+                   {{ form.driver_netid.label }}<br>
+                   {{ form.driver_netid }}
+                   <br>
+                       
+                   {{ form.origin.label }}<br>
+                   {{ form.destination }}
+                   <br>
+                
+                   {{ form.destination.label }}<br>
+                   {{ form.destination }}
+                   <br>
+                   
+                   {{ form.earliest_departure.label }}<br>
+                   {{ form.earliest_departure }}
+                   <br>
+                    
+                   {{ form.latest_departure.label }}<br>
+                   {{ form.latest_departure }}
+                   <br>
+                   
+                   {{ form.seats_available.label }}<br>
+                   {{ form.seats_available }}
+                   <br>
+                       
+                   {{ form.gas_price.label }}<br>
+                   {{ form.gas_price }}
+                   <br>
+                       
+                   {{ form.comments.label }}<br>
+                   {{ form.comments }}
+                   <br>
+                    
+                   <br>
+                   </div>
+                   <div style = font-size:20px; font-weight:bold; margin-left:150px;>
+                   {{ form.submit }}
+                   </div>
+            </form>
+            </center>
             <hr>
         </div>
         <div class="col-sm-2 sidenav">
