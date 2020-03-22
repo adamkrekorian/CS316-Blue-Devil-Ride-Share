@@ -36,7 +36,7 @@ def find_rides():
         return render_template('find-rides.html', start = start_city, end = end_city, spots = spots_needed)
     return render_template('find-rides.html')
 
-@app.route('/list-rides')
+@app.route('/list-rides', methods=['GET','POST'])
 def list_rides():
     form = forms.ListRideFormFactory()
     global net
@@ -49,6 +49,15 @@ def list_rides():
         flash("You are not logged in. Redirecting you to log in.")
         return redirect(url_for('log_in'))
     else:
+        print(form.errors)
+
+        if form.is_submitted():
+            print("submitted")
+
+        if form.validate():
+            print("valid")
+
+        print(form.errors)
         if form.validate_on_submit():
             redirect(url_for('home_page'))
     return render_template('list-rides.html', form=form)
