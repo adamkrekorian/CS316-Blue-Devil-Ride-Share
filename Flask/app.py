@@ -21,17 +21,11 @@ def home_page():
 
 @app.route('/find-rides', methods=('GET', 'POST'))
 def find_rides():
-    ride_origins = db.session.query(models.Ride.origin) \
-        .filter(models.Ride.date >= date.today()).distinct().all()
     form = forms.SearchFormFactory()
-    form.start_city.choices = ride_origins
-
-    ride_destinations = db.session.query(models.Ride.destination).distinct().all()
-    form.end_city.choices = ride_destinations
 
     if form.validate_on_submit():
-        start_city = request.form['start_city']
-        end_city = request.form['end_city']
+        start_city = request.form['origin_city']
+        end_city = request.form['destination']
         spots_needed = request.form['spots_needed']
         return render_template('find-rides.html', start = start_city, end = end_city, spots = spots_needed)
     return render_template('find-rides.html', form=form)
