@@ -65,7 +65,25 @@ def list_rides():
 
         print(form.errors)
         if form.validate_on_submit():
-            redirect(url_for('home_page'))
+            driver_netid = request.form['driver_netid']
+            destination = request.form['destination']
+            origin_city = request.form['origin_city']
+            date = request.form['date']
+            earliest_departure = request.form['earliest_departure']
+            latest_departure = request.form['latest_departure']
+            seats_available = request.form['seats_available']
+            gas_price = request.form['gas_price']
+            if gas_price == '':
+                gas_price = None
+            comments = request.form['comments']
+            if comments=='':
+                comments = None
+
+            newride = models.Ride(driver_netid=driver_netid, destination=destination, origin=origin_city, date=date, earliest_time=earliest_departure, latest_time=latest_departure, seats_available=seats_available, gas_price=gas_price, comments=comments)
+            db.session.add(newride)
+            db.session.commit()
+
+            return redirect(url_for('home_page'))
     return render_template('list-rides.html', form=form)
 
 @app.route('/sign-up', methods=['GET','POST'])
