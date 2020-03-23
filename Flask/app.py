@@ -61,6 +61,7 @@ def list_rides():
 
         if form.validate():
             print("valid")
+        
 
         print(form.errors)
         if form.validate_on_submit():
