@@ -11,12 +11,20 @@
             <hr>
             <form method="POST">
                 {{ form.csrf_token }}
-                {{ form.origin_city.name }}
+                {{ form.origin_city.label }}
                 {{ form.origin_city }}
-                {{ form.destination.name }}
+                {{ form.destination.label }}
                 {{ form.destination }}
-                {{ form.spots_needed.name }}
+                <br>
+                {{ form.date.label }}
+                {{ form.date }}
+                {{ form.earliest_departure.label }}
+                {{ form.earliest_departure }}
+                {{ form.latest_departure.label }}
+                {{ form.latest_departure }}
+                {{ form.spots_needed.label }}
                 {{ form.spots_needed }}
+                <br>
                 {{ form.submit }}
             </form>
         </div>

@@ -24,10 +24,15 @@ def find_rides():
     form = forms.SearchFormFactory()
 
     if form.validate_on_submit():
-        start_city = request.form['origin_city']
-        end_city = request.form['destination']
+        origin_city = request.form['origin_city']
+        destination = request.form['destination']
+        date = request.form['date']
+        earliest_departure = request.form['earliest_departure']
+        latest_departure = request.form['latest_departure']
         spots_needed = request.form['spots_needed']
-        return render_template('find-rides.html', start = start_city, end = end_city, spots = spots_needed)
+    
+    
+        return render_template('find-rides.html', origin = origin_city, dest = destination, date = date, earliest_departure = earliest_departure, latest_departure = latest_departure, spots = spots_needed)
     return render_template('find-rides.html', form=form)
 
 @app.route('/list-rides', methods=['GET','POST'])
