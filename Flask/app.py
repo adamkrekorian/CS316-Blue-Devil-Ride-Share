@@ -21,18 +21,43 @@ def home_page():
 
 @app.route('/find-rides', methods=('GET', 'POST'))
 def find_rides():
-    form = forms.SearchFormFactory()
 
-    if form.validate_on_submit():
-        origin_city = request.form['origin_city']
-        destination = request.form['destination']
-        date = request.form['date']
-        earliest_departure = request.form['earliest_departure']
-        latest_departure = request.form['latest_departure']
-        spots_needed = request.form['spots_needed']
-    
-    
-        return render_template('find-rides.html', origin = origin_city, dest = destination, date = date, earliest_departure = earliest_departure, latest_departure = latest_departure, spots = spots_needed)
+    form = forms.SearchFormFactory()
+    print("before first if")
+    if 'logged_in' not in session:
+        if session['logged_in']==False:
+            flash("You are not logged in. Redirecting you to log in.")
+            return redirect(url_for('log_in'))
+
+    if 'logged_in' in session and session['logged_in']==False:
+        flash("You are not logged in. Redirecting you to log in.")
+        return redirect(url_for('log_in'))     
+
+    else:
+        print(form.errors)
+        print("before if in else")
+        if form.is_submitted():
+            print("submitted")
+
+        if form.validate():
+            print("validated")
+            origin_city = request.form['origin_city']
+            destination = request.form['destination']
+            date = request.form['date']
+            earliest_departure = request.form['earliest_departure']
+            latest_departure = request.form['latest_departure']
+            spots_needed = request.form['spots_needed']
+        
+            results = db.session.query(models.Ride) \
+                .filter(models.Ride.origin == origin_city) \
+                .filter(models.Ride.destination == destination) \
+                .filter(models.Ride.date == date) \
+                .filter(models.Ride.earliset_time == earliest_departure) \
+                .filter(models.Ride.latest_time == latest_departure) \
+                .filter(models.Ride.seats_available <= spots_needed).all()
+            print("here: ")
+            print(results)
+        return render_template('find-rides.html', form = form)
     return render_template('find-rides.html', form=form)
 
 @app.route('/list-rides', methods=['GET','POST'])
