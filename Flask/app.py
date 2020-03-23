@@ -52,12 +52,12 @@ def find_rides():
                 .filter(models.Ride.origin == origin_city) \
                 .filter(models.Ride.destination == destination) \
                 .filter(models.Ride.date == date) \
-                .filter(models.Ride.earliset_time == earliest_departure) \
+                .filter(models.Ride.earliest_time == earliest_departure) \
                 .filter(models.Ride.latest_time == latest_departure) \
                 .filter(models.Ride.seats_available <= spots_needed).all()
             print("here: ")
             print(results)
-        return render_template('find-rides.html', form = form)
+        return render_template('find-rides.html', form=form)
     return render_template('find-rides.html', form=form)
 
 @app.route('/list-rides', methods=['GET','POST'])
