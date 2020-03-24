@@ -11,66 +11,75 @@
 
 </head>
 <body>
-
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>                        
-      </button>
-      <a class="navbar-brand" href="#">Duke University Rideshare</a>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+        </button>
+        <a class="navbar-brand" href="#">Duke University Rideshare</a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <!-- commented out the navbar that is left-aligned next to logo-->
+        <!-- <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul> -->
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="{{url_for('home_page')}}"> Home </a></li>
+          {% if session['logged_in'] %}
+          <li><a href="{{url_for('find_rides')}}"> Find Rides </a></li>
+          <li><a href="{{url_for('list_rides')}}"> List Rides </a></li>
+          <!--<li><a href="{{url_for('sign_up')}}"> Sign Up </a></li>-->
+          {% else %}
+          <!--<li><a href="{{url_for('find_rides')}}"> Find Rides </a></li>
+          <li><a href="{{url_for('list_rides')}}"> List Rides </a></li>-->
+          <li><a href="{{url_for('sign_up')}}"> Sign Up </a></li>
+          {% endif %}
+          <!--<li><a href="{{url_for('find_rides')}}"> Find Rides </a></li>
+          <li><a href="{{url_for('list_rides')}}"> List Rides </a></li>
+          <li><a href="{{url_for('sign_up')}}"> Sign Up </a></li>-->
+          {% if session['logged_in'] %}
+            <li><a href="{{url_for('log_out')}}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            <li><a href="{{url_for('account')}}"> Account </a></li>
+          {% else %}
+            <li><a href="{{url_for('log_in')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          {% endif %}
+        </ul>
+      </div>
     </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <!-- commented out the navbar that is left-aligned next to logo-->
-      <!-- <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Projects</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul> -->
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{url_for('home_page')}}"> Home </a></li>
-        <li><a href="{{url_for('find_rides')}}"> Find Rides </a></li>
-        <li><a href="{{url_for('list_rides')}}"> List Rides </a></li>
-        <li><a href="{{url_for('sign_up')}}"> Sign Up </a></li>
-        {% if session['logged_in'] %}
-          <li><a href="{{url_for('log_out')}}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-        {% else %}
-          <li><a href="{{url_for('log_in')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-        {% endif %}
-      </ul>
+  </nav>
+  {% block content %} 
+  <div class="container-fluid text-center">    
+    <div class="row content">
+      <div class="col-sm-2 sidenav">
+        <p><a href="#">Link</a></p>
+        <p><a href="#">Link</a></p>
+        <p><a href="#">Link</a></p>
+      </div>
+      <div class="col-sm-8 text-left"> 
+        <h1>Welcome to Duke Rideshare!</h1>
+        <p>Our mission at Blue Devil Rideshare is to explore outside of the Duke bubble. Sometimes you might need to go off campus, whether you're going home for break or looking for a fun adventure closeby, and we have got you covered. We aim to make it easy for Duke students to coordinate rides. If you're a driver, you can easily post your planned rides. If you're a rider, you can search for rides based on origin, destination, date, and gas price. We believe that our ridesharing service allows Duke students to make new friends, travel to some new or familiar places, and save the environment by cutting carbon emissions in the process. Sign up for Blue Devil Rideshare today to start exploring!</p>
+        <hr>
+      </div>
+      <div class="col-sm-2 sidenav">
+        <!--<div class="well">-->
+          <img src="../hw4/chapel.jpg"></img>
+        <!--</div>-->
+        <!--<div class="well">
+          <p>ADS</p>
+        </div>-->
+      </div>
     </div>
   </div>
-</nav>
-{% block content %} 
-<div class="container-fluid text-center">    
-  <div class="row content">
-    <div class="col-sm-2 sidenav">
-      <p><a href="#">Link</a></p>
-      <p><a href="#">Link</a></p>
-      <p><a href="#">Link</a></p>
-    </div>
-    <div class="col-sm-8 text-left"> 
-      <h1>Welcome to Duke Rideshare!</h1>
-      <p>Our mission at Blue Devil Rideshare is to explore outside of the Duke bubble. Sometimes you might need to go off campus, whether you're going home for break or looking for a fun adventure closeby, and we have got you covered. We aim to make it easy for Duke students to coordinate rides. If you're a driver, you can easily post your planned rides. If you're a rider, you can search for rides based on origin, destination, date, and gas price. We believe that our ridesharing service allows Duke students to make new friends, travel to some new or familiar places, and save the environment by cutting carbon emissions in the process. Sign up for Blue Devil Rideshare today to start exploring!</p>
-      <hr>
-    </div>
-    <div class="col-sm-2 sidenav">
-      <!--<div class="well">-->
-        <img src="../hw4/chapel.jpg"></img>
-      <!--</div>-->
-      <!--<div class="well">
-        <p>ADS</p>
-      </div>-->
-    </div>
-  </div>
-</div>
-{% endblock %}
-<footer class="container-fluid text-center">
-  <p>Contact us: 301-366-9384 INSERT DUKE UNI LOGO</p>
-</footer>
+  {% endblock %}
+  <footer class="container-fluid text-center">
+    <p>Contact us: 301-366-9384 INSERT DUKE UNI LOGO Created by </p>
+  </footer>
 
 </body>
 </html>

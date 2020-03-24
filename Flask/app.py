@@ -207,5 +207,10 @@ def log_out():
     print(net)
     return home_page()
 
+@app.route('/account', methods=('GET', 'POST'))
+def account():
+    #should have edit form in here 
+    return render_template('account.html')
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug = True)

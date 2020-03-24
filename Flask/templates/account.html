@@ -1,0 +1,32 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<div class="container-fluid text-center">    
+    <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <!-- empty left sidebar -->
+        </div>
+        <div class="col-sm-8 text-left"> 
+            <h1>Account </h1>
+            <hr>
+            <ul style="list-style-type: none;">
+                <li>NetID: </li>
+                <li>Rides you are riding in: </li> <!--here we update the status of the ride- delayed, cancelled, ontime and how many riders and meeting spot/ drop off spot, comments, and driver-->
+                <li>Rides you have listed: </li> <!--Same as information above-->
+                <li>Ride history: </li><!--Just list driver, time, origin, destination-->
+                <!--buttons we want to have- edit password, edit rides -->
+            </ul>
+
+            
+        </div>
+        <div class="col-sm-2 sidenav">
+            <div class="well">
+          <button>Edit Password</button>
+            </div>
+            <div class="well">
+                <button>Edit Rides</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
