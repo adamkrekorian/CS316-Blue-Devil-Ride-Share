@@ -10,7 +10,13 @@
             <h1>Account </h1>
             <hr>
             <ul style="list-style-type: none;">
-                <li>NetID: </li>
+                <li>NetID: {{user.netid}}</li>
+                <li>Name: {{user.name}}</li>
+                <li>Email: {{user.duke_email}}</li>
+                <li>Phone number: {{user.phone_number}}</li>
+                <li>Affiliation: {{user.affiliation}}</li>
+                <li>School: {{user.school}}</li>
+                <li>Test: {{ridesListed.first().driver_netid}}</li>
                 <li>Rides you are riding in: </li> <!--here we update the status of the ride- delayed, cancelled, ontime and how many riders and meeting spot/ drop off spot, comments, and driver-->
                 <li>Rides you have listed: </li> <!--Same as information above-->
                 <li>Ride history: </li><!--Just list driver, time, origin, destination-->

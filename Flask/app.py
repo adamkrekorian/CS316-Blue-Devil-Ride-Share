@@ -209,8 +209,12 @@ def log_out():
 
 @app.route('/account', methods=('GET', 'POST'))
 def account():
-    #should have edit form in here 
-    return render_template('account.html')
+    #should have edit form in here
+    #NOTE: this will give an error if you are already logged in and try to do this- somehow we need to get the netid if you are already logged in
+    user = models.Rideshare_user.query.filter_by(netid=net).first()
+    ridesListed = models.Ride.query.filter_by(driver_netid=net)
+    ridesReserved = models.Reserve.query.filter_by(rider_netid=net)
+    return render_template('account.html', user=user, ridesListed=ridesListed, ridesReserved=ridesReserved)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug = True)
