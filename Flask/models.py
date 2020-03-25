@@ -35,9 +35,9 @@ class Reserve(db.Model):
     __tablename__= 'reserve'
     #commented portions are wrong
     #id = odm.CompositeIdField('ride_no', 'rider_netid')
-    ride_no = db.Column('ride_no', db.Integer())
-    rider_netid = db.Column('rider_netid', db.String(7))
+    ride_no = db.Column('ride_no', db.Integer(), primary_key=True)
+    rider_netid = db.Column('rider_netid', db.String(7), primary_key= True)
     seats_needed = db.Column('seats_needed', db.Integer())
-    note = db.Column('note', db.String(500), primary_key= True) #create foreign keys
+    note = db.Column('note', db.String(500)) #create foreign keys
     #ride_no = db.Column('ride_no', db.Integer(), FOREIGN KEY(ride_no) REFERENCES Ride(ride_no))
     #rider_netid = db.Column('rider_netid', db.String(7), FOREIGN KEY(rider_netid) REFERENCES Rideshare_user(netid))

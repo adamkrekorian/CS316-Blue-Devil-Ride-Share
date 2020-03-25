@@ -16,7 +16,7 @@
                 <li>Phone number: {{user.phone_number}}</li>
                 <li>Affiliation: {{user.affiliation}}</li>
                 <li>School: {{user.school}}</li>
-                <li>Test: {{ridesListed.first().driver_netid}}</li>
+                <li>Test: {{ridesListed[0].ride_no}}</li> <!--variables passed in: user, ridesListed, ridesReserved. print list with rides[0] but how to loop? or print all-->
                 <li>Rides you are riding in: </li> <!--here we update the status of the ride- delayed, cancelled, ontime and how many riders and meeting spot/ drop off spot, comments, and driver-->
                 <li>Rides you have listed: </li> <!--Same as information above-->
                 <li>Ride history: </li><!--Just list driver, time, origin, destination-->
@@ -26,12 +26,9 @@
             
         </div>
         <div class="col-sm-2 sidenav">
-            <div class="well">
-          <button>Edit Password</button>
-            </div>
-            <div class="well">
-                <button>Edit Rides</button>
-            </div>
+            
+            <br><button>Edit Password</button></br>
+            <br><button>Edit Rides</button></br>
         </div>
     </div>
 </div>

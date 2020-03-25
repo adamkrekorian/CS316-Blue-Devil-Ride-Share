@@ -77,7 +77,7 @@ class RegisterFormFactory(FlaskForm):
     phone_number = IntegerField("Phone Number:", validators = [InputRequired(message='You must enter a valid phone number')])
     password = PasswordField("Password:", validators = [InputRequired(message='You must enter a password'), Length(min=5, max=256, message='Your password must be between 5 to 256 characters')])
     affiliation_sel = SelectField("Affiliation:", validators = [InputRequired(message='You must select your affiliation')], choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
-    school = SelectField("School:", validators = [InputRequired(message='You must enter your school')], choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity'), ('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicolas', 'Nicolas'), ('Nursing', 'Nursing'), ('Other', 'Other')])
+    school = SelectField("School:", validators = [InputRequired(message='You must enter your school')], choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity'), ('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')])
     submit = SubmitField("Submit")      
 
 class RegisterDriverFormFactory(FlaskForm):
@@ -104,6 +104,6 @@ class ListRideFormFactory(FlaskForm):
     earliest_departure = TimeField("Earliest Time of Departure:", validators=[InputRequired(message='Please enter the earliest time of departure')], format='%H:%M')
     latest_departure = TimeField("Latest Time of Departure:", validators=[InputRequired(message='Please enter the latest time of departure'), GreaterThan('earliest_departure')], format='%H:%M')
     seats_available = IntegerField("Number of Seats Available:", validators = [InputRequired(message='You must enter the number of seats available')])
-    gas_price = DecimalField("Gas Price per Person:", places=2, rounding=None, validators=[Optional()])
+    gas_price = DecimalField("Gas Price:", places=2, rounding=None, validators=[Optional()])
     comments = StringField("Comments:")
     submit = SubmitField("Submit")

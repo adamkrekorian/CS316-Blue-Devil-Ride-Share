@@ -2,7 +2,7 @@ INSERT INTO rideshare_user VALUES ('cas175', 'Calleigh Smith', 'cas175@duke.edu'
 INSERT INTO rideshare_user VALUES ('mjb128', 'Meredith Brown', 'mjb128@duke.edu', 2025550149, 'Undergraduate', 'Trinity', '525613abc');
 INSERT INTO rideshare_user VALUES ('gal16', 'Grace Llewellyn', 'gal16@duke.edu', 2025550169, 'Undergraduate', 'Pratt', 'marley73');
 INSERT INTO rideshare_user VALUES ('agk19', 'Adam Krekorian', 'agk19@duke.edu', 2025550116, 'Undergraduate', 'Pratt', 'blue98');
-INSERT INTO rideshare_user VALUES ('ijs5', 'Isabel Shiff', 'ijs5@duke.edu', 2025550143, 'Graduate', 'Nicolas', 'cars313');
+INSERT INTO rideshare_user VALUES ('ijs5', 'Isabel Shiff', 'ijs5@duke.edu', 2025550143, 'Graduate', 'Nicholas', 'cars313');
 INSERT INTO rideshare_user VALUES ('cab186', 'Catherine Bailey', 'cab186@duke.edu', 2025550185, 'Undergraduate', 'Pratt', 'giants78');
 INSERT INTO rideshare_user VALUES ('abc123', 'Alice Curly', 'abc123@duke.edu', 2025550130, 'Graduate', 'Law', 'd0g123');
 INSERT INTO rideshare_user VALUES ('mem20', 'Matt Mendoza', 'mem20@duke.edu', 9177250830, 'Undergraduate', 'Trinity', 'devils99');
@@ -11,14 +11,24 @@ INSERT INTO rideshare_user VALUES ('sfs60', 'Sarah Smith', 'sfs60@duke.edu', 646
 INSERT INTO rideshare_user VALUES ('yjk10', 'Yang Kit', 'yjk10@duke.edu', 7263827192, 'Undergraduate', 'Pratt', 'ijklmnop');
 INSERT INTO rideshare_user VALUES ('lmn66', 'Leo Nango', 'lmn66@duke.edu', 7280272392, 'Graduate', 'Nursing', 'qrstuv123');
 INSERT INTO rideshare_user VALUES ('hjj7', 'Hallie Juno', 'hjj7@duke.edu', 9178293721, 'Undergraduate', 'Trinity', 'wxyz990');
-INSERT INTO rideshare_user VALUES ('ams27', 'Alex Sanso', 'ams27@duke.edu', 6319282211, 'Graduate', 'Nicolas', 'hamlet63');
+INSERT INTO rideshare_user VALUES ('ams27', 'Alex Sanso', 'ams27@duke.edu', 6319282211, 'Graduate', 'Nicholas', 'hamlet63');
 INSERT INTO rideshare_user VALUES ('tkp9', 'Thomas Pack', 'tkp9@duke.edu', 7827349921, 'Undergraduate', 'Trinity', 'daisy94');
+INSERT INTO rideshare_user VALUES ('aaa12', 'Angela', 'aaa12@duke.edu', 1111111111, 'Graduate', 'Nicholas', 'passworda');
+INSERT INTO rideshare_user VALUES ('bbb12', 'Becky', 'bbb12@duke.edu', 1111111112, 'Graduate', 'Law', 'passwordb');
+INSERT INTO rideshare_user VALUES ('ccc12', 'Cassie', 'ccc12@duke.edu', 1111111113, 'Graduate', 'Fuqua', 'passwordc');
+INSERT INTO rideshare_user VALUES ('ddd12', 'Danny', 'ddd12@duke.edu', 1111111114, 'Graduate', 'Nursing', 'passwordd');
+INSERT INTO rideshare_user VALUES ('eee12', 'Early', 'eee12@duke.edu', 1111111115, 'Undergraduate', 'Pratt', 'passworde');
 
 INSERT INTO Driver VALUES ('cas175', 123456789, 'ABC1234', 'NY');
 INSERT INTO Driver VALUES ('mjb128', 102936789, 'ABC0000', 'NC');
 INSERT INTO Driver VALUES ('gal16', 492749678, '7TYP290', 'CA');
 INSERT INTO Driver VALUES ('agk19', 834839984, 'N33FNX', 'NJ');
 INSERT INTO Driver VALUES ('ijs5', 883476354, 'IJS1008', 'NY');
+INSERT INTO Driver VALUES ('bbb12', 111111112, 'ABC4001', 'MO');
+INSERT INTO Driver VALUES ('ccc12', 111111113, 'ABC4002', 'NC');
+INSERT INTO Driver VALUES ('ddd12', 111111114, 'ABC4003', 'SC');
+INSERT INTO Driver VALUES ('eee12', 111111115, 'ABC4004', 'TX');
+
 
 INSERT INTO Ride VALUES (DEFAULT, 'San Francisco, CA', 'Durham, NC', 'ijs5', '2020-01-02', '00:00:00', '23:59:59', 1, 200, 'join me on a road trip!');
 INSERT INTO Ride VALUES (DEFAULT, 'New York, NY', 'Durham, NC', 'mjb128', '2020-01-02', '00:01:00', '23:59:00', 2, 50, 'going to 360 East 88th Street');
@@ -50,6 +60,19 @@ INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Washington, DC', 'cas175', '202
 INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Detroit, MI', 'ijs5', '2020-09-05', '21:00:00', '21:45:00', 1, 100, 'I can drop off at the Motown Museum');
 INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Boston, MA', 'cas175', '2020-05-30', '00:00:00', '23:59:00', 2, 175, NULL);
 INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Nashville, TN', 'mjb128', '2020-11-04', '00:00:00', '12:00:00', 2, 60, 'Searching for good music');
+INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Aspen, CO', 'cas175', '2020-06-06', '14:00:00', '20:00:00', 3, 20, 'test');
+INSERT INTO Ride VALUES (DEFAULT, 'Aspen, CO', 'Durham, NC', 'gal16', '2020-06-07', '14:00:00', '21:00:00', 4, 10, NULL);
+INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'New York, NY', 'gal16', '2020-06-08', '2:00:00', '3:00:00', 3, 5, 'Big Apple);
+INSERT INTO Ride VALUES (DEFAULT, 'New York, NY', 'Durham, NC', 'gal16', '2020-06-25', '1:00:00', '21:00:00', 1, 7, 'Lots of tolls');
+INSERT INTO Ride VALUES (DEFAULT, 'Asheville, NC', 'Aspen, CO', 'gal16', '2020-06-09', '2:00:00', '20:00:00', 3, 30, NULL);
+INSERT INTO Ride VALUES (DEFAULT, 'High Point, NC', 'Fresno, CA', 'gal16', '2020-06-11', '3:00:00', '21:00:00', 4, 20, 'Fav place?');
+INSERT INTO Ride VALUES (DEFAULT, 'Baltimore, MD', 'Boca Grande, FL', 'gal16', '2020-06-13', '4:00:00', '20:00:00', 3, 30, NULL);
+INSERT INTO Ride VALUES (DEFAULT, 'Altanta, GA', 'Austin, TX', 'gal16', '2020-06-16', '5:00:00', '21:00:00', 4, 40, 'I like the sun');
+INSERT INTO Ride VALUES (DEFAULT, 'Arlington, TX', 'Austin, TX', 'gal16', '2020-06-17', '6:00:00', '20:00:00', 3, 45, NULL);
+INSERT INTO Ride VALUES (DEFAULT, 'Kansas City, MO', 'Los Angeles, CA', 'gal16', '2020-06-20', '7:00:00', '21:00:00', 4, 65, 'comment2');
+INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Louisville, KY', 'gal16', '2020-06-22', '8:00:00', '20:00:00', 2, 30, '2 dogs');
+INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Myrtle Beach, SC', 'gal16', '2020-06-24', '9:00:00', '21:00:00', 1, 23, 'comment');
+INSERT INTO Ride VALUES (DEFAULT, 'Myrtle Beach, SC', 'Durham, NC', 'gal16', '2020-06-30', '10:00:00', '20:00:00', 4, 30, 'beach week');
 
 INSERT INTO Reserve VALUES ('mem20', 26, 1, 'cannot wait');
 INSERT INTO Reserve VALUES ('mjb128', 28, 1, NULL);
