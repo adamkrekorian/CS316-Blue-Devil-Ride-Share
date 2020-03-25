@@ -44,8 +44,8 @@
           <li><a href="{{url_for('list_rides')}}"> List Rides </a></li>
           <li><a href="{{url_for('sign_up')}}"> Sign Up </a></li>-->
           {% if session['logged_in'] %}
-            <li><a href="{{url_for('log_out')}}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
             <li><a href="{{url_for('account')}}"> Account </a></li>
+            <li><a href="{{url_for('log_out')}}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
           {% else %}
             <li><a href="{{url_for('log_in')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
           {% endif %}
@@ -60,7 +60,7 @@
         <img src="static/img/carpool.jpg" height= "100%" width= "100%" alt = "Carpool"></img>
       </div>
       <div class="col-sm-8 text-left"> 
-        <h1>Welcome to Duke Rideshare!</h1>
+        <h1>Welcome to Blue Devil Rideshare!</h1>
         <p>Our mission at Blue Devil Rideshare is to explore outside of the Duke bubble. Sometimes you might need to go off campus, whether you're going home for break or looking for a fun adventure closeby, and we have got you covered. We aim to make it easy for Duke students to coordinate rides. If you're a driver, you can easily post your planned rides. If you're a rider, you can search for rides based on origin, destination, date, and gas price. We believe that our ridesharing service allows Duke students to make new friends, travel to some new or familiar places, and save the environment by cutting carbon emissions in the process. Sign up for Blue Devil Rideshare today to start exploring!</p>
         <hr>
       </div>
