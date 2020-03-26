@@ -1,4 +1,5 @@
 {% extends 'home.html' %}
+<link rel="stylesheet" type = "text/css" href = "/static/css/style.css">
 
 {% block content %}
 <div class="container-fluid text-center">    
@@ -19,15 +20,45 @@
                 <br>
                 {{ form.date.label }}
                 {{ form.date (placeholder='MM-DD-YYYY') }}
-                {{ form.earliest_departure.label }}
-                {{ form.earliest_departure }}
-                {{ form.latest_departure.label }}
-                {{ form.latest_departure }}
                 {{ form.spots_needed.label }}
                 {{ form.spots_needed }}
                 <br>
                 {{ form.submit }}
             </form>
+            <hr>
+            <hr>
+            {% if results %}
+            <div>
+                <h3> Results: </h3>
+                <p> Here they are {{results}} </p>
+                <table style="border-collapse: collapse; width: 100%">
+                    <tr style="border: 1px solid black;">
+                        <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
+                        <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
+                        <th style="width: 12%; border: 1px solid black; text-align: center"> Date </th>
+                        <th style="width: 20; border: 1px solid black; text-align: center"> Earliest Departure </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Departure </th>
+                        <th style="width: 8%; border: 1px solid black; text-align: center"> Spots </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
+                    </tr>
+                    {% for item in results %}
+                    <tr>
+                        <td style="border: 1px solid black; padding: 3px"> {{ item.origin }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ item.destination }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ item.date }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ item.earliest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ item.latest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ item.seats_available }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ item.comments }} </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            {% else %}
+            <div>
+                <h3> No rides found </h3>
+            </div>
+            {% endif %}
         </div>
         <div class="col-sm-2 sidenav">
             <!-- empty right sidebar-->
