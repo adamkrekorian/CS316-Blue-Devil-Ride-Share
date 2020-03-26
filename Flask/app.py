@@ -47,7 +47,7 @@ def find_rides():
                 results = db.session.query(models.Ride) \
                     .filter(models.Ride.origin == origin_city) \
                     .filter(models.Ride.date == date) \
-                    .filter(models.Ride.seats_available <= spots_needed).all()
+                    .filter(models.Ride.seats_available >= spots_needed).all()
 
             else:
                 print("not search all")
@@ -55,8 +55,9 @@ def find_rides():
                     .filter(models.Ride.origin == origin_city) \
                     .filter(models.Ride.destination == destination) \
                     .filter(models.Ride.date == date) \
-                    .filter(models.Ride.seats_available <= spots_needed).all()
+                    .filter(models.Ride.seats_available >= spots_needed).all()
             results = [x.__dict__ for x in results]
+            print("here are results: ", results)
             return render_template('find-rides.html', form=form, results = results)
 
     return render_template('find-rides.html', form=form)
