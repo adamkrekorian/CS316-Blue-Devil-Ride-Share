@@ -13,11 +13,18 @@ INSERT INTO rideshare_user VALUES ('lmn66', 'Leo Nango', 'lmn66@duke.edu', 72802
 INSERT INTO rideshare_user VALUES ('hjj7', 'Hallie Juno', 'hjj7@duke.edu', 9178293721, 'Undergraduate', 'Trinity', 'wxyz990');
 INSERT INTO rideshare_user VALUES ('ams27', 'Alex Sanso', 'ams27@duke.edu', 6319282211, 'Graduate', 'Nicholas', 'hamlet63');
 INSERT INTO rideshare_user VALUES ('tkp9', 'Thomas Pack', 'tkp9@duke.edu', 7827349921, 'Undergraduate', 'Trinity', 'daisy94');
-INSERT INTO rideshare_user VALUES ('aaa12', 'Angela', 'aaa12@duke.edu', 1111111111, 'Graduate', 'Nicholas', 'passworda');
+INSERT INTO rideshare_user VALUES ('aaa12', 'Angela', 'aaa12@duke.edu', 1111111111, 'Graduate', 'Nicholas', 'password1');
 INSERT INTO rideshare_user VALUES ('bbb12', 'Becky', 'bbb12@duke.edu', 1111111112, 'Graduate', 'Law', 'passwordb');
 INSERT INTO rideshare_user VALUES ('ccc12', 'Cassie', 'ccc12@duke.edu', 1111111113, 'Graduate', 'Fuqua', 'passwordc');
 INSERT INTO rideshare_user VALUES ('ddd12', 'Danny', 'ddd12@duke.edu', 1111111114, 'Graduate', 'Nursing', 'passwordd');
 INSERT INTO rideshare_user VALUES ('eee12', 'Early', 'eee12@duke.edu', 1111111115, 'Undergraduate', 'Pratt', 'passworde');
+INSERT INTO rideshare_user VALUES ('srj99', 'Scarlett Jones', 'srj99@duke.edu', 1111111116, 'Undergraduate', 'Pratt', 'scarlett99');
+INSERT INTO rideshare_user VALUES ('mah129', 'Margot Heffernan', 'mah129@duke.edu', 7362837233, 'Graduate', 'Law', 'iloveduke');
+INSERT INTO rideshare_user VALUES ('mlr87', 'Maggie Rogers', 'mlr87@duke.edu', 7362837233, 'Undergraduate', 'Trinity', 'dukerocks!');
+INSERT INTO rideshare_user VALUES ('hil568', 'Harper Lee', 'hil568@duke.edu', 7382342233, 'Undergraduate', 'Trinity', 'bestbluedevil1');
+INSERT INTO rideshare_user VALUES ('jtd746', 'Jane Doe', 'jtd746@duke.edu', 647238472, 'Undergraduate', 'Trinity', 'gthc123');
+
+
 
 INSERT INTO Driver VALUES ('cas175', 123456789, 'ABC1234', 'NY');
 INSERT INTO Driver VALUES ('mjb128', 102936789, 'ABC0000', 'NC');
@@ -28,7 +35,10 @@ INSERT INTO Driver VALUES ('bbb12', 111111112, 'ABC4001', 'MO');
 INSERT INTO Driver VALUES ('ccc12', 111111113, 'ABC4002', 'NC');
 INSERT INTO Driver VALUES ('ddd12', 111111114, 'ABC4003', 'SC');
 INSERT INTO Driver VALUES ('eee12', 111111115, 'ABC4004', 'TX');
-
+INSERT INTO Driver VALUES ('mah128', 987654321, 'IGF8273', 'NC');
+INSERT INTO Driver VALUES ('mlr87', 111111116, 'ABC4005', 'IL');
+INSERT INTO Driver VALUES ('srj99', 111111117, 'ABC4006', 'NJ');
+INSERT INTO Driver VALUES ('jtd746', 111111118, 'ABC4007', 'FL');
 
 INSERT INTO Ride VALUES (DEFAULT, 'San Francisco, CA', 'Durham, NC', 'ijs5', '2020-01-02', '00:00:00', '23:59:59', 1, 200, 'join me on a road trip!');
 INSERT INTO Ride VALUES (DEFAULT, 'New York, NY', 'Durham, NC', 'mjb128', '2020-01-02', '00:01:00', '23:59:00', 2, 50, 'going to 360 East 88th Street');
@@ -73,6 +83,14 @@ INSERT INTO Ride VALUES (DEFAULT, 'Kansas City, MO', 'Los Angeles, CA', 'gal16',
 INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Louisville, KY', 'gal16', '2020-06-22', '8:00:00', '20:00:00', 2, 30, '2 dogs');
 INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Myrtle Beach, SC', 'gal16', '2020-06-24', '9:00:00', '21:00:00', 1, 23, 'comment');
 INSERT INTO Ride VALUES (DEFAULT, 'Myrtle Beach, SC', 'Durham, NC', 'gal16', '2020-06-30', '10:00:00', '20:00:00', 4, 30, 'beach week');
+INSERT INTO Ride VALUES (DEFAULT, 'Miami, FL', 'Durham, NC', 'mah129', '2020-08-27', '15:30:00', '20:00:00', 4, 80, 'coming back for Duke Engage');
+INSERT INTO Ride VALUES (DEFAULT, 'Washington, DC', 'Durham, NC', 'mlr87', '2020-08-20', '08:15:00', '09:45:00', 1, 20.50, 'away formal');
+INSERT INTO Ride VALUES (DEFAULT, 'Asheville, NC', 'Durham, NC', 'srj99', '2020-08-30', '20:30:00', '23:59:00', 2, 60, 'going home');
+INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Miami, FL', 'mah129', '2020-11-26', '09:45:00', '22:40:00', 5, 80, NULL);
+INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Washington, DC', 'mlr87', '2020-08-30', '00:00:00', '23:59:00', 2, 60, 'no space for extra luggage');
+                        
+
+
 
 INSERT INTO Reserve VALUES ('mem20', 26, 1, 'cannot wait');
 INSERT INTO Reserve VALUES ('mjb128', 28, 1, NULL);
