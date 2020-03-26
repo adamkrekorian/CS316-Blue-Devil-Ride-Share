@@ -96,21 +96,21 @@ CREATE TRIGGER TG_No_time_given
   EXECUTE PROCEDURE TF_No_time_given();
 
 ------
+-- commented out because this should happen in app.py
+-- CREATE FUNCTION TF_Seats_left() RETURNS TRIGGER AS $$
+-- BEGIN
+--   UPDATE Ride
+--   SET seats_available = ((SELECT seats_available FROM Ride
+--     WHERE NEW.ride_no = ride_no) - NEW.seats_needed)
+--   WHERE Ride.ride_no = NEW.ride_no;
+--   RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
-CREATE FUNCTION TF_Seats_left() RETURNS TRIGGER AS $$
-BEGIN
-  UPDATE Ride
-  SET seats_available = ((SELECT seats_available FROM Ride
-    WHERE NEW.ride_no = ride_no) - NEW.seats_needed)
-  WHERE Ride.ride_no = NEW.ride_no;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER TG_Seats_left
-  AFTER INSERT OR UPDATE ON Reserve
-  FOR EACH ROW
-  EXECUTE PROCEDURE TF_Seats_left();
+-- CREATE TRIGGER TG_Seats_left
+--   AFTER INSERT OR UPDATE ON Reserve
+--   FOR EACH ROW
+--   EXECUTE PROCEDURE TF_Seats_left();
 
 ------
 

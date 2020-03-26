@@ -72,7 +72,7 @@ INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Boston, MA', 'cas175', '2020-05
 INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Nashville, TN', 'mjb128', '2020-11-04', '00:00:00', '12:00:00', 2, 60, 'Searching for good music');
 INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Aspen, CO', 'cas175', '2020-06-06', '14:00:00', '20:00:00', 3, 20, 'test');
 INSERT INTO Ride VALUES (DEFAULT, 'Aspen, CO', 'Durham, NC', 'gal16', '2020-06-07', '14:00:00', '21:00:00', 4, 10, NULL);
-INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'New York, NY', 'gal16', '2020-06-08', '2:00:00', '3:00:00', 3, 5, 'Big Apple);
+INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'New York, NY', 'gal16', '2020-06-08', '2:00:00', '3:00:00', 3, 5, 'Big Apple');
 INSERT INTO Ride VALUES (DEFAULT, 'New York, NY', 'Durham, NC', 'gal16', '2020-06-25', '1:00:00', '21:00:00', 1, 7, 'Lots of tolls');
 INSERT INTO Ride VALUES (DEFAULT, 'Asheville, NC', 'Aspen, CO', 'gal16', '2020-06-09', '2:00:00', '20:00:00', 3, 30, NULL);
 INSERT INTO Ride VALUES (DEFAULT, 'High Point, NC', 'Fresno, CA', 'gal16', '2020-06-11', '3:00:00', '21:00:00', 4, 20, 'Fav place?');
@@ -97,7 +97,7 @@ INSERT INTO Reserve VALUES ('mjb128', 28, 1, NULL);
 INSERT INTO Reserve VALUES ('gal16', 29, 1, NULL);
 INSERT INTO Reserve VALUES ('agk19', 30, 4, 'Do you have room for a dog?');
 INSERT INTO Reserve VALUES ('mem20', 44, 2, 'I am excited');
-INSERT INTO Reserve VALUES ('cab186', 38, 2, 'I can help drive');
+INSERT INTO Reserve VALUES ('cab186', 39, 2, 'I can help drive');
 INSERT INTO Reserve VALUES ('abc123', 21, 1, NULL);
 INSERT INTO Reserve VALUES ('mem20', 30, 1, 'Save room for me and my friend');
 INSERT INTO Reserve VALUES ('dlc7', 18, 1, 'WOO');
