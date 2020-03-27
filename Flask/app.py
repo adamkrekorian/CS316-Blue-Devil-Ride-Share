@@ -10,13 +10,15 @@ app = Flask(__name__)
 app.secret_key = 's3cr3t' #change this?
 app.config.from_object('config')
 db = SQLAlchemy(app, session_options={'autocommit': False})
-net = "NETID"
 
 import forms
 import models
 
 @app.route('/')
 def home_page():
+    print(session['netid'])
+    if 'driver' in session:
+        print(session['driver'])
     return render_template('home.html')# are going to have to set some values here equal to something like in beers- to return values?
 
 @app.route('/find-rides', methods=('GET', 'POST'))
@@ -65,9 +67,7 @@ def find_rides():
 @app.route('/list-rides', methods=['GET','POST'])
 def list_rides():
     form = forms.ListRideFormFactory()
-    global net
-    driver = models.Driver.query.filter_by(netid=net).first()
-    print(net)
+    driver = models.Driver.query.filter_by(netid=session['netid']).first()
     if 'logged_in' in session and not driver:
         if session['logged_in']:
             flash("You are signed in but not yet a driver. Redirecting you to driver registration.") #These flash messages aren't displaying on the site
@@ -104,7 +104,7 @@ def list_rides():
             comments = request.form['comments']
             if comments=='':
                 comments = None
-
+            session['driver'] = True
             newride = models.Ride(driver_netid=driver_netid, destination=destination, origin=origin_city, date=date, earliest_time=earliest_departure, latest_time=latest_departure, seats_available=seats_available, gas_price=gas_price, comments=comments)
             db.session.add(newride)
             db.session.commit()
@@ -115,9 +115,7 @@ def list_rides():
 @app.route('/sign-up', methods=['GET','POST'])
 def sign_up():
     form = forms.RegisterFormFactory()
-    global net
-    driver = models.Driver.query.filter_by(netid=net).first()
-    print(net)
+    driver = models.Driver.query.filter_by(netid=session['netid']).first()
     if 'logged_in' in session and not driver:
         if session['logged_in'] == True:
             flash("You are signed in but not yet a driver. Redirecting you to driver registration.") #These flash messages aren't displaying on the site
@@ -156,8 +154,7 @@ def sign_up():
 @app.route('/register-driver', methods=['GET','POST'])
 def register_driver():
     form = forms.RegisterDriverFormFactory()
-    global net
-    driver = models.Driver.query.filter_by(netid=net).first()
+    driver = models.Driver.query.filter_by(netid=session['netid']).first()
     if 'logged_in' in session and driver:
         if session['logged_in']:
             flash("You are already a driver. Redirecting you to list a ride.")
@@ -172,12 +169,12 @@ def register_driver():
 
     print(form.errors)
     if form.validate_on_submit():
-        netid = net
+        netid = session['netid']
         license_no = request.form['license_no']
         license_plate_no = request.form['license_plate_no']
         plate_state = request.form['plate_state']
-            
         register = models.Driver(netid=netid, license_no=license_no, license_plate_no=license_plate_no, plate_state=plate_state)
+        session['driver'] = True
         db.session.add(register)
         db.session.commit()
         return redirect(url_for('list_rides'))
@@ -195,27 +192,29 @@ def log_in():
             error = 'Invalid Credentials. Please try again.'
         else:
             session['logged_in'] = True
-            global net
-            net = netid
-            print(net)
+            session['netid'] = netid
+            driver = models.Driver.query.filter_by(netid=session['netid']).first()
+            if not driver:
+                session['driver'] = False
+            else:
+                session['driver'] = True
             return redirect(url_for('home_page'))
     return render_template('log-in.html', error=error)
 
 @app.route("/logout")
 def log_out():
     session['logged_in'] = False
-    global net
-    net = "NETID"
-    print(net)
+    session['netid'] = None
+    session['driver'] = False
     return home_page()
 
 @app.route('/account', methods=('GET', 'POST'))
 def account():
     #should have edit form in here
     #NOTE: this will give an error if you are already logged in and try to do this- somehow we need to get the netid if you are already logged in
-    user = models.Rideshare_user.query.filter_by(netid=net).first()
-    ridesListed = models.Ride.query.filter_by(driver_netid=net)
-    ridesReserved = models.Reserve.query.filter_by(rider_netid=net)
+    user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
+    ridesListed = models.Ride.query.filter_by(driver_netid=session['netid'])
+    ridesReserved = models.Reserve.query.filter_by(rider_netid=session['netid'])
     return render_template('account.html', user=user, ridesListed=ridesListed, ridesReserved=ridesReserved)
 
 if __name__ == "__main__":
