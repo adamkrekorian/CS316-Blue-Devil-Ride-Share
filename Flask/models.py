@@ -35,6 +35,8 @@ class Reserve(db.Model):
     __tablename__= 'reserve'
     #commented portions are wrong
     #id = odm.CompositeIdField('ride_no', 'rider_netid')
+    # ride_no and rider_netid need to be foreign keys from the other tables
+    # need a reserve id or something that increments to track reservations
     ride_no = db.Column('ride_no', db.Integer(), primary_key=True)
     rider_netid = db.Column('rider_netid', db.String(7), primary_key= True)
     seats_needed = db.Column('seats_needed', db.Integer())
