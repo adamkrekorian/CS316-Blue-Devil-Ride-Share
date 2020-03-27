@@ -33,10 +33,10 @@ def find_rides():
         return redirect(url_for('log_in'))     
 
     else:
+        print(form.validate_on_submit())
         print("errors: ", form.errors)
-
-        if form.is_submitted():
-            print("submitted")
+        if form.validate_on_submit():
+            print("validated")
             origin_city = request.form['origin_city']
             destination = request.form['destination']
             date = request.form['date']
