@@ -33,12 +33,14 @@
           <li><a href="{{url_for('home_page')}}"> Home </a></li>
           {% if session['logged_in'] %}
           <li><a href="{{url_for('find_rides')}}"> Find Rides </a></li>
-          <li><a href="{{url_for('list_rides')}}"> List Rides </a></li>
           <!--<li><a href="{{url_for('sign_up')}}"> Sign Up </a></li>-->
           {% else %}
           <!--<li><a href="{{url_for('find_rides')}}"> Find Rides </a></li>
           <li><a href="{{url_for('list_rides')}}"> List Rides </a></li>-->
           <li><a href="{{url_for('sign_up')}}"> Sign Up </a></li>
+          {% endif %}
+          {% if (session['logged_in'] and session['driver']) %}
+          <li><a href="{{url_for('list_rides')}}"> List Rides </a></li>
           {% endif %}
           {% if (session['logged_in'] and session['driver']==False) %}
           <li><a href="{{url_for('register_driver')}}"> Register as Driver </a></li>
