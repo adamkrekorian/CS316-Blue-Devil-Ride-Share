@@ -16,7 +16,6 @@ import models
 
 @app.route('/')
 def home_page():
-    print(session['netid'])
     if 'driver' in session:
         print(session['driver'])
     return render_template('home.html')# are going to have to set some values here equal to something like in beers- to return values?

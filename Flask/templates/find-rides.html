@@ -54,7 +54,8 @@
                     {% endfor %}
                 </table>
             </div>
-            {% else %}
+            {% endif %}
+            {% if results == [] %}
             <div>
                 <h3> No rides found </h3>
             </div>
