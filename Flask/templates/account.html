@@ -16,19 +16,93 @@
                 <li>Phone number: {{user.phone_number}}</li>
                 <li>Affiliation: {{user.affiliation}}</li>
                 <li>School: {{user.school}}</li>
-                <li>Test: {{ridesListed[0].ride_no}}</li> <!--variables passed in: user, ridesListed, ridesReserved. print list with rides[0] but how to loop? or print all-->
-                <li>Rides you are riding in: </li> <!--here we update the status of the ride- delayed, cancelled, ontime and how many riders and meeting spot/ drop off spot, comments, and driver-->
-                <li>Rides you have listed: </li> <!--Same as information above-->
-                <li>Ride history: </li><!--Just list driver, time, origin, destination-->
-                <!--buttons we want to have- edit password, edit rides -->
+                <div> {% if ridesListed %}
+                    <h4> Rides Posted: </h4>
+                    <table style="width: 85%">
+                        <tr style="border: 1px solid black;">
+                            <th style="width: 10%; border: 1px solid black; text-align: center"> Ride Number </th>
+                            <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
+                            <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
+                            <th style="width: 20%; border: 1px solid black; text-align: center"> Date </th>
+                            <th style="width: 20%; border: 1px solid black; text-align: center"> Earliest Time </th>
+                            <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Time </th>
+                            <th style="width: 4%; border: 1px solid black; text-align: center"> Seats Available </th>
+                            <th style="width: 4%; border: 1px solid black; text-align: center"> Gas Price </th>
+                            <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
+                        </tr>
+                        {% for ride in ridesListed %}
+                        <tr>
+                            <td style="border: 1px solid black; padding: 3px"> {{ ride.ride_no }} </td>
+                            <td style="border: 1px solid black; padding: 3px"> {{ ride.origin }} </td>
+                            <td style="border: 1px solid black; padding: 3px"> {{ ride.destination }} </td>
+                            <td style="border: 1px solid black; padding: 3px"> {{ ride.date}} </td>
+                            <td style="border: 1px solid black; padding: 3px"> {{ ride.earliest_time }} </td>
+                            <td style="border: 1px solid black; padding: 3px"> {{ ride.latest_time }} </td>
+                            <td style="border: 1px solid black; padding: 3px"> {{ ride.seats_available }} </td>
+                            <td style="border: 1px solid black; padding: 3px"> {{ ride.gas_price }} </td>
+                            <td style="border: 1px solid black; padding: 3px"> {{ ride.comments }} </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                {% endif %}
+                {% if ridesListed == [] %}
+                <div>
+                    <h3> No rides listed </h3>
+                </div>
+                {% endif %}
+            
+            <div> {% if ridesReserved %}
+                <h4> Rides Reserved: </h4>
+                <table style="width: 85%">
+                    <tr style="border: 1px solid black;">
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Ride Number </th>
+                        <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
+                        <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Date </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Earliest Time </th>
+                        <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Time </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Seats Available </th>
+                        <th style="width: 4%; border: 1px solid black; text-align: center"> Gas Price </th>
+                        <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
+                    </tr>
+                    {% for ride in ridesReserved %}
+                    <tr>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.ride_no }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.origin }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.destination }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.date}} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.earliest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.latest_time }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.seats_available }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.gas_price }} </td>
+                        <td style="border: 1px solid black; padding: 3px"> {{ ride.comments }} </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            {% endif %}
+            {% if ridesReserved == [] %}
+            <div>
+                <h3> No rides reserved </h3>
+            </div>
+            {% endif %}
+        
+                <!--variables passed in: user, ridesListed, ridesReserved.-->
+                <!--<li>Rides you are riding in: </li> here we update the status of the ride- delayed, cancelled, 
+                    ontime and how many riders and meeting spot/ drop off spot, comments, and driver
+                <li>Rides you have listed: </li> Same as information above
+                <li>Ride history: </li>Just list driver, time, origin, destination
+                buttons we want to have- edit password, edit rides -->
             </ul>
 
             
         </div>
         <div class="col-sm-2 sidenav">
-            
-            <br><button>Edit Password</button></br>
-            <br><button>Edit Rides</button></br>
+            <br> <a href="{{url_for('editPassword')}}"> Edit Password </a></br>
+            <br> <a href="{{url_for('editPassword')}}"> Edit Rides </a></br>
+            <!--<br><button onclick= "window.location.href = {{url_for('home_page')}}"> Edit Password</button></br>
+            <br><button>Edit Rides</button></br>-->
         </div>
     </div>
 </div>
