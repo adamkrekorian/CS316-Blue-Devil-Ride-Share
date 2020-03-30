@@ -6,9 +6,11 @@ Grace Llwellyn -
 
 Adam Krekorian -
 
-Isabel Shiff -
+Isabel Shiff - Isabel created and worked on the Find Rides page. Adam helped one time via Zoom with writing the wtform information on the HTML page. Independently, Isabel has gotten the find rides page to a place where users can search for a ride and if there are results it will show in a table on the page. This involved working in forms.py, app.py, models.py and find-rides.html. I will finish this page by allowing users to sign up for a ride after the milestone before the final presentation. I also helped add more data to the database. I have attended all group meetings. I have been able to attend one meeting with Danai where he helped with wtform validation and finding those errors. I was able to fix the list rides and find rides forms after this call.
 
 Calleigh Smith - Calleigh was responsible for creating the Sign-Up page for new users, the Sign-Up page for drivers, the Login page, and the List Rides page. All of these pages are functional and successfully connected to the database, and besides perhaps some aesthetic changes, they are complete. Additionally, Calleigh attended every private group meeting since MS1 and every group meeting with Danai Adkisson at the Technology Engagement Center in addition to additional meetings that she and Grace coordinated for additional questions. With Danai's help, she was able to deploy the website and fix bugs in various pages of the site. Additionally, she has assisted team members on their respective assignments for the milestone by helping with debugging and conceptual elements of Flask/PostgreSQL. She added more data to the PostgreSQL database for more efficient testing. She has continued her role as project manager since MS2 by delegating the workload and keeping track of the team's progress, and she feels like the group is doing an excellent job in terms of their progress.
+
+______________________________________________________________________________________
 
 MILESTONE 1:
 
