@@ -23,7 +23,11 @@ INSERT INTO rideshare_user VALUES ('mah129', 'Margot Heffernan', 'mah129@duke.ed
 INSERT INTO rideshare_user VALUES ('mlr87', 'Maggie Rogers', 'mlr87@duke.edu', 7362837233, 'Undergraduate', 'Trinity', 'dukerocks!');
 INSERT INTO rideshare_user VALUES ('hil568', 'Harper Lee', 'hil568@duke.edu', 7382342233, 'Undergraduate', 'Trinity', 'bestbluedevil1');
 INSERT INTO rideshare_user VALUES ('jtd746', 'Jane Doe', 'jtd746@duke.edu', 647238472, 'Undergraduate', 'Trinity', 'gthc123');
-
+INSERT INTO rideshare_user VALUES ('wtf911', 'Walter Frank', 'wtf911@duke.edu', 3014524333, 'Undergraduate', 'Pratt', 'carpool64');
+INSERT INTO rideshare_user VALUES ('dif4', 'Daisy Ferleger', 'dif4@duke.edu', 3014524332, 'Graduate', 'Law', 'cs101');
+INSERT INTO rideshare_user VALUES ('ls320', 'Luisa Stalman', 'ls320@duke.edu', 3014524331, 'Graduate', 'Law', 'lola41');
+INSERT INTO rideshare_user VALUES ('afk11', 'Audrey Kotick', 'afk11@duke.edu', 3015295233, 'Undergraduate', 'Pratt', 'bean99');
+INSERT INTO rideshare_user VALUES ('khs11', 'Katherine Shiff', 'khs11@duke.edu', 3019226136, 'Undergraduate', 'Trinity', 'soccer9');
 
 
 INSERT INTO Driver VALUES ('cas175', 123456789, 'ABC1234', 'NY');
@@ -39,6 +43,8 @@ INSERT INTO Driver VALUES ('mah128', 987654321, 'IGF8273', 'NC');
 INSERT INTO Driver VALUES ('mlr87', 111111116, 'ABC4005', 'IL');
 INSERT INTO Driver VALUES ('srj99', 111111117, 'ABC4006', 'NJ');
 INSERT INTO Driver VALUES ('jtd746', 111111118, 'ABC4007', 'FL');
+INSERT INTO Driver VALUES ('ls320', 987654321, 'LOLA41', 'MA');
+INSERT INTO Driver VALUES ('afk11', 666666666, '666', 'CA');
 
 INSERT INTO Ride VALUES (DEFAULT, 'San Francisco, CA', 'Durham, NC', 'ijs5', '2020-01-02', '00:00:00', '23:59:59', 1, 200, 'join me on a road trip!');
 INSERT INTO Ride VALUES (DEFAULT, 'New York, NY', 'Durham, NC', 'mjb128', '2020-01-02', '00:01:00', '23:59:00', 2, 50, 'going to 360 East 88th Street');
@@ -88,7 +94,11 @@ INSERT INTO Ride VALUES (DEFAULT, 'Washington, DC', 'Durham, NC', 'mlr87', '2020
 INSERT INTO Ride VALUES (DEFAULT, 'Asheville, NC', 'Durham, NC', 'srj99', '2020-08-30', '20:30:00', '23:59:00', 2, 60, 'going home');
 INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Miami, FL', 'mah129', '2020-11-26', '09:45:00', '22:40:00', 5, 80, NULL);
 INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Washington, DC', 'mlr87', '2020-08-30', '00:00:00', '23:59:00', 2, 60, 'no space for extra luggage');
-                        
+INSERT INTO Ride VALUES (DEFAULT, 'New York, NY', 'Miami, FL', 'ls320', '2020-04-20', '08:00:00', '12:00:00', 3, 20, NULL);
+INSERT INTO Ride VALUES (DEFAULT, 'Miami, FL', 'Washington, DC', 'ls320', '2020-05-08', '09:00:00', '12:00:00', 3, 20, NULL);
+INSERT INTO Ride VALUES (DEFAULT, 'Los Angeles, CA', 'San Francisco, CA', 'afk11', '2020-04-20', '10:00:00', '12:00:00', 3, 20, NULL);
+INSERT INTO Ride VALUES (DEFAULT, 'Baltimore, MD', 'Durham, NC', 'afk11', '2021-05-08', '11:00:00', '12:00:00', 3, 20, NULL);
+INSERT INTO Ride VALUES (DEFAULT, 'Durham, NC', 'Asheville, NC', 'afk11', '2021-04-22', '09:00:00', '12:00:00', 3, 20, NULL);
 
 
 
