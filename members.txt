@@ -1,3 +1,17 @@
+MILESTONE 2:
+
+Meredith Brown -
+
+Grace Llwellyn -
+
+Adam Krekorian -
+
+Isabel Shiff -
+
+Calleigh Smith - Calleigh was responsible for creating the Sign-Up page for new users, the Sign-Up page for drivers, the Login page, and the List Rides page. All of these pages are functional and successfully connected to the database, and besides perhaps some aesthetic changes, they are complete. Additionally, Calleigh attended every private group meeting since MS1 and every group meeting with Danai Adkisson at the Technology Engagement Center in addition to additional meetings that she and Grace coordinated for additional questions. With Danai's help, she was able to deploy the website and fix bugs in various pages of the site. Additionally, she has assisted team members on their respective assignments for the milestone by helping with debugging and conceptual elements of Flask/PostgreSQL. She added more data to the PostgreSQL database for more efficient testing. She has continued her role as project manager since MS2 by delegating the workload and keeping track of the team's progress, and she feels like the group is doing an excellent job in terms of their progress.
+
+MILESTONE 1:
+
 Meredith Brown - Meredith met with the team to discuss ideas for the project as well as initial assignment of roles. She met with Grace Llewellyn and wrote the initial version of the “create.sql” file, which she later went back through and fixed syntax errors upon its completion. Using the “readme.txt” created by Calleigh Smith, she entered the team’s virtual machine and created the tables for the database, as well as beginning to upload functions and triggers before passing the task off to Isabel Shiff. Likewise, she met with Adam Krekorian to test the SQL queries written for Task 5, as well as produced the “test-sample.out”.
 
 Grace Llewellyn- Grace met with the team to discussion project ideas. Grace also met with the group twice to work on creating the tables and triggers. Grace went to office hours with questions and went to the appointment with Calleigh to learn how to create the Database. Grace has helped answer questions other group members have in the group chat and coordinated with Calleigh delegating responsibilities. Grace also created the relational schema for the project and started looking for syntax errors in the create table file. Grace also looked over the final MS1 to check for any changes that should be made. 
