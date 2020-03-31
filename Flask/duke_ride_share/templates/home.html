@@ -30,30 +30,25 @@
           <li><a href="#">Contact</a></li>
         </ul> -->
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="{{url_for('home_page')}}"> Home </a></li>
+          <li><a href="{{url_for('rides.home_page')}}"> Home </a></li>
           {% if session['logged_in'] %}
-          <li><a href="{{url_for('find_rides')}}"> Find Rides </a></li>
-          <!--<li><a href="{{url_for('sign_up')}}"> Sign Up </a></li>-->
+          <li><a href="{{url_for('rides.find_rides')}}"> Find Rides </a></li>
           {% else %}
-          <!--<li><a href="{{url_for('find_rides')}}"> Find Rides </a></li>
-          <li><a href="{{url_for('list_rides')}}"> List Rides </a></li>-->
-          <li><a href="{{url_for('sign_up')}}"> Sign Up </a></li>
+          <li><a href="{{url_for('rides.sign_up')}}"> Sign Up </a></li>
           {% endif %}
           {% if (session['logged_in'] and session['driver']) %}
-          <li><a href="{{url_for('list_rides')}}"> List Rides </a></li>
+          <li><a href="{{url_for('rides.list_rides')}}"> List Rides </a></li>
           {% endif %}
           {% if (session['logged_in'] and session['driver']==False) %}
-          <li><a href="{{url_for('register_driver')}}"> Register as Driver </a></li>
+          <li><a href="{{url_for('rides.register_driver')}}"> Register as Driver </a></li>
           {% endif %}
-          <!--<li><a href="{{url_for('find_rides')}}"> Find Rides </a></li>
-          <li><a href="{{url_for('list_rides')}}"> List Rides </a></li>
-          <li><a href="{{url_for('sign_up')}}"> Sign Up </a></li>-->
           {% if session['logged_in'] %}
-            <li><a href="{{url_for('account')}}"> Account </a></li>
-            <li><a href="{{url_for('log_out')}}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+          <li><a href="{{url_for('rides.account')}}"> Account </a></li>
+          <li><a href="{{url_for('rides.log_out')}}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
           {% else %}
-            <li><a href="{{url_for('log_in')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          <li><a href="{{url_for('rides.log_in')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
           {% endif %}
+          
         </ul>
       </div>
     </div>
@@ -62,7 +57,7 @@
   <div class="container-fluid text-center">    
     <div class="row content">
       <div class="col-sm-2 sidenav">
-        <img src="static/img/carpool.jpg" height= "100%" width= "100%" alt = "Carpool"></img>
+        <img src="../static/img/carpool.jpg" height= "100%" width= "100%" alt = "Carpool"></img>
       </div>
       <div class="col-sm-8 text-left"> 
         <h1>Welcome to Blue Devil Rideshare!</h1>
@@ -70,7 +65,7 @@
         <hr>
       </div>
       <div class="col-sm-2 sidenav">
-          <img src="static/img/chapel.jpg" height = "100%" width= "100%" alt = "Duke University Chapel"> </img>
+          <img src="../static/img/chapel.jpg" height = "100%" width= "100%" alt = "Duke University Chapel"> </img>
       </div>
     </div>
   </div>
