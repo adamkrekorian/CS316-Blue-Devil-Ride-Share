@@ -135,20 +135,20 @@ def sign_up():
     #         #print("valid")
 
     #     #print(form.errors)
-        if form.validate_on_submit():
-            netid = request.form['netid']
-            name = request.form['name']
-            duke_email = request.form['duke_email']
-            phone_number = request.form['phone_number']
-            password = request.form['password']
-            affiliation = request.form['affiliation_sel']
-            school = request.form['school']
+    if form.validate_on_submit():
+        netid = request.form['netid']
+        name = request.form['name']
+        duke_email = request.form['duke_email']
+        phone_number = request.form['phone_number']
+        password = request.form['password']
+        affiliation = request.form['affiliation_sel']
+        school = request.form['school']
 
-            register = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, password=password, affiliation=affiliation, school=school)
-            db.session.add(register)
-            db.session.commit()
+        register = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, password=password, affiliation=affiliation, school=school)
+        db.session.add(register)
+        db.session.commit()
 
-            return redirect(url_for('log_in'))
+        return redirect(url_for('log_in'))
         #return render_template('sign-up.html', form=form)
     return render_template('sign-up.html', form=form)
 
