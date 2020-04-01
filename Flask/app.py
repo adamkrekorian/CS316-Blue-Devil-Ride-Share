@@ -150,7 +150,7 @@ def sign_up():
 
             return redirect(url_for('log_in'))
         return render_template('sign-up.html', form=form)
-    return render_template('sign_up.html', form=form)
+    return render_template('sign-up.html', form=form)
 
 @app.route('/register-driver', methods=['GET','POST'])
 def register_driver():
