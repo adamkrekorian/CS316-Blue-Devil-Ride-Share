@@ -1,6 +1,6 @@
 MILESTONE 2:
 
-Meredith Brown -
+Meredith Brown - Meredith helped Grace with the Accounts page to connect it to the home page and get it initially running. Additionally, she attended two meetings with Danai Adkisson, one in person and one via Zoom, to contribute to the group’s progress towards completion of MS2. After experiencing technical issues, she further emailed with Danai to get all of the group’s code running on her computer. Likewise, she attended all private group meetings to discuss progress on the project. Meredith also added additional data to the database for better testing results. Once the code for MS2 was completed, Meredith wrote a script with Adam for the 5 minute video of the website, which she then filmed and narrated. Likewise, Meredith updated the test-sample.sql statements to more accurately reflect the data in the database, and she ran these statements over the database to produce the test-sample.out file. 
 
 Grace Llwellyn -
 
