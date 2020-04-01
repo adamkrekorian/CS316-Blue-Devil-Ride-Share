@@ -4,7 +4,7 @@ Meredith Brown -
 
 Grace Llwellyn -
 
-Adam Krekorian -
+Adam Krekorian - Adam worked on the Find Rides page. Adam had issues running the website on his personal computer, so he helped Isabel work on the find-rides page via zoom, specifically the wtform information on the HTML page. Adam met with Danai to resolve his environment issues. This involved working in forms.py, app.py and find-rides.html. Adam also wrote up the progress report for milestone 2 and wrote the script for the website voiceover. Adam will continue to insert data into the database. Adam attended every group meeting including the meeting with Danai, and helped troubleshoot issues when other group members needed assistance.
 
 Isabel Shiff - Isabel created and worked on the Find Rides page. Adam helped one time via Zoom with writing the wtform information on the HTML page. Independently, Isabel has gotten the find rides page to a place where users can search for a ride and if there are results it will show in a table on the page. This involved working in forms.py, app.py, models.py and find-rides.html. I will finish this page by allowing users to sign up for a ride after the milestone before the final presentation. I also helped add more data to the database. I have attended all group meetings. I have been able to attend one meeting with Danai where he helped with wtform validation and finding those errors. I was able to fix the list rides and find rides forms after this call.
 
