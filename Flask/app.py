@@ -114,27 +114,27 @@ def list_rides():
 @app.route('/sign-up', methods=['GET','POST'])
 def sign_up():
     form = forms.RegisterFormFactory()
-    if 'driver' in session:
-        driver = models.Driver.query.filter_by(netid=session['netid']).first()
-    if 'logged_in' in session and 'driver' in session:
-        if session['logged_in'] == True and session['driver']==False:
-            flash("You are signed in but not yet a driver. Redirecting you to driver registration.") #These flash messages aren't displaying on the site
-            return redirect(url_for('register_driver', form=forms.RegisterDriverFormFactory()))
-    if 'logged_in' in session and 'driver' in session:
-        if session['logged_in'] and session['driver']:
-            flash("You are signed in and already registered as a driver. Redirecting you to list a ride.")
-            return redirect(url_for('list_rides'))
-    else:
+    # if 'driver' in session:
+    #     driver = models.Driver.query.filter_by(netid=session['netid']).first()
+    # if 'logged_in' in session and 'driver' in session:
+    #     if session['logged_in'] == True and session['driver']==False:
+    #         flash("You are signed in but not yet a driver. Redirecting you to driver registration.") #These flash messages aren't displaying on the site
+    #         return redirect(url_for('register_driver', form=forms.RegisterDriverFormFactory()))
+    # if 'logged_in' in session and 'driver' in session:
+    #     if session['logged_in'] and session['driver']:
+    #         flash("You are signed in and already registered as a driver. Redirecting you to list a ride.")
+    #         return redirect(url_for('list_rides'))
+    # else:
         
-        #print(form.errors)
+    #     #print(form.errors)
 
-        #if form.is_submitted():
-            #print("submitted")
+    #     #if form.is_submitted():
+    #         #print("submitted")
 
-        #if form.validate():
-            #print("valid")
+    #     #if form.validate():
+    #         #print("valid")
 
-        #print(form.errors)
+    #     #print(form.errors)
         if form.validate_on_submit():
             netid = request.form['netid']
             name = request.form['name']
@@ -149,7 +149,7 @@ def sign_up():
             db.session.commit()
 
             return redirect(url_for('log_in'))
-        return render_template('sign-up.html', form=form)
+        #return render_template('sign-up.html', form=form)
     return render_template('sign-up.html', form=form)
 
 @app.route('/register-driver', methods=['GET','POST'])
