@@ -9,7 +9,7 @@ from datetime import date
 #app = Flask(__name__)
 #app.secret_key = 's3cr3t' #change this?
 #app.config.from_object('config')
-#db = SQLAlchemy(app, session_options={'autocommit': False})
+
 
 import forms
 import models

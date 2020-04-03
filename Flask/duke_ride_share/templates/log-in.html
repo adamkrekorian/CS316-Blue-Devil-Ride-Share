@@ -13,7 +13,7 @@
             {% if session['logged_in'] %}
             You're logged in already!
             {% else %}
-            <form method="POST" action="/log-in">
+            <form method="POST" action="/rides/log-in">
              <input type="text" style="height:50px;font-size:14pt;" placeholder="NetID" name="netid" value="{{
                 request.form.netid }}">
              <br>
