@@ -10,7 +10,7 @@
         <div class="col-sm-8 text-left"> 
             <h1>Search for Rides</h1>
             <hr>
-            <form method="post" action = "/find-rides" onsubmit="return validateForm();">
+            <form method="post" action = "/rides/find-rides" onsubmit="return validateForm();">
                 {{ form.csrf_token }}
 
                 {{ form.origin_city.label }}

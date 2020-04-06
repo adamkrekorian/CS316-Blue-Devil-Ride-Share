@@ -16,7 +16,7 @@
             {% for message in form.duke_email.errors %}
                <div>{{ message }}</div>
             {% endfor %}
-            <form action = "/sign-up" onsubmit="return validateForm();" method="post">
+            <form action = "/rides/sign-up" onsubmit="return validateForm();" method="post">
                    <div style = font-size:14px; font-weight:bold; margin-left:150px;>
                    {{ form.csrf_token }} 
                   
