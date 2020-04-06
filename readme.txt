@@ -13,3 +13,9 @@ You will be prompted to enter a password. The password is: 316project.
 
 From there, you can use commands such as \dt to view the tables in our database or \l for a list of databases. You can also create and modify tables, run queries, create triggers, etc. in the command line.
 We created our tables by copy and pasting our create.sql file into the command line. We did the same with our insert statements. 
+
+To run the website:
+
+$ cd CS316-Blue-Devil-Ride-Share
+$ cd Flask
+$ export FLASK_APP=duke_ride_share
