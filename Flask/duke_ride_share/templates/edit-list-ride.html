@@ -1,5 +1,5 @@
 {% extends 'home.html' %}
-{% block heading %}Edit Listed Ride Information: {{ride.ride_no}}{% endblock %} <!-- include driver net id here? need to make so only driver can log in-->
+<!--{% block heading %}Edit Listed Ride Information: {{ride.ride_no}}{% endblock %} include driver net id here? need to make so only driver can log in-->
 
 {% block content %}
 <div class="container-fluid text-center">    
@@ -10,9 +10,9 @@
         <div class="col-sm-8 text-left"> 
             <h1>Edit a Ride</h1>
             <hr>
-            <p>
+            <!--<p>
                 Origin: {{form.origin}}
-                <!-- need this error thing? -->
+                need this error thing?
                 {% if form.origin.errors %}
                 <ul>{% for error in form.origin.errors %}<li>{{error}}</li>{% endfor %}</ul>
                 {% endif %}
@@ -52,7 +52,7 @@
                 {% if form.comments.errors %}
                 <ul>{% for error in form.comments.errors %}<li>{{error}}</li>{% endfor %}</ul>
                 {% endif %}
-              </p>
+              </p>-->
         </div>
         <div class="col-sm-2 sidenav">
             <!-- empty right sidebar-->

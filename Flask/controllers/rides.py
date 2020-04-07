@@ -224,6 +224,11 @@ def account():
 @bp.route('/edit-password')
 def editPassword():
     return render_template('edit-password.html', debug=True)
+    
+@bp.route('/edit-list-ride')
+def editRides():
+    return render_template('edit-list-ride.html', debug=True)
+
 
 
 if __name__ == "__main__":

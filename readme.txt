@@ -18,4 +18,7 @@ To run the website:
 
 $ cd CS316-Blue-Devil-Ride-Share
 $ cd Flask
-$ export FLASK_APP=duke_ride_share
+$ export FLASK_APP=duke_ride_share (note for Windows the command is set FLASK_APP=duke_ride_share)
+$ flask run
+
+Then the website can be found on localhost:5000/rides
