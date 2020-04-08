@@ -221,11 +221,35 @@ def account():
     ridesReserved = models.Reserve.query.filter_by(rider_netid=session['netid'])
     return render_template('account.html', user=user, ridesListed=ridesListed, ridesReserved=ridesReserved)
 
-@bp.route('/edit-password')
+@bp.route('/edit-password', methods=('GET', 'POST'))
 def editPassword():
-    return render_template('edit-password.html', debug=True)
+    form = forms.EditPasswordFactory
+    print("errors: ", form.errors)
+    user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
+    if form.is_submitted():
+        print("submitted")
+
+    if form.validate():
+        print("valid")
+
+
+    if form.validate_on_submit():
+        netid=user.netid
+        name=user.name
+        duke_email=user.duke_email
+        phone_number=user.phone_number
+        affiliation=user.affiliation
+        school=user.school
+        password=request.form['password']
+        newUser = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, affiliation= affiliation, school=school, password=password)
+        db.session.delete(user)
+        db.session.commit()
+        db.session.add(newUser)
+        db.session.commit()
     
-@bp.route('/edit-list-ride')
+    return render_template('edit-password.html', user=user, debug=True, form=form)
+    
+@bp.route('/edit-list-ride', methods=('GET', 'POST'))
 def editRides():
     return render_template('edit-list-ride.html', debug=True)
 

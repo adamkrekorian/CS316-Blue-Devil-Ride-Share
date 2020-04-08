@@ -108,3 +108,6 @@ class ListRideFormFactory(FlaskForm):
     gas_price = DecimalField("Gas Price:", places=2, rounding=None, validators=[Optional()])
     comments = StringField("Comments:")
     submit = SubmitField("Submit")
+
+class EditPasswordFactory(FlaskForm):
+    password = StringField("New Password:", validators = [Length(min=5, max=100, message="Your password must be at least 5 characters and no more than 100")])
