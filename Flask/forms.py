@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import Form, BooleanField, StringField, IntegerField, PasswordField, validators, SubmitField, SelectField, ValidationError, DecimalField, DateTimeField
 from wtforms_components import TimeField, DateRange
-from wtforms.validators import InputRequired, Length, NumberRange, Regexp, Email, DataRequired, Optional
+from wtforms.validators import InputRequired, Length, NumberRange, Regexp, Email, DataRequired, Optional, EqualTo
 from wtforms.fields.html5 import DateTimeLocalField, DateField
 from app import db
 import models
@@ -75,7 +75,8 @@ class RegisterFormFactory(FlaskForm):
     name = StringField("Name:", validators = [InputRequired(message='You must enter your name'), Length(min=5, max=256, message='Your name must be between 5 to 256 characters')])
     duke_email = StringField("Duke Email:", validators = [InputRequired(message='You must enter your Duke email'), Email(message='You must enter a valid email address'), Length(min=10, max=256, message='Your email must be between 10 to 256 characters'), Regexp('^[a-zA-Z0-9]+@duke.edu$', message = 'Please enter a valid Duke email address')])
     phone_number = IntegerField("Phone Number:", validators = [InputRequired(message='You must enter a valid phone number')])
-    password = PasswordField("Password:", validators = [InputRequired(message='You must enter a password'), Length(min=5, max=256, message='Your password must be between 5 to 256 characters')])
+    password = PasswordField("Password:", validators = [InputRequired(message='You must enter a password'), Length(min=5, max=256, message='Your password must be between 5 to 256 characters'), EqualTo('confirm_password', message='Passwords must match')])
+    confirm_password = PasswordField("Confirm Password:", validators = [InputRequired(message='You must confirm your password')])
     affiliation_sel = SelectField("Affiliation:", validators = [InputRequired(message='You must select your affiliation')], choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
     school = SelectField("School:", validators = [InputRequired(message='You must enter your school')], choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity'), ('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')])
     submit = SubmitField("Submit")      
