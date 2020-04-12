@@ -59,15 +59,19 @@ def find_rides():
                     .filter(models.Ride.date == date) \
                     .filter(models.Ride.seats_available >= spots_needed).all()
             results = [x.__dict__ for x in results]
-            
+            print('we are hereeeeeeee')
             return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results)
-        if reserveForm.validate_on_submit():
-            spots_needed = request.reserveForm['spots_needed']
-            notes = request.reserveForm['notes']
-    here = request.args.get('data-rideno')
-    print('here is the number: ' + here)
+    
+    print(reserveForm.validate_on_submit())
+    print(reserveForm.errors)
+    if reserveForm.validate_on_submit():
+        print('inside function')
+        spots_needed = request.reserveForm['spots_needed']
+        notes = request.reserveForm['notes']
+        print("here are needed spots: ", spots_needed)
 
     return render_template('find-rides.html', form=form, reserveForm = reserveForm)
+
 
 @bp.route('/list-rides', methods=['GET','POST'])
 def list_rides():

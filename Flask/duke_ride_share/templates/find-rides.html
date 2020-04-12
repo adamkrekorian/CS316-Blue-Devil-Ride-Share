@@ -62,29 +62,32 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">Reserve Ride</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                <h3 class="modal-title" id="exampleModalLabel">Reserve Ride</h3>
             </div>
             <div class="modal-body">  
                 <form id="reserveForm" method="post">
                     <p>Ride # </p><p class="rideno"></p>
                     {{ form.origin_city.label }}
+                    <br>
                     {{ form.origin_city.data }}
                     <br>
                     <br>
                     {{ form.destination.label }} <p class="dest"></p>
-                    <br>
                     {{ form.date.label }}
+                    <br>
                     {{ form.date.data }}
                     <br>
                     <br>
                     {{ reserveForm.spots_needed.label }}
+                    <br>
                     {{ reserveForm.spots_needed }}
                     <br>
                     <br>
                     {{ reserveForm.notes.label }}
+                    <br>
                     {{ reserveForm.notes }}
                     <br>
                     <br>
