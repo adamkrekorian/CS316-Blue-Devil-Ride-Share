@@ -27,6 +27,7 @@ def home_page():
 @bp.route('/find-rides', methods=('GET', 'POST'))
 def find_rides():
     form = forms.SearchFormFactory()
+    reserveForm = forms.ReserveRideFormFactory()
 
     if 'logged_in' not in session:
         if session['logged_in']==False:
@@ -38,34 +39,35 @@ def find_rides():
         return redirect(url_for('rides.log_in'))     
 
     else:
-        print(form.validate_on_submit())
-        print("errors: ", form.errors)
         if form.validate_on_submit():
-            print("validated")
+
             origin_city = request.form['origin_city']
             destination = request.form['destination']
             date = request.form['date']
             spots_needed = request.form['spots_needed']
 
             if destination == "Search All":
-                print("search all")
                 results = db.session.query(models.Ride) \
                     .filter(models.Ride.origin == origin_city) \
                     .filter(models.Ride.date == date) \
                     .filter(models.Ride.seats_available >= spots_needed).all()
 
             else:
-                print("not search all")
                 results = db.session.query(models.Ride) \
                     .filter(models.Ride.origin == origin_city) \
                     .filter(models.Ride.destination == destination) \
                     .filter(models.Ride.date == date) \
                     .filter(models.Ride.seats_available >= spots_needed).all()
             results = [x.__dict__ for x in results]
-            print("here are results: ", results)
-            return render_template('find-rides.html', form=form, results = results)
+            
+            return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results)
+        if reserveForm.validate_on_submit():
+            spots_needed = request.reserveForm['spots_needed']
+            notes = request.reserveForm['notes']
+    here = request.args.get('data-rideno')
+    print('here is the number: ' + here)
 
-    return render_template('find-rides.html', form=form)
+    return render_template('find-rides.html', form=form, reserveForm = reserveForm)
 
 @bp.route('/list-rides', methods=['GET','POST'])
 def list_rides():

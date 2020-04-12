@@ -40,6 +40,7 @@
                         <th style="width: 20%; border: 1px solid black; text-align: center"> Latest Departure </th>
                         <th style="width: 8%; border: 1px solid black; text-align: center"> Spots </th>
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Comments </th>
+                        <th> </th>
                     </tr>
                     {% for item in results %}
                     <tr>
@@ -50,11 +51,64 @@
                         <td style="border: 1px solid black; padding: 3px"> {{ item.latest_time }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.seats_available }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.comments }} </td>
+                        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-rideno="{{item.ride_no}}" data-dest="{{item.destination}}"> Book </button></td>
                     </tr>
                     {% endfor %}
                 </table>
             </div>
-            {% endif %}
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">Reserve Ride</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">  
+                <form id="reserveForm" method="post">
+                    <p>Ride # </p><p class="rideno"></p>
+                    {{ form.origin_city.label }}
+                    {{ form.origin_city.data }}
+                    <br>
+                    <br>
+                    {{ form.destination.label }} <p class="dest"></p>
+                    <br>
+                    {{ form.date.label }}
+                    {{ form.date.data }}
+                    <br>
+                    <br>
+                    {{ reserveForm.spots_needed.label }}
+                    {{ reserveForm.spots_needed }}
+                    <br>
+                    <br>
+                    {{ reserveForm.notes.label }}
+                    {{ reserveForm.notes }}
+                    <br>
+                    <br>
+                    {{ reserveForm.submit }}
+                    <br>
+                    <br>
+                </form>
+            </div>
+            </div>
+        </div>
+        </div>
+        <script>
+            //extract ride no from 'Book' button
+            $('#exampleModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var rideno = button.data('rideno') // Extract info from data-* attributes
+                var dest = button.data('dest')
+                var modal = $(this)
+                $('p.rideno').text(rideno)
+                $('p.dest').text(dest)
+            })
+        </script>
+        {% endif %}
+        <div class="col-sm-8 text-left"> 
             {% if results == [] %}
             <div>
                 <h3> No rides found </h3>
