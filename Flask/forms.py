@@ -37,6 +37,37 @@ class NotEqualTo(object):  # --> Change to 'NotEqualTo'
                 message = field.gettext('Destination must not be equal to origin.')
 
             raise ValidationError(message % d)
+
+class EqualTo(object):  #might not be done correctly!!
+    """
+    Compares the values of two fields.
+
+    :param fieldname:
+        The name of the other field to compare to.
+    :param message:
+        Error message to raise in case of a validation error. Can be
+        interpolated with `%(other_label)s` and `%(other_name)s` to provide a
+        more helpful error.
+    """
+    def __init__(self, fieldname, message=None):
+        self.fieldname = fieldname
+        self.message = message
+
+    def __call__(self, form, field):
+        try:
+            other = form[self.fieldname]
+        except KeyError:
+            raise ValidationError(field.gettext("Invalid field name '%s'.") % self.fieldname)
+        if field.data != other.data:  #  --> Change to == from !=
+            d = {
+                'other_label': hasattr(other, 'label') and other.label.text or self.fieldname,
+                'other_name': self.fieldname
+            }
+            message = self.message
+            if message is None:
+                message = field.gettext('Password and confirm password must be equal.')
+
+            raise ValidationError(message % d)
             
 
 class GreaterThan(object):  # --> Change to 'GreaterThan'
@@ -111,8 +142,17 @@ class ListRideFormFactory(FlaskForm):
     comments = StringField("Comments:")
     submit = SubmitField("Submit")
 
-class EditPasswordFactory(FlaskForm):
-    password = StringField("New Password:", validators = [Length(min=5, max=100, message="Your password must be at least 5 characters and no more than 100")])
+#NOTE: how do I make it yell at people if password isn't equal to confirm password?
+class EditInfoFactory(FlaskForm):
+    #netid = StringField("NetID:", validators = [Length(min=4, max=7, message='Your NetID must be between 4 to 7 characters')])
+   # name = StringField("Name:", validators = [Length(min=5, max=256, message='Your name must be between 5 to 256 characters')])
+   # duke_email = StringField("Duke Email:", validators = [Email(message='You must enter a valid email address'), Length(min=10, max=256, message='Your email must be between 10 to 256 characters'), Regexp('^[a-zA-Z0-9]+@duke.edu$', message = 'Please enter a valid Duke email address')])
+   # phone_number = IntegerField("Phone Number:")
+   # affiliation_sel = SelectField("Affiliation:", choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
+   # school = SelectField("School:", choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity'), ('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')])
+    password = StringField("New Password or enter current password to make changes:", default = '12', validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('confirmPassword'), InputRequired(message='Must enter password to make changes')])
+    confirmPassword = StringField("Confirm Password:", validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('password'), InputRequired(message='Must confirm password')])
+    submit = SubmitField("Save")
 
 class ReserveRideFormFactory(FlaskForm):
     spots_needed = IntegerField("Spots Needed:", validators = [InputRequired(message='You must enter the number of seats needed')])

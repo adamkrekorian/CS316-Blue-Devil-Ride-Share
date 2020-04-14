@@ -8,16 +8,26 @@
         </div>
         <div class="col-sm-8 text-left"> 
             <h1>Account </h1>
+
             <hr>
+
             <ul style="list-style-type: none;">
+                <li><b>Account Information</b></li>
                 <li>NetID: {{user.netid}}</li>
                 <li>Name: {{user.name}}</li>
                 <li>Email: {{user.duke_email}}</li>
                 <li>Phone number: {{user.phone_number}}</li>
                 <li>Affiliation: {{user.affiliation}}</li>
                 <li>School: {{user.school}}</li>
+                {% if driver %}
+                <li><b>Driver Information</b></li>
+                <li>License Number: {{driver.license_no}}</li>
+                <li>License Plate Number: {{driver.license_plate_no}}</li>
+                <li>License Plate State: {{driver.plate_state}}</li>
+                {% endif %}
+                
                 <div> {% if ridesListed %}
-                    <h4> Rides Posted: </h4>
+                    <h4><b> Rides Posted by you: </b></h4>
                     <table style="width: 85%">
                         <tr style="border: 1px solid black;">
                             <th style="width: 10%; border: 1px solid black; text-align: center"> Ride Number </th>
@@ -46,14 +56,14 @@
                     </table>
                 </div>
                 {% endif %}
-                {% if ridesListed == [] %}
+                {% if ridesListed == None %}
                 <div>
-                    <h3> No rides listed </h3>
+                    <h4><b>No rides listed</b></h4>
                 </div>
                 {% endif %}
             
             <div> {% if ridesReserved %}
-                <h4> Rides Reserved: </h4>
+                <h4><b> Rides Reserved by you: </b></h4>
                 <table style="width: 85%">
                     <tr style="border: 1px solid black;">
                         <th style="width: 10%; border: 1px solid black; text-align: center"> Ride Number </th>
@@ -82,9 +92,9 @@
                 </table>
             </div>
             {% endif %}
-            {% if ridesReserved == [] %}
+            {% if ridesReserved == None %}
             <div>
-                <h3> No rides reserved </h3>
+                <h4><b>No rides reserved</b></h4>
             </div>
             {% endif %}
         
@@ -99,7 +109,7 @@
             
         </div>
         <div class="col-sm-2 sidenav">
-            <br> <a href="{{url_for('rides.editPassword')}}"> Edit Password </a></br>
+            <br> <a href="{{url_for('rides.editInfo')}}"> Edit Information </a></br>
             <br> <a href="{{url_for('rides.editRides')}}"> Edit Rides </a></br>
             <!--<br><button onclick= "window.location.href = {{url_for('rides.home_page')}}"> Edit Password</button></br>
             <br><button>Edit Rides</button></br>-->
