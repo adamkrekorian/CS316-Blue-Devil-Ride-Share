@@ -32,36 +32,36 @@
             <hr>
             <center>
               
-              <form action = "/rides/account"  onsubmit="return validateForm();" method="post">
+              <form action = "/rides/edit-list-ride"  onsubmit="return validateForm();" method="post">
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>
                 {{ form.csrf_token }}
                
                 {{ form.date.label }}<br>
-                {{ form.date(placeholder=ride.date)}}
+                {{ form.date(value=ride.date)}}
                 <br>
 
                 {{ form.earliest_departure.label }}<br>
-                {{ form.earliest_departure(placeholder = ride.earliest_departure) }}
+                {{ form.earliest_departure(value="13:00")}}
                 <br>
 
                 {{ form.latest_departure.label }}<br>
-                {{ form.latest_departure (placeholder = ride.latest_departure)}}
+                {{ form.latest_departure(value=ride.latest_departure)}}
                 <br>
 
                 {{ form.seats_available.label }}<br>
-                {{ form.seats_available(placeholder=ride.seats_available) }}
+                {{ form.seats_available(value=ride.seats_available) }}
                 <br>
 
                 {{ form.gas_price.label }}<br>
-                {{ form.gas_price(placeholder=ride.gas_price) }}
+                {{ form.gas_price(value=ride.gas_price) }}
                 <br>
 
                 {{ form.comments.label }}<br>
-                {{ form.comments(placeholder=ride.comments) }}
+                {{ form.comments(value=ride.comments) }}
                 <br>
 
                 {{ form.cancel.label }}<br>
-                {{ form.cancel }}
+                {{ form.cancel(value='Yes') }}
                 <br>
                 <br>
 

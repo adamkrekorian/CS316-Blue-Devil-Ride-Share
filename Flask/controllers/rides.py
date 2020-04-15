@@ -6,7 +6,7 @@ from wtforms import Form, BooleanField, StringField, PasswordField, validators
 from sqlalchemy import distinct
 from datetime import date
 from database import db
-
+import pdb
 
 #app = Flask(__name__)
 #app.secret_key = 's3cr3t' #change this?
@@ -65,10 +65,11 @@ def find_rides():
     
     print(reserveForm.validate_on_submit())
     print(reserveForm.errors)
+    #note- I changed this to be request.form because it works for me
     if reserveForm.validate_on_submit():
         print('inside function')
-        spots_needed = request.reserveForm['spots_needed']
-        notes = request.reserveForm['notes']
+        spots_needed = request.form['spots_needed']
+        notes = request.form['notes']
         print("here are needed spots: ", spots_needed)
 
     return render_template('find-rides.html', form=form, reserveForm = reserveForm)
@@ -222,7 +223,7 @@ def log_out():
 
 @bp.route('/account', methods=('GET', 'POST'))
 def account():
-
+    
     user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
     ridesListed = models.Ride.query.filter_by(driver_netid=session['netid']).order_by(models.Ride.ride_no.desc())
     ridesReservedTemp = models.Reserve.query.filter_by(rider_netid=session['netid']).order_by(models.Reserve.ride_no.desc())
@@ -233,6 +234,7 @@ def account():
 
     #ridesReservedFinal = ridesReserved.order_by(models.Ride.date.desc())
     #SORT rides listed and rides reserved by date- really hard
+
 
     driver = models.Driver.query.filter_by(netid=session['netid']).first()
     if ridesListed.first()==None:
@@ -295,6 +297,7 @@ def editRides():
 
     print("FORM ERRORS")
     print(form.errors)
+    #pdb.set_trace()
     if form.is_submitted():
         print("FORM submitted")
 
