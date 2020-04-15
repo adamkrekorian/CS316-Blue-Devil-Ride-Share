@@ -10,6 +10,16 @@
             <h1>Account </h1>
 
             <hr>
+            <!--Shows error messages from edit info and edit rides-->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+            <h3><b><font color="red"> {{ message }}</font></b></h3>
+            {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
 
             <ul style="list-style-type: none;">
                 <li><b>Account Information</b></li>

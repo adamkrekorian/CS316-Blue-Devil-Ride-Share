@@ -100,6 +100,38 @@ class GreaterThan(object):  # --> Change to 'GreaterThan'
                 message = field.gettext('Invalid date/time entry')
 
             raise ValidationError(message % d)
+
+class GreaterThanWithNull(object):  # --> Change to 'GreaterThan'
+    """
+    Compares the values of two fields.
+
+    :param fieldname:
+        The name of the other field to compare to.
+    :param message:
+        Error message to raise in case of a validation error. Can be
+        interpolated with `%(other_label)s` and `%(other_name)s` to provide a
+        more helpful error.
+    """
+    def __init__(self, fieldname, message=None):
+        self.fieldname = fieldname
+        self.message = message
+
+    def __call__(self, form, field):
+        try:
+            other = form[self.fieldname]
+        except KeyError:
+            raise ValidationError(field.gettext("Invalid field name '%s'.") % self.fieldname)
+        if field.data != None and other.data != None :
+            if field.data < other.data:  #  --> Change to <= from !=
+                d = {
+                    'other_label': hasattr(other, 'label') and other.label.text or self.fieldname,
+                    'other_name': self.fieldname
+                }
+                message = self.message
+                if message is None:
+                    message = field.gettext('Invalid date/time entry')
+
+                raise ValidationError(message % d)
             
 class RegisterFormFactory(FlaskForm):
     netid = StringField("NetID:", validators = [InputRequired(message='You must enter your NetID'), Length(min=4, max=7, message='Your NetID must be between 4 to 7 characters')])
@@ -150,9 +182,27 @@ class EditInfoFactory(FlaskForm):
    # phone_number = IntegerField("Phone Number:")
    # affiliation_sel = SelectField("Affiliation:", choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
    # school = SelectField("School:", choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity'), ('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')])
-    password = StringField("New Password or enter current password to make changes:", default = '12', validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('confirmPassword'), InputRequired(message='Must enter password to make changes')])
+    password = StringField("New password or enter current password to make changes:", default = '12', validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('confirmPassword'), InputRequired(message='Must enter password to make changes')])
     confirmPassword = StringField("Confirm Password:", validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('password'), InputRequired(message='Must confirm password')])
     submit = SubmitField("Save")
+
+class RideNumberFactory(FlaskForm):
+    ride_no = IntegerField("Ride number of ride you would like to edit", validators = [InputRequired(message='You must enter a ride number')])
+    submit = SubmitField("Enter")
+
+class EditRideFactory(FlaskForm):
+    date = DateField("Departure Date:", validators=[DateRange(min = datetime.date.today())], format='%m-%d-%Y')
+    earliest_departure = TimeField("Earliest Time of Departure:", format='%H:%M')
+    latest_departure = TimeField("Latest Time of Departure:", validators=[GreaterThanWithNull('earliest_departure')], format='%H:%M')
+    seats_available = IntegerField("Number of Seats Available:")
+    gas_price = DecimalField("Gas Price:", places=2, rounding=None)
+    comments = StringField("Comments:")
+    cancel = SelectField("Would you like to cancel this ride?", choices = [('No', 'No'), ('Yes', 'Yes')])
+    submit = SubmitField("Save")
+
+class CancelRideFactory(FlaskForm):
+    cancel = SelectField("Would you like to cancel this ride?", choices = [('No', 'No'), ('Yes', 'Yes')])
+    submit = SubmitField("Cancel Ride")
 
 class ReserveRideFormFactory(FlaskForm):
     spots_needed = IntegerField("Spots Needed:", validators = [InputRequired(message='You must enter the number of seats needed')])

@@ -1,4 +1,4 @@
-{% extends 'home.html' %}
+{% extends 'account.html' %}
 <!--{% block heading %}Edit Listed Ride Information: {{ride.ride_no}}{% endblock %} include driver net id here? need to make so only driver can log in-->
 
 {% block content %}
@@ -8,52 +8,74 @@
             <!-- empty left sidebar -->
         </div>
         <div class="col-sm-8 text-left"> 
+          {% if validRideNo == False %}
+            <h1>Enter Ride Number</h1>
+            <center>
+            <form action = "/rides/edit-list-ride"  onsubmit="return validateForm();" method="post">
+              <div style = font-size:14px; font-weight:bold; margin-left:150px;>
+              {{ formRideNo.csrf_token }}
+             
+              {{ formRideNo.ride_no.label }}<br>
+              {{ formRideNo.ride_no }}
+              <br>
+            </div>
+            <div style = font-size:20px; font-weight:bold; margin-left:150px;>
+            {{ formRideNo.submit }}
+            </div>
+            </form>
+            
+        </center>
+
+          {% endif %}
+          {% if validRideNo %}
             <h1>Edit a Ride</h1>
             <hr>
-            <!--Remember to add cancel ride option-->
-            <!--<p>
-                Origin: {{form.origin}}
-                need this error thing?
-                {% if form.origin.errors %}
-                <ul>{% for error in form.origin.errors %}<li>{{error}}</li>{% endfor %}</ul>
-                {% endif %}
-              </p>
-              <p>
-                Destination: {{form.destination}}
-                {% if form.destination.errors %}
-                <ul>{% for error in form.destination.errors %}<li>{{error}}</li>{% endfor %}</ul>
-                {% endif %}
-              </p>
-              <p>
-                Earliest time to leave: {{form.earliest_time}}
-                {% if form.earliest_time.errors %}
-                <ul>{% for error in form.earliest_time.errors %}<li>{{error}}</li>{% endfor %}</ul>
-                {% endif %}
-              </p>
-              <p>
-                Latest time to leave: {{form.latest_time}}
-                {% if form.latest_time.errors %}
-                <ul>{% for error in form.latest_time.errors %}<li>{{error}}</li>{% endfor %}</ul>
-                {% endif %}
-              </p>
-              <p>
-                Seats Available: {{form.seats_available}}
-                {% if form.seats_available.errors %}
-                <ul>{% for error in form.seats_available.errors %}<li>{{error}}</li>{% endfor %}</ul>
-                {% endif %}
-              </p>
-              <p>
-                Gas Price: {{form.gas_price}}
-                {% if form.gas_price.errors %}
-                <ul>{% for error in form.gas_price.errors %}<li>{{error}}</li>{% endfor %}</ul>
-                {% endif %}
-              </p>
-              <p>
-                Comments: {{form.comments}}
-                {% if form.comments.errors %}
-                <ul>{% for error in form.comments.errors %}<li>{{error}}</li>{% endfor %}</ul>
-                {% endif %}
-              </p>-->
+            <center>
+              
+              <form action = "/rides/account"  onsubmit="return validateForm();" method="post">
+                <div style = font-size:14px; font-weight:bold; margin-left:150px;>
+                {{ form.csrf_token }}
+               
+                {{ form.date.label }}<br>
+                {{ form.date(placeholder=ride.date)}}
+                <br>
+
+                {{ form.earliest_departure.label }}<br>
+                {{ form.earliest_departure(placeholder = ride.earliest_departure) }}
+                <br>
+
+                {{ form.latest_departure.label }}<br>
+                {{ form.latest_departure (placeholder = ride.latest_departure)}}
+                <br>
+
+                {{ form.seats_available.label }}<br>
+                {{ form.seats_available(placeholder=ride.seats_available) }}
+                <br>
+
+                {{ form.gas_price.label }}<br>
+                {{ form.gas_price(placeholder=ride.gas_price) }}
+                <br>
+
+                {{ form.comments.label }}<br>
+                {{ form.comments(placeholder=ride.comments) }}
+                <br>
+
+                {{ form.cancel.label }}<br>
+                {{ form.cancel }}
+                <br>
+                <br>
+
+              </div>
+              <div style = font-size:20px; font-weight:bold; margin-left:150px;>
+              {{ form.submit }}
+              </div>
+              </form>
+              
+          </center>
+
+          {% endif %}
+            
+            
         </div>
         <div class="col-sm-2 sidenav">
             <!-- empty right sidebar-->

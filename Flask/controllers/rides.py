@@ -7,6 +7,7 @@ from sqlalchemy import distinct
 from datetime import date
 from database import db
 
+
 #app = Flask(__name__)
 #app.secret_key = 's3cr3t' #change this?
 #app.config.from_object('config')
@@ -221,13 +222,17 @@ def log_out():
 
 @bp.route('/account', methods=('GET', 'POST'))
 def account():
+
     user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
-    ridesListed = models.Ride.query.filter_by(driver_netid=session['netid'])
-    ridesReservedReserve = models.Reserve.query.filter_by(rider_netid=session['netid'])
+    ridesListed = models.Ride.query.filter_by(driver_netid=session['netid']).order_by(models.Ride.ride_no.desc())
+    ridesReservedTemp = models.Reserve.query.filter_by(rider_netid=session['netid']).order_by(models.Reserve.ride_no.desc())
     ridesReserved = []
 
-    for ride in ridesReservedReserve:
+    for ride in ridesReservedTemp:
         ridesReserved.append(models.Ride.query.filter_by(ride_no=ride.ride_no).first())
+
+    #ridesReservedFinal = ridesReserved.order_by(models.Ride.date.desc())
+    #SORT rides listed and rides reserved by date- really hard
 
     driver = models.Driver.query.filter_by(netid=session['netid']).first()
     if ridesListed.first()==None:
@@ -241,13 +246,13 @@ def account():
 def editInfo():
     form = forms.EditInfoFactory()
     user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
-    print("errors: ")
-    print(form.errors)
-    if form.is_submitted():
-        print("submitted")
+    #print("errors: ")
+    #print(form.errors)
+    #if form.is_submitted():
+        #print("submitted")
 
-    if form.validate():
-        print("valid")
+    #if form.validate():
+        #print("valid")
 
 
     if form.validate_on_submit():
@@ -271,7 +276,85 @@ def editInfo():
     
 @bp.route('/edit-list-ride', methods=('GET', 'POST'))
 def editRides():
-    return render_template('edit-list-ride.html', debug=True)
+    form = forms.EditRideFactory()
+    formRideNo = forms.RideNumberFactory()
+    #cancelForm = forms.CancelRideFactory()
+    validRideNo = False
+    ride = None
+    
+    if formRideNo.validate_on_submit():
+        rideNumber = request.form['ride_no']
+        ride = db.session.query(models.Ride) \
+                    .filter(models.Ride.ride_no == rideNumber) \
+                    .filter(models.Ride.driver_netid == session['netid']).first()
+        if (ride == None):
+            flash("Ride not found.")
+            return redirect(url_for('rides.account'))
+        else: 
+            validRideNo = True
+
+    print("FORM ERRORS")
+    print(form.errors)
+    if form.is_submitted():
+        print("FORM submitted")
+
+    if form.validate():
+        print("FORM valid")
+
+    if form.validate_on_submit():
+        #edit ride form here
+        cancel = request.form['cancel']
+        print("TEST1 here")
+        print(cancel == "Yes")
+        if cancel == "Yes":
+            #delete ride here
+            print("ride cancelled")
+            flash("Ride cancelled.")
+        else:
+            #update ride here- bunch of if statements to see if null
+            date = request.form['date']
+            earliest_departure = request.form['earliest_departure']
+            latest_departure = request.form['latest_departure']
+            seats_available = request.form['seats_available']
+            gas_price = request.form['gas_price']
+            comments = request.form['comments']
+
+            #how to check if empty correctly?
+            if date == None:
+                date = ride.date
+            if earliest_departure == None:
+                earliest_departure = ride.earliest_departure
+            if latest_departure == None:
+                latest_departure = ride.latest_departure
+            if seats_available == None:
+                seats_available = ride.seats_available
+            if gas_price == None:
+                gas_price = ride.gas_price
+            if comments == None:
+                comments = ride.comments
+
+
+            flash("Ride updated.")
+        return redirect(url_for('rides.account'))
+
+    #if cancelForm.validate_on_submit():
+        #how to delete here? recreate object?
+        #print("ride cancelled")
+        #flash("Ride cancelled.")
+        #return redirect(url_for('rides.account'))
+
+
+    return render_template('edit-list-ride.html', form=form, formRideNo=formRideNo, validRideNo = validRideNo, ride=ride)
+
+#@bp.route('/edit-ride', methods=('GET', 'POST'))
+#def editRidesInformation():
+    #form=forms.EditRideFactory()
+
+    #if form.validate_on_submit():
+        #print("form worked")
+        #update ride information here
+
+    #return render_template('edit-ride.html', debug=True, form=form)
 
 
 
