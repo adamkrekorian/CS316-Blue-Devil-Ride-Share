@@ -1,4 +1,4 @@
-from sqlalchemy import sql, orm
+from sqlalchemy import sql, orm, ForeignKey
 from app import db
 
 class Rideshare_user(db.Model):
@@ -13,7 +13,7 @@ class Rideshare_user(db.Model):
     
 class Driver(db.Model):
     __tablename__ = 'driver'
-    netid = db.Column('netid', db.String(20), primary_key=True)
+    netid = db.Column('netid', db.String(20), primary_key=True) #ForeignKey('rideshare_user.netid'))
     license_no = db.Column('license_no', db.Integer())
     license_plate_no = db.Column('license_plate_no', db.String(10))
     plate_state = db.Column('plate_state', db.String(3))
@@ -23,7 +23,7 @@ class Ride(db.Model):
     ride_no = db.Column('ride_no', db.Integer(), primary_key = True)
     origin = db.Column('origin', db.String(100))
     destination = db.Column('destination', db.String(100))
-    driver_netid = db.Column('driver_netid', db.String(7))
+    driver_netid = db.Column('driver_netid', db.String(7)) #ForeignKey('driver.netid'))
     date = db.Column('date', db.Date())
     earliest_time = db.Column('earliest_time', db.Time())
     latest_time = db.Column('latest_time', db.Time())
@@ -37,8 +37,8 @@ class Reserve(db.Model):
     #id = odm.CompositeIdField('ride_no', 'rider_netid')
     # ride_no and rider_netid need to be foreign keys from the other tables
     # need a reserve id or something that increments to track reservations
-    ride_no = db.Column('ride_no', db.Integer(), primary_key=True)
-    rider_netid = db.Column('rider_netid', db.String(7), primary_key= True)
+    ride_no = db.Column('ride_no', db.Integer(), primary_key=True) #ForeignKey('ride.ride_no'))
+    rider_netid = db.Column('rider_netid', db.String(7), primary_key= True) #ForeignKey('rideshare_user.netid'))
     seats_needed = db.Column('seats_needed', db.Integer())
     note = db.Column('note', db.String(500)) #create foreign keys
     #ride_no = db.Column('ride_no', db.Integer(), FOREIGN KEY(ride_no) REFERENCES Ride(ride_no))

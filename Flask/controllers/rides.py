@@ -17,6 +17,8 @@ import pdb
 import forms
 import models
 
+rideToEdit = None
+
 bp = Blueprint('rides', __name__, url_prefix = '/rides', template_folder = 'templates')
 
 @bp.route('/')
@@ -246,8 +248,9 @@ def account():
 
 @bp.route('/edit-info', methods=('GET', 'POST'))
 def editInfo():
-    form = forms.EditInfoFactory()
     user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
+    form = forms.EditInfoFactory()
+    
     #print("errors: ")
     #print(form.errors)
     #if form.is_submitted():
@@ -284,17 +287,22 @@ def editRides():
     validRideNo = False
     ride = None
     
+    
     if formRideNo.validate_on_submit():
         rideNumber = request.form['ride_no']
-        ride = db.session.query(models.Ride) \
+        global rideToEdit
+        rideToEdit = db.session.query(models.Ride) \
                     .filter(models.Ride.ride_no == rideNumber) \
                     .filter(models.Ride.driver_netid == session['netid']).first()
+        ride = rideToEdit
         if (ride == None):
             flash("Ride not found.")
             return redirect(url_for('rides.account'))
         else: 
+            print(ride.earliest_time)
             validRideNo = True
 
+    
     print("FORM ERRORS")
     print(form.errors)
     #pdb.set_trace()
@@ -305,36 +313,50 @@ def editRides():
         print("FORM valid")
 
     if form.validate_on_submit():
-        #edit ride form here
+        print(rideToEdit.comments)
+        #edit ride form here- rideToEdit is a global variable representing the ride you are editing
+        reservesAffected = models.Reserve.query.filter_by(ride_no=rideToEdit.ride_no)
+        netIDsAffected = None
+
+        for reservation in reservesAffected:
+            netIDsAffected.append(reservation.rider_netid)
+
+        #print(netIDsAffected.first())
+        
         cancel = request.form['cancel']
-        print("TEST1 here")
+        print("TEST1 checking if cancelling")
         print(cancel == "Yes")
         if cancel == "Yes":
-            #delete ride here
+            #how to delete a ride?
+            #db.session.delete(ride)
+            #db.commit()
             print("ride cancelled")
             flash("Ride cancelled.")
         else:
-            #update ride here- bunch of if statements to see if null
+            #update ride here- bunch of if statements to see if null- if no changes set usersAffected to null
             date = request.form['date']
             earliest_departure = request.form['earliest_departure']
             latest_departure = request.form['latest_departure']
             seats_available = request.form['seats_available']
             gas_price = request.form['gas_price']
             comments = request.form['comments']
+            #db.session.update(ride)
+            #db.session.commit()
+
 
             #how to check if empty correctly?
-            if date == None:
-                date = ride.date
-            if earliest_departure == None:
-                earliest_departure = ride.earliest_departure
-            if latest_departure == None:
-                latest_departure = ride.latest_departure
-            if seats_available == None:
-                seats_available = ride.seats_available
-            if gas_price == None:
-                gas_price = ride.gas_price
-            if comments == None:
-                comments = ride.comments
+            #if date == None:
+                #date = ride.date
+            #if earliest_departure == None:
+                #earliest_departure = ride.earliest_departure
+            #if latest_departure == None:
+                #latest_departure = ride.latest_departure
+            #if seats_available == None:
+                #seats_available = ride.seats_available
+            #if gas_price == None:
+                #gas_price = ride.gas_price
+            #if comments == None:
+                #comments = ride.comments
 
 
             flash("Ride updated.")

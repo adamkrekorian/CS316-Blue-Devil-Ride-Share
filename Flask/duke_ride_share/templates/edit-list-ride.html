@@ -35,17 +35,17 @@
               <form action = "/rides/edit-list-ride"  onsubmit="return validateForm();" method="post">
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>
                 {{ form.csrf_token }}
-               
+
                 {{ form.date.label }}<br>
                 {{ form.date(value=ride.date)}}
                 <br>
 
                 {{ form.earliest_departure.label }}<br>
-                {{ form.earliest_departure(value="13:00")}}
+                {{ form.earliest_departure(value=ride.earliest_time)}}
                 <br>
 
                 {{ form.latest_departure.label }}<br>
-                {{ form.latest_departure(value=ride.latest_departure)}}
+                {{ form.latest_departure(value=ride.latest_time)}}
                 <br>
 
                 {{ form.seats_available.label }}<br>
