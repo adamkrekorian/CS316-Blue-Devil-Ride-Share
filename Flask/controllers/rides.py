@@ -321,6 +321,12 @@ def editRides():
         for reservation in reservesAffected:
             netIDsAffected.append(reservation.rider_netid)
 
+        #could I check net ids affected with??
+        if (netIDsAffected != None):
+            for netidAffected in netIDsAffected:
+                session['netidAffected']
+                flash("One of your reserved rides has changed")
+
         #print(netIDsAffected.first())
         
         cancel = request.form['cancel']
