@@ -37,8 +37,9 @@ class Reserve(db.Model):
     #id = odm.CompositeIdField('ride_no', 'rider_netid')
     # ride_no and rider_netid need to be foreign keys from the other tables
     # need a reserve id or something that increments to track reservations
-    ride_no = db.Column('ride_no', db.Integer(), primary_key=True) #ForeignKey('ride.ride_no'))
-    rider_netid = db.Column('rider_netid', db.String(7), primary_key= True) #ForeignKey('rideshare_user.netid'))
+    reservation_id = db.Column('reservation_id', db.Integer(), primary_key=True)
+    ride_no = db.Column('ride_no', db.Integer(), foreign_key = 'ride.ride_no')
+    rider_netid = db.Column('rider_netid', db.String(7)) #ForeignKey('rideshare_user.netid'))
     seats_needed = db.Column('seats_needed', db.Integer())
     note = db.Column('note', db.String(500)) #create foreign keys
     #ride_no = db.Column('ride_no', db.Integer(), FOREIGN KEY(ride_no) REFERENCES Ride(ride_no))

@@ -270,11 +270,15 @@ def editInfo():
         #password=request.form['password']
 
         #newUser = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, affiliation= affiliation, school=school, password=password)
-        print("NEW PASS")
+        print("NEW PASS next try")
         print(request.form['password'])
-        user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
         user.password = request.form['password']
+        user.phone_number = request.form['phone_number']
+        #user.password = "gracel"
+        #user.update()
         db.session.commit()
+        print("="*50)
+        flash("User information updated.")
         return redirect(url_for('rides.account'))
     
     return render_template('edit-info.html', user=user, debug=True, form=form)
@@ -334,8 +338,8 @@ def editRides():
         print(cancel == "Yes")
         if cancel == "Yes":
             #how to delete a ride?
-            #db.session.delete(ride)
-            #db.commit()
+            db.session.delete(rideToEdit)
+            db.session.commit()
             print("ride cancelled")
             flash("Ride cancelled.")
         else:
