@@ -17,6 +17,7 @@ import pdb
 import forms
 import models
 
+#Grace's variables
 rideToEdit = None
 
 bp = Blueprint('rides', __name__, url_prefix = '/rides', template_folder = 'templates')
@@ -250,6 +251,8 @@ def account():
 def editInfo():
     user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
     form = forms.EditInfoFactory()
+
+    
     
     #print("errors: ")
     #print(form.errors)
@@ -261,22 +264,27 @@ def editInfo():
 
 
     if form.validate_on_submit():
-        #netid=user.netid
-       # name=user.name
-       # duke_email=user.duke_email
-        #phone_number=user.phone_number
-       # affiliation=user.affiliation
-        #school=user.school
-        #password=request.form['password']
+        netid=user.netid
+        name=user.name
+        duke_email=user.duke_email
+        phone_number=request.form['phone_number']
+        #note should I update so they can choose affiliation and school?
+        affiliation=user.affiliation
+        school=user.school
+        #dont need to check if equal to confirm because form does that for me
+        password=request.form['password']
 
-        #newUser = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, affiliation= affiliation, school=school, password=password)
+        newUser = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, affiliation= affiliation, school=school, password=password)
+        # ERROR WITH WRONG SESSION
+        #db.session.delete(userInfo)
+        #db.session.add(newUser)
+        #db.session.commit()
         print("NEW PASS next try")
         print(request.form['password'])
-        user.password = request.form['password']
-        user.phone_number = request.form['phone_number']
+        #user.password = request.form['password']
+        #user.phone_number = request.form['phone_number']
         #user.password = "gracel"
         #user.update()
-        db.session.commit()
         print("="*50)
         flash("User information updated.")
         return redirect(url_for('rides.account'))

@@ -27,7 +27,7 @@ CREATE TABLE Ride
  comments VARCHAR(500));
 
 CREATE TABLE Reserve
-(reservation_id SERIAL PRIMARY KEY,
+(--reservation_id SERIAL PRIMARY KEY,
   rider_netid VARCHAR(7) NOT NULL,
   ride_no INTEGER NOT NULL, 
   seats_needed INTEGER NOT NULL,
