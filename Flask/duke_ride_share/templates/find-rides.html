@@ -19,7 +19,7 @@
                 {{ form.destination }}
                 <br>
                 {{ form.date.label }}
-                {{ form.date (placeholder='MM-DD-YYYY') }}
+                {{ form.date (placeholder='YYYY-MM-DD') }}
                 {{ form.spots_needed.label }}
                 {{ form.spots_needed }}
                 <br>
@@ -33,6 +33,7 @@
                 <!-- <p> Here they are {{results}} </p> -->
                 <table style="border-collapse: collapse; width: 100%">
                     <tr style="border: 1px solid black;">
+                        <th style="width: 3%; border: 1px solid black; text-align: center"> Ride # </th>
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Origin </th>
                         <th style="width: 15%; border: 1px solid black; text-align: center"> Destination </th>
                         <th style="width: 12%; border: 1px solid black; text-align: center"> Date </th>
@@ -44,6 +45,7 @@
                     </tr>
                     {% for item in results %}
                     <tr>
+                        <td style="border: 1px solid black; padding: 3px" data-rideno="{{item.ride_no}}"> {{ item.ride_no }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.origin }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.destination }} </td>
                         <td style="border: 1px solid black; padding: 3px"> {{ item.date }} </td>
@@ -69,7 +71,12 @@
             </div>
             <div class="modal-body">  
                 <form id="reserveForm" method="post">
-                    <p>Ride # </p><p class="rideno"></p>
+                    {{ reserveForm.csrf_token }}
+                    <!-- <p>Ride # </p><p class="rideno"></p> -->
+                    <!-- {{ reserveForm.ride_no.label }}
+                    <br>
+                    {{ reserveForm.ride_no(class_="input-rideno") }} -->
+                    <br>
                     {{ form.origin_city.label }}
                     <br>
                     {{ form.origin_city.data }}
@@ -100,15 +107,15 @@
         </div>
         </div>
         <script>
-            //extract ride no from 'Book' button
+
             $('#exampleModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget) // Button that triggered the modal
-                var rideno = button.data('rideno') // Extract info from data-* attributes
-                var dest = button.data('dest')
-                var modal = $(this)
-                $('p.rideno').text(rideno)
-                $('p.dest').text(dest)
-            })
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var rideno = button.data('rideno'); // Extract info from data-* attributes
+                var dest = button.data('dest');
+                var modal = $(this);
+                $('p.dest').text(dest);
+            });
+            
         </script>
         {% endif %}
         <div class="col-sm-8 text-left"> 

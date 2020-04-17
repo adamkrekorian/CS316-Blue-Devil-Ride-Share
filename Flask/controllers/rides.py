@@ -69,6 +69,7 @@ def find_rides():
     print(reserveForm.validate_on_submit())
     print(reserveForm.errors)
     #note- I changed this to be request.form because it works for me
+    
     if reserveForm.validate_on_submit():
         print('inside function')
         spots_needed = request.form['spots_needed']

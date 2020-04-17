@@ -177,7 +177,7 @@ class ListRideFormFactory(FlaskForm):
 #NOTE: how do I make it yell at people if password isn't equal to confirm password?
 
 class EditInfoFactory(FlaskForm):
-    phone_number = IntegerField("Phone Number:")
+    phone_number = IntegerField("Phone Number:", validators = [Optional()])
     affiliation = SelectField("Affiliation:", choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
     school = SelectField("School:", choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity'), ('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')])
     password = StringField("New password or enter current password to make changes:", validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('confirmPassword'), InputRequired(message='Must enter password to make changes')])
@@ -203,6 +203,7 @@ class CancelRideFactory(FlaskForm):
     submit = SubmitField("Cancel Ride")
 
 class ReserveRideFormFactory(FlaskForm):
+    ride_no = IntegerField("Ride Number:", validators=[Optional()], id ="input-rideno")
     spots_needed = IntegerField("Spots Needed:", validators = [InputRequired(message='You must enter the number of seats needed')])
     notes = StringField("Notes:", validators=[Optional()])
     submit = SubmitField("Request Ride")
