@@ -115,23 +115,6 @@ CREATE TRIGGER TG_No_time_given
 
 ------
 
-CREATE FUNCTION TF_No_same_ride() RETURNS TRIGGER AS $$
-BEGIN
-  IF EXISTS (SELECT *
-            FROM Reserve
-            WHERE NEW.ride_no = ride_no AND NEW.rider_netid = rider_netid) THEN
-    RAISE EXCEPTION 'This ride has already been booked';
-    RETURN NULL;
-  ELSE
-    RETURN NEW;
-  END IF;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER TG_No_same_ride
-  BEFORE INSERT OR UPDATE ON Reserve
-  FOR EACH ROW
-  EXECUTE PROCEDURE TF_No_same_ride();
 
 ------
 

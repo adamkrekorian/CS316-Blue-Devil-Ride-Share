@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import Form, BooleanField, StringField, IntegerField, PasswordField, validators, SubmitField, SelectField, ValidationError, DecimalField, DateTimeField
+from wtforms import Form, BooleanField, StringField, HiddenField, IntegerField, PasswordField, validators, SubmitField, SelectField, ValidationError, DecimalField, DateTimeField
 from wtforms_components import TimeField, DateRange
 from wtforms.validators import InputRequired, Length, NumberRange, Regexp, Email, DataRequired, Optional, EqualTo
 from wtforms.fields.html5 import DateTimeLocalField, DateField
@@ -203,7 +203,7 @@ class CancelRideFactory(FlaskForm):
     submit = SubmitField("Cancel Ride")
 
 class ReserveRideFormFactory(FlaskForm):
-    ride_no = IntegerField("Ride Number:", validators=[Optional()], id ="input-rideno")
+    rideNumber = HiddenField("Ride #", id="input-rideno")
     spots_needed = IntegerField("Spots Needed:", validators = [InputRequired(message='You must enter the number of seats needed')])
     notes = StringField("Notes:", validators=[Optional()])
     submit = SubmitField("Request Ride")

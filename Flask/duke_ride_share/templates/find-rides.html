@@ -72,10 +72,7 @@
             <div class="modal-body">  
                 <form id="reserveForm" method="post">
                     {{ reserveForm.csrf_token }}
-                    <!-- <p>Ride # </p><p class="rideno"></p> -->
-                    <!-- {{ reserveForm.ride_no.label }}
-                    <br>
-                    {{ reserveForm.ride_no(class_="input-rideno") }} -->
+                    {{ reserveForm.rideNumber(class_="rideno") }}
                     <br>
                     {{ form.origin_city.label }}
                     <br>
@@ -107,15 +104,17 @@
         </div>
         </div>
         <script>
+           
 
             $('#exampleModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
-                var rideno = button.data('rideno'); // Extract info from data-* attributes
+                window.ride_num = button.data('rideno'); // Extract info from data-* attributes
                 var dest = button.data('dest');
                 var modal = $(this);
                 $('p.dest').text(dest);
+                $('.rideno').val(window.ride_num);
             });
-            
+
         </script>
         {% endif %}
         <div class="col-sm-8 text-left"> 

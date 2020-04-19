@@ -3,7 +3,7 @@ from flask import Flask, render_template, redirect, url_for, request, session, f
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
-from sqlalchemy import distinct
+from sqlalchemy import distinct, update
 from datetime import date
 from database import db
 import pdb
@@ -71,10 +71,20 @@ def find_rides():
     #note- I changed this to be request.form because it works for me
     
     if reserveForm.validate_on_submit():
-        print('inside function')
-        spots_needed = request.form['spots_needed']
+        rideno = int(request.form['rideNumber'])
+        spots_needed = int(request.form['spots_needed'])
         notes = request.form['notes']
-        print("here are needed spots: ", spots_needed)
+
+        #update seats available in ride
+        edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideno).one()
+        print(edit_ride.seats_available - spots_needed)
+        edit_ride.seats_available = edit_ride.seats_available - spots_needed
+        db.session.commit()
+
+        #create entry in Reserve
+        newEntry = models.Reserve(rider_netid = session['netid'], ride_no = rideno, seats_needed = spots_needed, note = notes)
+        db.session.add(newEntry)
+        db.session.commit()
 
     return render_template('find-rides.html', form=form, reserveForm = reserveForm)
 
