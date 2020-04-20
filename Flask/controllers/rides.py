@@ -7,6 +7,7 @@ from sqlalchemy import distinct, update
 from datetime import date
 from database import db
 import pdb
+from sqlalchemy.orm import sessionmaker
 
 #app = Flask(__name__)
 #app.secret_key = 's3cr3t' #change this?
@@ -76,9 +77,25 @@ def find_rides():
         spots_needed = int(request.form['spots_needed'])
         notes = request.form['notes']
 
-        #update seats available in ride
+       
         edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideno).one()
-        print(edit_ride.seats_available - spots_needed)
+        #dont allow to book ride if requesting more spots than there is available
+        if spots_needed > edit_ride.seats_available:
+            flash("Not enough spots in this ride.")
+            return redirect(url_for('rides.find_rides')) 
+
+        #dont allow to book ride if they already have booked the same ride
+        previousReservationBool = False
+        previousReservationTemp = models.Reserve.query.filter_by(ride_no = rideno)
+        for rev in previousReservationTemp:
+            if rev.rider_netid == session['netid']:
+                previousReservationBool = True
+        if previousReservationBool == True:
+            flash("You have already reserved this ride.")
+            return redirect(url_for('rides.find_rides')) 
+        print(edit_ride.seats_available - spots_needed) 
+
+        #update seats available in ride
         edit_ride.seats_available = edit_ride.seats_available - spots_needed
         db.session.commit()
 
@@ -86,6 +103,7 @@ def find_rides():
         newEntry = models.Reserve(rider_netid = session['netid'], ride_no = rideno, seats_needed = spots_needed, note = notes)
         db.session.add(newEntry)
         db.session.commit()
+        flash("Successfully booked.")
 
     return render_template('find-rides.html', form=form, reserveForm = reserveForm)
 
@@ -240,63 +258,56 @@ def log_out():
 def account():
     
     user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
-    ridesListed = models.Ride.query.filter_by(driver_netid=session['netid']).order_by(models.Ride.ride_no.desc())
-    ridesReservedTemp = models.Reserve.query.filter_by(rider_netid=session['netid']).order_by(models.Reserve.ride_no.desc())
-    ridesReserved = []
+    ridesListed = models.Ride.query.filter_by(driver_netid=session['netid']).order_by(models.Ride.date.desc())
+    #ridesReservedTemp = models.Reserve.query.filter_by(rider_netid=session['netid']).order_by(models.Reserve.ride_no.desc())
+    #reservations = models.Reserve.query.join(models.Ride).filter_by(models.Reserve.ride_no=models.Ride.ride_no).filter_by(models.Reserve.rider_netid=session['netid'])
+    #reservationsTemp = models.Ride.query.join(models.Ride.ride_no == models.Reserve.ride_no)
+    reservations = db.session.query(models.Reserve).join(models.Ride).add_columns(models.Ride.comments, models.Ride.origin, models.Ride.date, models.Ride.destination, models.Ride.driver_netid, models.Ride.earliest_time, models.Ride.latest_time, models.Ride.seats_available, models.Ride.gas_price, models.Reserve.rider_netid, models.Reserve.ride_no, models.Reserve.note, models.Reserve.seats_needed).filter(models.Reserve.rider_netid == session['netid']).order_by(models.Ride.date.desc())
+    #reservations = []
 
-    for ride in ridesReservedTemp:
-        ridesReserved.append(models.Ride.query.filter_by(ride_no=ride.ride_no).first())
+    #for ride in reservationsTemp:
+    #    if ride.rider_netid == session['netid']:
+    #        reservations.append(ride)
 
+    #userList = users.query.join(friendships, users.id==friendships.user_id).add_columns(users.userId, users.name, users.email, friends.userId, friendId)\
+    #.filter(users.id == friendships.friend_id).filter(friendships.user_id == userID)\
+    #ridesReserved = []
+    #for ride in ridesReservedTemp:
+        #ridesReserved.append(models.Ride.query.filter_by(ride_no=ride.ride_no).first()) 
     #ridesReservedFinal = ridesReserved.order_by(models.Ride.date.desc())
     #SORT rides listed and rides reserved by date- really hard
-
 
     driver = models.Driver.query.filter_by(netid=session['netid']).first()
     if ridesListed.first()==None:
         ridesListed = None
-    if ridesReserved == []:
-        ridesReserved = None
+    if reservations.first() == None:
+        reservations = None
 
-    return render_template('account.html', user=user, driver=driver, ridesListed=ridesListed, ridesReserved=ridesReserved)
+    return render_template('account.html', user=user, driver=driver, ridesListed=ridesListed, reservations=reservations)
 
 @bp.route('/edit-info', methods=('GET', 'POST'))
 def editInfo():
     user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
     form = forms.EditInfoFactory()
 
-    
-    
-    #print("errors: ")
-    #print(form.errors)
-    #if form.is_submitted():
-        #print("submitted")
-
-    #if form.validate():
-        #print("valid")
-
-
     if form.validate_on_submit():
-        netid=user.netid
-        name=user.name
-        duke_email=user.duke_email
-        phone_number=request.form['phone_number']
+        newphone_number=request.form['phone_number']
         #note should I update so they can choose affiliation and school?
-        affiliation=user.affiliation
-        school=user.school
+        newaffiliation=request.form['affiliation']
+        newschool=request.form['school']
         #dont need to check if equal to confirm because form does that for me
-        password=request.form['password']
+        newpassword=request.form['password']
+        if newpassword != user.password:
+            flash("Password updated.")
 
-        newUser = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, affiliation= affiliation, school=school, password=password)
-        # ERROR WITH WRONG SESSION
-        #db.session.delete(userInfo)
-        #db.session.add(newUser)
-        #db.session.commit()
+        user_edit = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).one()
+        user_edit.phone_number = newphone_number
+        user_edit.affiliation = newaffiliation
+        user_edit.school = newschool
+        user_edit.password = newpassword
+        db.session.commit()
         print("NEW PASS next try")
         print(request.form['password'])
-        #user.password = request.form['password']
-        #user.phone_number = request.form['phone_number']
-        #user.password = "gracel"
-        #user.update()
         print("="*50)
         flash("User information updated.")
         return redirect(url_for('rides.account'))
@@ -339,14 +350,13 @@ def editRides():
     if form.validate_on_submit():
         ride = rideToEdit
         print(rideToEdit.comments)
-        #edit ride form here- rideToEdit is a global variable representing the ride you are editing
 
         #figure out who the edits affect
         reservesAffected = models.Reserve.query.filter_by(ride_no=rideToEdit.ride_no)
         netIDsAffected = None
 
-        for reservation in reservesAffected:
-            netIDsAffected.append(reservation.rider_netid)
+        #for reservation in reservesAffected:
+            #netIDsAffected.append(reservation.rider_netid)
 
         #could I check net ids affected with??
         #ADD BACK IN LATER
@@ -356,38 +366,33 @@ def editRides():
                 #flash("One of your reserved rides has changed")
 
         #print(netIDsAffected.first())
-        
+
+        rideNumber = rideToEdit.ride_no
         cancel = request.form['cancel']
-        print("TEST1 checking if cancelling")
-        print(cancel == "Yes")
         if cancel == "Yes":
             #how to delete a ride?
+            reservationsToDelete = db.session.query(models.Reserve).filter(models.Reserve.ride_no == rideNumber)
+            for reservation in reservationsToDelete:
+                db.session.delete(reservation)
+                db.session.commit()
             db.session.delete(rideToEdit)
             db.session.commit()
             print("ride cancelled")
             flash("Ride cancelled.")
         else:
-            #update ride here- bunch of if statements to see if null- if no changes set usersAffected to null
-            date = request.form['date']
-            earliest_departure = request.form['earliest_departure']
-            latest_departure = request.form['latest_departure']
-            gas_price = request.form['gas_price']
-            comments = request.form['comments']
-            #rideToEdit.comments = comments
-            #models.Ride.edit(ride.ride_no, date, earliest_departure, latest_departure, ride.seats_available, gas_price, comments)
-            models.Ride.edit(ride.ride_no, 1, 20, "he")
-            #db.session.update(ride)
-            #db.session.commit()
+            newearliest_departure = request.form['earliest_departure']
+            newlatest_departure = request.form['latest_departure']
+            newgas_price = request.form['gas_price']
+            newcomments = request.form['comments']
+            edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).one()
+            edit_ride.gas_price = newgas_price
+            edit_ride.comments = newcomments
+            edit_ride.earliest_time = newearliest_departure
+            edit_ride.latest_time = newlatest_departure
+            db.session.commit()
             flash("Ride updated.")
 
         return redirect(url_for('rides.account'))
-
-    #if cancelForm.validate_on_submit():
-        #how to delete here? recreate object?
-        #print("ride cancelled")
-        #flash("Ride cancelled.")
-        #return redirect(url_for('rides.account'))
-
 
     return render_template('edit-list-ride.html', form=form, formRideNo=formRideNo, validRideNo = validRideNo, ride=ride)
 
@@ -412,14 +417,6 @@ def editReservation():
             return redirect(url_for('rides.account'))
         else: 
             validRideNo = True
-    
-    #print("errors: ")
-    #print(form.errors)
-    #if form.is_submitted():
-        #print("submitted")
-
-    #if form.validate():
-        #print("valid")
 
     if form.validate_on_submit():
         cancel = request.form['cancel']
@@ -430,33 +427,61 @@ def editReservation():
 
         if cancel == "Yes":
             #how to delete a ride?
-            newSpots = reservationToEdit.seats_needed
+            newSpots = reservationToEdit.seats_needed*-1
+            print("PRINTING NEW SPOTS")
+            print(newSpots)
             db.session.delete(reservationToEdit)
             db.session.commit()
             print("reservation cancelled")
             flash("Reservation cancelled.")
+        #not cancelling-edit reservation
         else:
             updatedSpots = int(request.form['spots_needed'])
-           
-            #newSpots = updatedSpots - reservationToEdit.seats_needed
+            newSpots = updatedSpots - reservationToEdit.seats_needed
             if (updatedSpots > ride.seats_available):
                 flash("Not enough room in the ride for spots needed. Reservation not updated.")
                 return redirect(url_for('rides.account'))
-            #note can be negative
-            #models.Reserve.edit(reservationToEdit.ride_no, reservationToEdit.rider_netid, updatedSpots)
-        #try:
-            #form.errors.pop('database', None) #could be wrong
-        #models.Ride.edit(ride.ride_no, ride.origin, ride.destination, ride.driver_netid, ride.date, ride.earliest_time, ride.latest_time, ride.seats_available-newSpots, ride.gas_price, ride.comments)
-        flash("Reservation updated.")
+            reservation_edit = db.session.query(models.Reserve).filter(models.Reserve.ride_no == rideNumber).one()
+            reservation_edit.seats_needed = updatedSpots
+            db.session.commit()
+            flash("Reservation updated.")
+        #edit seats available no matter what
+        ride_edit = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).one()
+        ride_edit.seats_available = ride.seats_available - newSpots
+        db.session.commit()
+        
+        
         return redirect(url_for('rides.account'))
         #except BaseException as e:
             #form.errors['database'] = str(e) #could be wrong
 
         #return redirect(url_for('rides.account'))
-    else:
-        flash("Error submitting your form.")
     
     return render_template('edit-reservation.html', user=user, debug=True, form=form, validRideNo=validRideNo, formRideNo=formRideNo, reservation=reservation)
+
+@bp.route('/riders-netids', methods=('GET', 'POST'))
+def Riders_Netids():
+    form = forms.RideNumberFactory()
+    validRideNo = False
+    ride = None
+    reservations = None
+    rideNumber = None
+    
+    if form.validate_on_submit():
+        rideNumber = request.form['ride_no']
+        ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).filter(models.Ride.driver_netid == session['netid']).first()
+        if (ride == None):
+            flash("Ride not found.")
+            return redirect(url_for('rides.account'))
+        else: 
+            validRideNo = True
+            reservations = db.session.query(models.Reserve).filter(models.Reserve.ride_no == ride.ride_no)
+            print("printing revs")
+            for rev in reservations:
+                print(rev.rider_netid)
+            print("done printing revs")
+
+    return render_template('riders-netids.html', form=form, validRideNo = validRideNo, reservations=reservations, rideNumber=rideNumber)
 
 
 

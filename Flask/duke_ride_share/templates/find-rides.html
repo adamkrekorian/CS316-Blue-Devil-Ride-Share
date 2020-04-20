@@ -7,6 +7,16 @@
         <div class="col-sm-2 sidenav">
             <!-- empty left sidebar -->
         </div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+        <h3><b><font color="red"> {{ message }}</font></b></h3>
+        {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
         <div class="col-sm-8 text-left"> 
             <h1>Search for Rides</h1>
             <hr>

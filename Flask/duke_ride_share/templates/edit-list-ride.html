@@ -36,16 +36,12 @@
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>
                 {{ form.csrf_token }}
 
-                {{ form.date.label }}<br>
-                {{ form.date(value=ride.date)}}
-                <br>
-
                 {{ form.earliest_departure.label }}<br>
-                {{ form.earliest_departure(value=ride.earliest_time)}}
+                {{ form.earliest_departure(value=ride.earliest_time, format='%H:%M')}}
                 <br>
 
                 {{ form.latest_departure.label }}<br>
-                {{ form.latest_departure(value=ride.latest_time)}}
+                {{ form.latest_departure(value=ride.latest_time, format='%H:%M')}}
                 <br>
 
                 {{ form.gas_price.label }}<br>

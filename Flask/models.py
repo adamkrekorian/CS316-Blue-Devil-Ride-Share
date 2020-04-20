@@ -30,16 +30,6 @@ class Ride(db.Model):
     seats_available = db.Column('seats_available', db.Integer())
     gas_price = db.Column('gas_price', db.Integer())
     comments = db.Column('comments', db.String(500))
-    @staticmethod
-    def edit(ride_no, newSeats_available, gas_price, comments):
-    #def edit(ride_no, date, earliest_departure, latest_departure, newSeats_available, gas_price, comments):
-        try:
-            db.session.execute('UPDATE ride SET gas_price = :gas_price, comments = :comments, seats_available = :newSeats_available'
-                               ' WHERE ride_no = :ride_no')
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            raise e
 
 class Reserve(db.Model):
     __tablename__= 'reserve'
@@ -48,36 +38,3 @@ class Reserve(db.Model):
     rider_netid = db.Column('rider_netid', db.String(7), db.ForeignKey('rideshare_user.netid'), primary_key=True)
     seats_needed = db.Column('seats_needed', db.Integer())
     note = db.Column('note', db.String(500)) 
-    @staticmethod
-    def edit(ride_no, rider_netid, newSeats_needed, note):
-        try:
-            db.session.execute('UPDATE reserve SET seats_needed = :newSeats_needed'
-                               ' WHERE ride_no = :ride_no')
-                               #dict(old_name=old_name, name=name, address=address))
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            raise e
-
-    @staticmethod
-    def edit(old_name, name, address, beers_liked, bars_frequented):
-        try:
-            db.session.execute('DELETE FROM likes WHERE drinker = :name',
-                               dict(name=old_name))
-            db.session.execute('DELETE FROM frequents WHERE drinker = :name',
-                               dict(name=old_name))
-            db.session.execute('UPDATE drinker SET name = :name, address = :address'
-                               ' WHERE name = :old_name',
-                               dict(old_name=old_name, name=name, address=address))
-            for beer in beers_liked:
-                db.session.execute('INSERT INTO likes VALUES(:drinker, :beer)',
-                                   dict(drinker=name, beer=beer))
-            for bar, times_a_week in bars_frequented:
-                db.session.execute('INSERT INTO frequents'
-                                   ' VALUES(:drinker, :bar, :times_a_week)',
-                                   dict(drinker=name, bar=bar,
-                                        times_a_week=times_a_week))
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            raise e
