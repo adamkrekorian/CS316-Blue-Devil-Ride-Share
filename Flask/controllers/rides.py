@@ -17,8 +17,9 @@ import pdb
 import forms
 import models
 
-#Grace's variables
+#Grace's global variables
 rideToEdit = None
+reservationToEdit = None
 
 bp = Blueprint('rides', __name__, url_prefix = '/rides', template_folder = 'templates')
 
@@ -68,7 +69,7 @@ def find_rides():
     
     print(reserveForm.validate_on_submit())
     print(reserveForm.errors)
-    #note- I changed this to be request.form because it works for me
+    #note- I changed this to be request.form because it works for me - grace
     
     if reserveForm.validate_on_submit():
         rideno = int(request.form['rideNumber'])
@@ -336,8 +337,11 @@ def editRides():
         print("FORM valid")
 
     if form.validate_on_submit():
+        ride = rideToEdit
         print(rideToEdit.comments)
         #edit ride form here- rideToEdit is a global variable representing the ride you are editing
+
+        #figure out who the edits affect
         reservesAffected = models.Reserve.query.filter_by(ride_no=rideToEdit.ride_no)
         netIDsAffected = None
 
@@ -345,10 +349,11 @@ def editRides():
             netIDsAffected.append(reservation.rider_netid)
 
         #could I check net ids affected with??
-        if (netIDsAffected != None):
-            for netidAffected in netIDsAffected:
-                session['netidAffected']
-                flash("One of your reserved rides has changed")
+        #ADD BACK IN LATER
+        #if (netIDsAffected != None):
+            #for netidAffected in netIDsAffected:
+                #session['netidAffected']
+                #flash("One of your reserved rides has changed")
 
         #print(netIDsAffected.first())
         
@@ -366,29 +371,15 @@ def editRides():
             date = request.form['date']
             earliest_departure = request.form['earliest_departure']
             latest_departure = request.form['latest_departure']
-            seats_available = request.form['seats_available']
             gas_price = request.form['gas_price']
             comments = request.form['comments']
+            #rideToEdit.comments = comments
+            #models.Ride.edit(ride.ride_no, date, earliest_departure, latest_departure, ride.seats_available, gas_price, comments)
+            models.Ride.edit(ride.ride_no, 1, 20, "he")
             #db.session.update(ride)
             #db.session.commit()
-
-
-            #how to check if empty correctly?
-            #if date == None:
-                #date = ride.date
-            #if earliest_departure == None:
-                #earliest_departure = ride.earliest_departure
-            #if latest_departure == None:
-                #latest_departure = ride.latest_departure
-            #if seats_available == None:
-                #seats_available = ride.seats_available
-            #if gas_price == None:
-                #gas_price = ride.gas_price
-            #if comments == None:
-                #comments = ride.comments
-
-
             flash("Ride updated.")
+
         return redirect(url_for('rides.account'))
 
     #if cancelForm.validate_on_submit():
@@ -400,15 +391,72 @@ def editRides():
 
     return render_template('edit-list-ride.html', form=form, formRideNo=formRideNo, validRideNo = validRideNo, ride=ride)
 
-#@bp.route('/edit-ride', methods=('GET', 'POST'))
-#def editRidesInformation():
-    #form=forms.EditRideFactory()
 
-    #if form.validate_on_submit():
-        #print("form worked")
-        #update ride information here
+@bp.route('/edit-reservation', methods=('GET', 'POST'))
+def editReservation():
+    user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
+    form = forms.EditReservationFactory()
+    formRideNo = forms.RideNumberFactory()
+    reservation = None
+    validRideNo = False
 
-    #return render_template('edit-ride.html', debug=True, form=form)
+    if formRideNo.validate_on_submit():
+        rideNumber = request.form['ride_no']
+        global reservationToEdit
+        reservationToEdit = db.session.query(models.Reserve) \
+                    .filter(models.Reserve.ride_no == rideNumber) \
+                    .filter(models.Reserve.rider_netid == session['netid']).first()
+        reservation = reservationToEdit
+        if (reservation == None):
+            flash("Reservation not found.")
+            return redirect(url_for('rides.account'))
+        else: 
+            validRideNo = True
+    
+    #print("errors: ")
+    #print(form.errors)
+    #if form.is_submitted():
+        #print("submitted")
+
+    #if form.validate():
+        #print("valid")
+
+    if form.validate_on_submit():
+        cancel = request.form['cancel']
+        newSpots = 0
+        rideNumber = reservationToEdit.ride_no
+        ride = db.session.query(models.Ride) \
+                    .filter(models.Ride.ride_no == rideNumber).first()
+
+        if cancel == "Yes":
+            #how to delete a ride?
+            newSpots = reservationToEdit.seats_needed
+            db.session.delete(reservationToEdit)
+            db.session.commit()
+            print("reservation cancelled")
+            flash("Reservation cancelled.")
+        else:
+            updatedSpots = int(request.form['spots_needed'])
+           
+            #newSpots = updatedSpots - reservationToEdit.seats_needed
+            if (updatedSpots > ride.seats_available):
+                flash("Not enough room in the ride for spots needed. Reservation not updated.")
+                return redirect(url_for('rides.account'))
+            #note can be negative
+            #models.Reserve.edit(reservationToEdit.ride_no, reservationToEdit.rider_netid, updatedSpots)
+        #try:
+            #form.errors.pop('database', None) #could be wrong
+        #models.Ride.edit(ride.ride_no, ride.origin, ride.destination, ride.driver_netid, ride.date, ride.earliest_time, ride.latest_time, ride.seats_available-newSpots, ride.gas_price, ride.comments)
+        flash("Reservation updated.")
+        return redirect(url_for('rides.account'))
+        #except BaseException as e:
+            #form.errors['database'] = str(e) #could be wrong
+
+        #return redirect(url_for('rides.account'))
+    else:
+        flash("Error submitting your form.")
+    
+    return render_template('edit-reservation.html', user=user, debug=True, form=form, validRideNo=validRideNo, formRideNo=formRideNo, reservation=reservation)
 
 
 

@@ -174,7 +174,7 @@ class ListRideFormFactory(FlaskForm):
     comments = StringField("Comments:")
     submit = SubmitField("Submit")
 
-#NOTE: how do I make it yell at people if password isn't equal to confirm password?
+#NOTE: how do I make it yell at people if password isn't equal to confirm password?- how to flash the message?
 
 class EditInfoFactory(FlaskForm):
     phone_number = IntegerField("Phone Number:", validators = [Optional()])
@@ -192,15 +192,16 @@ class EditRideFactory(FlaskForm):
     date = DateField("Departure Date:",  format='%Y-%m-%d', validators=[DateRange(min = datetime.date.today())])
     earliest_departure = TimeField("Earliest Time of Departure:", format='%H:%M:%S')
     latest_departure = TimeField("Latest Time of Departure:", validators=[GreaterThanWithNull('earliest_departure')], format='%H:%M:%S') # format='%H:%M')
-    seats_available = IntegerField("Number of Seats Available:")
+    #seats_available = IntegerField("Number of Seats Available:")
     gas_price = DecimalField("Gas Price:", places=2, rounding=None)
     comments = StringField("Comments:")
     cancel = SelectField("Would you like to cancel this ride?", choices = [('No', 'No'), ('Yes', 'Yes')])
     submit = SubmitField("Save")
 
-class CancelRideFactory(FlaskForm):
-    cancel = SelectField("Would you like to cancel this ride?", choices = [('No', 'No'), ('Yes', 'Yes')])
-    submit = SubmitField("Cancel Ride")
+class EditReservationFactory(FlaskForm):
+    spots_needed = IntegerField("Spots Needed:")
+    cancel = SelectField("Would you like to cancel your reservation for this ride?", choices = [('No', 'No'), ('Yes', 'Yes')])
+    submit = SubmitField("Save")
 
 class ReserveRideFormFactory(FlaskForm):
     rideNumber = HiddenField("Ride #", id="input-rideno")

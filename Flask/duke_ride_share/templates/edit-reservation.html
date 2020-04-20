@@ -11,7 +11,7 @@
           {% if validRideNo == False %}
             <h1>Enter Ride Number</h1>
             <center>
-            <form action = "/rides/edit-list-ride"  onsubmit="return validateForm();" method="post">
+            <form action = "/rides/edit-reservation"  onsubmit="return validateForm();" method="post">
               <div style = font-size:14px; font-weight:bold; margin-left:150px;>
               {{ formRideNo.csrf_token }}
              
@@ -32,29 +32,14 @@
             <hr>
             <center>
               
-              <form action = "/rides/edit-list-ride"  onsubmit="return validateForm();" method="post">
+              <form action = "/rides/edit-reservation"  onsubmit="return validateForm();" method="post">
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>
                 {{ form.csrf_token }}
 
-                {{ form.date.label }}<br>
-                {{ form.date(value=ride.date)}}
+                {{ form.spots_needed.label }}<br>
+                {{ form.spots_needed(value=reservation.seats_needed)}}
                 <br>
-
-                {{ form.earliest_departure.label }}<br>
-                {{ form.earliest_departure(value=ride.earliest_time)}}
-                <br>
-
-                {{ form.latest_departure.label }}<br>
-                {{ form.latest_departure(value=ride.latest_time)}}
-                <br>
-
-                {{ form.gas_price.label }}<br>
-                {{ form.gas_price(value=ride.gas_price) }}
-                <br>
-
-                {{ form.comments.label }}<br>
-                {{ form.comments(value=ride.comments) }}
-                <br>
+            
 
                 {{ form.cancel.label }}<br>
                 {{ form.cancel(value='Yes') }}
