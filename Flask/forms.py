@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import Form, BooleanField, StringField, HiddenField, IntegerField, PasswordField, validators, SubmitField, SelectField, ValidationError, DecimalField, DateTimeField
 from wtforms_components import TimeField, DateRange
-from wtforms.validators import InputRequired, Length, NumberRange, Regexp, Email, DataRequired, Optional, EqualTo
+from wtforms.validators import InputRequired, Length, NumberRange, Regexp, Email, DataRequired, Optional, EqualTo, ValidationError
 from wtforms.fields.html5 import DateTimeLocalField, DateField
 from app import db
 import models
@@ -123,7 +123,7 @@ class SearchFormFactory(FlaskForm):
     ride_no = IntegerField("Ride #", validators=[Optional()])
     origin_city = SelectField("Origin City:", coerce=str, choices = [('Albuquerque, NM', 'Albuquerque, NM'), ('Arlington, TX', 'Arlington, TX'), ('Asheville, NC', 'Asheville, NC'), ('Aspen, CO', 'Aspen, CO'), ('Atlanta, GA', 'Atlanta, GA'), ('Austin, TX', 'Austin, TX'), ('Baltimore, MD', 'Baltimore, MD'), ('Boca Grande, FL', 'Boca Grande, FL'), ('Boston, MA', 'Boston, MA'), ('Cary, NC', 'Cary, NC'), ('Charlotte, NC', 'Charlotte, NC'), ('Chicago, IL', 'Chicago, IL'), ('Colorado Springs, CO', 'Colorado Springs, CO'), ('Columbus, OH', 'Columbus, OH'), ('Concord, NC', 'Concord, NC'), ('Dallas, TX', 'Dallas, TX'), ('Denver, CO', 'Denver, CO'), ('Detroit, MI', 'Detroit, MI'), ('Durham, NC', 'Durham, NC'), ('El Paso, TX', 'El Paso, TX'), ('Fayetteville, NC', 'Fayetteville, NC'), ('Fort Worth, TX', 'Fort Worth, TX'), ('Fresno, CA', 'Fresno, CA'), ('Greensboro, NC', 'Greensboro, NC'), ('Greenville, NC', 'Greenville, NC'), ('High Point, NC', 'High Point, NC'), ('Houston, TX', 'Houston, TX'), ('Indianapolis, IN', 'Indianapolis, IN'), ('Jacksonville, FL', 'Jacksonville, FL'), ('Kansas City, MO', 'Kansas City, MO'), ('Las Vegas, NV', 'Las Vegas, NV'), ('Long Beach, CA', 'Long Beach, CA'), ('Los Angeles, CA', 'Los Angeles, CA'), ('Louisville, KY', 'Louisville, KY'), ('Memphis, TN', 'Memphis, TN'), ('Mesa, AZ', 'Mesa, AZ'), ('Miami, FL', 'Miami, FL'), ('Milwaukee, WI', 'Milwaukee, WI'), ('Minneapolis, MN', 'Minneapolis, MN'), ('Myrtle Beach, SC', 'Myrtle Beach, SC'), ('Nashville, TN', 'Nashville, TN'), ('New Orleans, LA', 'New Orleans, LA'), ('New York, NY', 'New York, NY'), ('Oakland, CA', 'Oakland, CA'), ('Oklahoma City, OK', 'Oklahoma City, OK'), ('Omaha, NE', 'Omaha, NE'), ('Philadelphia, PA', 'Philadelphia, PA'), ('Phoenix, AZ', 'Phoenix, AZ'), ('Portland, OR', 'Portland, OR'), ('Raleigh, NC', 'Raleigh, NC'), ('Sacramento, CA', 'Sacramento, CA'), ('San Antonio, TX', 'San Antonio, TX'), ('San Diego, CA', 'San Diego, CA'), ('San Francisco, CA', 'San Francisco, CA'), ('San Jose, CA', 'San Jose, CA'), ('Seattle, WA', 'Seattle, WA'), ('Tucson, AZ', 'Tucson, AZ'), ('Tulsa, OK', 'Tulsa, OK'), ('Virginia Beach, VA', 'Virginia Beach, VA'), ('Washington, DC', 'Washington, DC'), ('Wichita, KS', 'Wichita, KS'), ('Wilmington, NC', 'Wilmington, NC'), ('Winston-Salem, NC', 'Winston-Salem, NC')], default = 'Durham, NC')
     destination = SelectField("Destination City:", validators = [InputRequired(message='Please enter destination'), NotEqualTo('origin_city')], choices = [('Search All', 'Search All'), ('Albuquerque, NM', 'Albuquerque, NM'), ('Arlington, TX', 'Arlington, TX'), ('Asheville, NC', 'Asheville, NC'), ('Aspen, CO', 'Aspen, CO'), ('Atlanta, GA', 'Atlanta, GA'), ('Austin, TX', 'Austin, TX'), ('Baltimore, MD', 'Baltimore, MD'), ('Boca Grande, FL', 'Boca Grande, FL'), ('Boston, MA', 'Boston, MA'), ('Cary, NC', 'Cary, NC'), ('Charlotte, NC', 'Charlotte, NC'), ('Chicago, IL', 'Chicago, IL'), ('Colorado Springs, CO', 'Colorado Springs, CO'), ('Columbus, OH', 'Columbus, OH'), ('Concord, NC', 'Concord, NC'), ('Dallas, TX', 'Dallas, TX'), ('Denver, CO', 'Denver, CO'), ('Detroit, MI', 'Detroit, MI'), ('Durham, NC', 'Durham, NC'), ('El Paso, TX', 'El Paso, TX'), ('Fayetteville, NC', 'Fayetteville, NC'), ('Fort Worth, TX', 'Fort Worth, TX'), ('Fresno, CA', 'Fresno, CA'), ('Greensboro, NC', 'Greensboro, NC'), ('Greenville, NC', 'Greenville, NC'), ('High Point, NC', 'High Point, NC'), ('Houston, TX', 'Houston, TX'), ('Indianapolis, IN', 'Indianapolis, IN'), ('Jacksonville, FL', 'Jacksonville, FL'), ('Kansas City, MO', 'Kansas City, MO'), ('Las Vegas, NV', 'Las Vegas, NV'), ('Long Beach, CA', 'Long Beach, CA'), ('Los Angeles, CA', 'Los Angeles, CA'), ('Louisville, KY', 'Louisville, KY'), ('Memphis, TN', 'Memphis, TN'), ('Mesa, AZ', 'Mesa, AZ'), ('Miami, FL', 'Miami, FL'), ('Milwaukee, WI', 'Milwaukee, WI'), ('Minneapolis, MN', 'Minneapolis, MN'), ('Myrtle Beach, SC', 'Myrtle Beach, SC'), ('Nashville, TN', 'Nashville, TN'), ('New Orleans, LA', 'New Orleans, LA'), ('New York, NY', 'New York, NY'), ('Oakland, CA', 'Oakland, CA'), ('Oklahoma City, OK', 'Oklahoma City, OK'), ('Omaha, NE', 'Omaha, NE'), ('Philadelphia, PA', 'Philadelphia, PA'), ('Phoenix, AZ', 'Phoenix, AZ'), ('Portland, OR', 'Portland, OR'), ('Raleigh, NC', 'Raleigh, NC'), ('Sacramento, CA', 'Sacramento, CA'), ('San Antonio, TX', 'San Antonio, TX'), ('San Diego, CA', 'San Diego, CA'), ('San Francisco, CA', 'San Francisco, CA'), ('San Jose, CA', 'San Jose, CA'), ('Seattle, WA', 'Seattle, WA'), ('Tucson, AZ', 'Tucson, AZ'), ('Tulsa, OK', 'Tulsa, OK'), ('Virginia Beach, VA', 'Virginia Beach, VA'), ('Washington, DC', 'Washington, DC'), ('Wichita, KS', 'Wichita, KS'), ('Wilmington, NC', 'Wilmington, NC'), ('Winston-Salem, NC', 'Winston-Salem, NC')])
-    date = DateField("Departure Date:", validators=[InputRequired(message='Please enter desired departure date'), DateRange(min = datetime.date.today())], format='%Y-%m-%d',)
+    date = DateField("Departure Date:", validators=[InputRequired(message='Please enter desired departure date'), DateRange(min = datetime.date.today())], format='%Y-%m-%d')
     # earliest_departure = TimeField("Earliest Time of Departure:", validators=[InputRequired(message='Please enter the earliest time of departure')], format='%H:%M')
     # latest_departure = TimeField("Latest Time of Departure:", validators=[InputRequired(message='Please enter the latest time of departure'), GreaterThan('earliest_departure')], format='%H:%M')
     spots_needed = IntegerField("Spots Needed:", validators=[InputRequired(message='Please enter spots needed')])
@@ -146,11 +146,13 @@ class ListRideFormFactory(FlaskForm):
 #NOTE: how do I make it yell at people if password isn't equal to confirm password?- how to flash the message?
 
 class EditInfoFactory(FlaskForm):
-    phone_number = IntegerField("Phone Number:", validators = [Optional()])
+    phone_number = IntegerField("Phone Number:")
     #affiliation = SelectField("Affiliation:", choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
     #school = SelectField("School:", choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity'), ('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')])
-    password = PasswordField("New password or enter current password to make changes:", validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('confirmPassword'), InputRequired(message='Must enter password to make changes')])
-    confirmPassword = PasswordField("Confirm Password:", validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('password'), InputRequired(message='Must confirm password')])
+    #password = PasswordField("New password or enter current password to make changes:", validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('confirmPassword'), InputRequired(message='Must enter password to make changes')])
+    #confirmPassword = PasswordField("Confirm Password:", validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('password'), InputRequired(message='Must confirm password')])
+    password = PasswordField("New password or enter current password to make changes:", validators = [InputRequired(message='Must enter password to make changes'), Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100')])
+    confirmPassword = PasswordField("Confirm Password:", validators = [InputRequired(message='Must confirm password')])
     submit = SubmitField("Save")
 
 class RideNumberFactory(FlaskForm):
@@ -159,8 +161,8 @@ class RideNumberFactory(FlaskForm):
 
 class EditRideFactory(FlaskForm):
     #date = DateField("Departure Date:",  format='%Y-%m-%d', validators=[DateRange(min = datetime.date.today())])
-    earliest_departure = TimeField("Earliest Time of Departure:", validators = [Optional()], format='%H:%M:%S')
-    latest_departure = TimeField("Latest Time of Departure:", validators = [Optional()], format='%H:%M:%S')  #validators=[GreaterThan('earliest_departure')],
+    #earliest_departure = TimeField("Earliest Time of Departure:", validators = [Optional()], format='%H:%M:%S')
+    #latest_departure = TimeField("Latest Time of Departure:", validators = [Optional()], format='%H:%M:%S')  #validators=[GreaterThan('earliest_departure')],
     #seats_available = IntegerField("Number of Seats Available:")
     gas_price = DecimalField("Gas Price:", places=2, rounding=None, validators=[Optional()])
     comments = StringField("Comments:", validators=[Optional()])
@@ -177,3 +179,8 @@ class ReserveRideFormFactory(FlaskForm):
     spots_needed = IntegerField("Spots Needed:", validators = [InputRequired(message='You must enter the number of seats needed')])
     notes = StringField("Notes:", validators=[Optional()])
     submit = SubmitField("Request Ride")
+
+class EditRideTimeFactory(FlaskForm):
+    earliest_departure = TimeField("Earliest Time of Departure:", validators = [InputRequired(message='You must enter the earliest time of departure')], format='%H:%M')
+    latest_departure = TimeField("Latest Time of Departure:", validators = [InputRequired(message='You must enter the latest time of departure'), GreaterThan('earliest_departure')], format='%H:%M')
+    submit = SubmitField("Save")

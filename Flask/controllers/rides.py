@@ -9,6 +9,7 @@ from database import db
 import pdb
 from sqlalchemy.orm import sessionmaker
 
+
 #app = Flask(__name__)
 #app.secret_key = 's3cr3t' #change this?
 #app.config.from_object('config')
@@ -21,6 +22,7 @@ import models
 #Grace's global variables
 rideToEdit = None
 reservationToEdit = None
+rideToEditTime = None
 
 bp = Blueprint('rides', __name__, url_prefix = '/rides', template_folder = 'templates')
 
@@ -35,6 +37,8 @@ def find_rides():
     form = forms.SearchFormFactory()
     reserveForm = forms.ReserveRideFormFactory()
 
+    print("in find rides")
+
     if 'logged_in' not in session:
         if session['logged_in']==False:
             flash("You are not logged in. Redirecting you to log in.")
@@ -46,47 +50,56 @@ def find_rides():
 
     else:
         if form.validate_on_submit():
-
+            print("find form valid and submitted")
             origin_city = request.form['origin_city']
             destination = request.form['destination']
             date = request.form['date']
             spots_needed = request.form['spots_needed']
 
+            resultsTemp = None
+            results = []
+            #TRY ADDING SOMETHING TO MAKE SURE NOT YOUR RIDE
             if destination == "Search All":
-                results = db.session.query(models.Ride) \
+                resultsTemp = db.session.query(models.Ride) \
                     .filter(models.Ride.origin == origin_city) \
                     .filter(models.Ride.date == date) \
                     .filter(models.Ride.seats_available >= spots_needed).all()
 
             else:
-                results = db.session.query(models.Ride) \
+                resultsTemp = db.session.query(models.Ride) \
                     .filter(models.Ride.origin == origin_city) \
                     .filter(models.Ride.destination == destination) \
                     .filter(models.Ride.date == date) \
                     .filter(models.Ride.seats_available >= spots_needed).all()
-            results = [x.__dict__ for x in results]
+
+            myRides = db.session.query(models.Ride).filter(models.Ride.driver_netid == session['netid'])
+            myRidesNumbers = []
+            for ride in myRides:
+                myRidesNumbers.append(ride.ride_no)
+            for ride in resultsTemp:
+                if not (ride.ride_no in myRidesNumbers):
+                    results.append(ride)
+                
+            results = [x.__dict__ for x in results] #what does this do?
             print('we are hereeeeeeee')
             return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results)
 
-        if form.is_submitted() and not form.validate():
-            print("IN RIDES AND DIDNT VALIDATE")
-            flash("Please enter a date after today's date.")
-            return redirect(url_for('rides.find_rides'))
+        
 
     #print(reserveForm.validate_on_submit())
     #print(reserveForm.errors)
     #note- I changed this to be request.form because it works for me - grace
     
     if reserveForm.validate_on_submit():
+        print("reserve form valid and submit")
         rideno = int(request.form['rideNumber'])
         spots_needed = int(request.form['spots_needed'])
         notes = request.form['notes']
-
        
         edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideno).one()
         #dont allow to book ride if requesting more spots than there is available
         if spots_needed > edit_ride.seats_available:
-            flash("Not enough spots in this ride.")
+            flash("Not enough spots in this ride as you changed spots needed from your initial request.")
             return redirect(url_for('rides.find_rides')) 
 
         #dont allow to book ride if they already have booked the same ride
@@ -109,7 +122,7 @@ def find_rides():
         db.session.add(newEntry)
         db.session.commit()
         flash("Successfully booked.")
-
+    print("end of find rides")
     return render_template('find-rides.html', form=form, reserveForm = reserveForm)
 
 
@@ -302,9 +315,22 @@ def editInfo():
         #newschool=request.form['school']
         #dont need to check if equal to confirm because form does that for me
         newpassword=request.form['password']
-        if newpassword != user.password:
-            flash("Password updated.")
+        confirmpassword = request.form['confirmPassword']
 
+        #CHECKS
+        #check if password and confirm password equal
+        if newpassword != confirmpassword:
+            flash("Confirm password and new password must match.")
+            return redirect(url_for('rides.account'))
+
+        #check if password in range
+        if len(newpassword)<5 or len(newpassword)>100:
+            flash("New password must be at least 5 characters and no more than 100.")
+            return redirect(url_for('rides.account'))
+
+        if newpassword != user.password:
+            flash("Password updated.") 
+        #can just do this even if they do not make any changes
         user_edit = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).one()
         user_edit.phone_number = newphone_number
         #user_edit.affiliation = newaffiliation
@@ -313,6 +339,7 @@ def editInfo():
         db.session.commit()
         flash("User information updated.")
         return redirect(url_for('rides.account'))
+
     
     return render_template('edit-info.html', user=user, debug=True, form=form)
     
@@ -338,15 +365,14 @@ def editRides():
         else: 
             print(ride.earliest_time)
             validRideNo = True
-
     
     if form.validate_on_submit():
         ride = rideToEdit
         print(rideToEdit.comments)
 
         #figure out who the edits affect
-        reservesAffected = models.Reserve.query.filter_by(ride_no=rideToEdit.ride_no)
-        netIDsAffected = None
+        #reservesAffected = models.Reserve.query.filter_by(ride_no=rideToEdit.ride_no)
+        #netIDsAffected = None
         #for reservation in reservesAffected:
             #netIDsAffected.append(reservation.rider_netid)
         #could I check net ids affected with??
@@ -370,8 +396,8 @@ def editRides():
             print("ride cancelled")
             flash("Ride cancelled.")
         else:
-            newearliest_departure = request.form['earliest_departure']
-            newlatest_departure = request.form['latest_departure']
+           # newearliest_departure = request.form['earliest_departure']
+            #newlatest_departure = request.form['latest_departure']
             newgas_price = request.form['gas_price']
             newcomments = request.form['comments']
 
@@ -386,8 +412,8 @@ def editRides():
             edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).one()
             edit_ride.gas_price = newgas_price
             edit_ride.comments = newcomments
-            edit_ride.earliest_time = newearliest_departure
-            edit_ride.latest_time = newlatest_departure
+            #edit_ride.earliest_time = newearliest_departure
+            #edit_ride.latest_time = newlatest_departure
             db.session.commit()
             flash("Ride updated.")
 
@@ -475,12 +501,63 @@ def Riders_Netids():
         else: 
             validRideNo = True
             reservations = db.session.query(models.Reserve).filter(models.Reserve.ride_no == ride.ride_no)
-            print("printing revs")
-            for rev in reservations:
-                print(rev.rider_netid)
-            print("done printing revs")
+            if reservations.first() == None:
+                reservations = None
 
     return render_template('riders-netids.html', form=form, validRideNo = validRideNo, reservations=reservations, rideNumber=rideNumber)
+
+@bp.route('/edit-ride-time', methods=('GET', 'POST'))
+def editRideTime():
+    form = forms.EditRideTimeFactory()
+    formRideNo = forms.RideNumberFactory()
+    validRideNo = False
+    ride = None
+    validatingRideNo = False
+    
+    if formRideNo.validate_on_submit():
+        validatingRideNo = True
+        rideNumber = request.form['ride_no']
+        global rideToEditTime
+        rideToEditTime = db.session.query(models.Ride) \
+                    .filter(models.Ride.ride_no == rideNumber) \
+                    .filter(models.Ride.driver_netid == session['netid']).first()
+        ride = rideToEditTime
+        
+        if (ride == None):
+            flash("Ride not found.")
+            return redirect(url_for('rides.account'))
+        reservations = db.session.query(models.Reserve).filter(models.Reserve.ride_no == rideNumber)
+        if reservations.first() == None:
+            reservations = None
+        if not (reservations == None): #check if people already reserved this
+            flash("You cannot change the time of ride people have already reserved. Please coordinate with them directly. You can find their netids via the form on the right.")
+            return redirect(url_for('rides.account')) 
+        else:
+            validRideNo = True
+
+    if form.validate_on_submit():
+        ride = rideToEditTime
+        rideNumber = rideToEditTime.ride_no
+        newearliest_departure = request.form['earliest_departure']
+        newlatest_departure = request.form['latest_departure']
+        edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).one()
+        edit_ride.earliest_time = newearliest_departure
+        edit_ride.latest_time = newlatest_departure
+        db.session.commit()
+        flash("Ride time updated.")
+        return redirect(url_for('rides.account'))
+    else:
+        #is passes this if statement means that they hit only error which is making latest departure time before earliest depature time
+        if not validatingRideNo and form.is_submitted():
+            print("SECOND TIME")
+            flash("Must make latest time of depature after earliest time of departure.")
+            return redirect(url_for('rides.account'))
+
+
+
+    print("leaving function")
+
+    return render_template('edit-ride-time.html', form=form, formRideNo=formRideNo, validRideNo = validRideNo, ride=ride)
 
 
 

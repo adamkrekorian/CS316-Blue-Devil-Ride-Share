@@ -30,6 +30,10 @@
                 <br>
                 {{ form.date.label }}
                 {{ form.date (placeholder='YYYY-MM-DD') }}
+                {% if form.date.errors %}
+                 <ul class="errors">{% for error in form.date.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+
                 {{ form.spots_needed.label }}
                 {{ form.spots_needed }}
                 <br>

@@ -16,7 +16,11 @@
 
                 {{ form.phone_number.label }}<br>
                 {{ form.phone_number(value=user.phone_number)}}
+                {% if form.phone_number.errors %}
+                 <ul class="errors">{% for error in form.phone_number.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
                 <br>
+                
                
                 {{ form.password.label }}<br>
                 {{ form.password }}
