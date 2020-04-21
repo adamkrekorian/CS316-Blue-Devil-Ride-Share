@@ -21,7 +21,10 @@
                 {% endif %}
                 <br>
                 
-               
+                {{ form.affiliation.label }}<br>
+                {{ form.affiliation(value=user.affiliation)}}
+                <br>
+
                 {{ form.password.label }}<br>
                 {{ form.password }}
                 <br>

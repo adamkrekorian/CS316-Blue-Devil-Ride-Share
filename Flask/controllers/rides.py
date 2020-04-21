@@ -35,8 +35,9 @@ def home_page():
 @bp.route('/find-rides', methods=('GET', 'POST'))
 def find_rides():
     form = forms.SearchFormFactory()
-    reserveForm = forms.ReserveRideFormFactory()
-
+    errors = []
+    results = []
+    reserveForm = None #should remove
     print("in find rides")
 
     if 'logged_in' not in session:
@@ -56,15 +57,21 @@ def find_rides():
             date = request.form['date']
             spots_needed = request.form['spots_needed']
 
+            if origin_city == destination:
+                print("HEREEEE")
+                errors.append("Origin and destination cannot be the same.") #not printing
+                return redirect(url_for('rides.find_rides'))
+            #write function to see if date is less than todays date
+            #if date<
+                #errors.append("Date entered must be after today's date.")
+                #return redirect(url_for('rides.find_ride'))
+
             resultsTemp = None
-            results = []
-            #TRY ADDING SOMETHING TO MAKE SURE NOT YOUR RIDE
             if destination == "Search All":
                 resultsTemp = db.session.query(models.Ride) \
                     .filter(models.Ride.origin == origin_city) \
                     .filter(models.Ride.date == date) \
                     .filter(models.Ride.seats_available >= spots_needed).all()
-
             else:
                 resultsTemp = db.session.query(models.Ride) \
                     .filter(models.Ride.origin == origin_city) \
@@ -82,14 +89,18 @@ def find_rides():
                 
             results = [x.__dict__ for x in results] #what does this do?
             print('we are hereeeeeeee')
-            return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results)
+            return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results, errors=errors)
 
-        
-
-    #print(reserveForm.validate_on_submit())
-    #print(reserveForm.errors)
-    #note- I changed this to be request.form because it works for me - grace
     
+    return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results, errors=errors) #REMOVE PROB
+
+#RETURN RENDER TEMPLATE
+@bp.route('/reserve-rides', methods=('GET', 'POST'))      
+def reserveRide():
+    reserveForm = forms.ReserveRideFormFactory()
+    errors = None
+    form = None #should remove
+
     if reserveForm.validate_on_submit():
         print("reserve form valid and submit")
         rideno = int(request.form['rideNumber'])
@@ -99,8 +110,9 @@ def find_rides():
         edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideno).one()
         #dont allow to book ride if requesting more spots than there is available
         if spots_needed > edit_ride.seats_available:
-            flash("Not enough spots in this ride as you changed spots needed from your initial request.")
-            return redirect(url_for('rides.find_rides')) 
+            #flash("Not enough spots in this ride as you changed spots needed from your initial request.")
+            errors.append("Not enough spots in this ride as you changed spots needed from your initial request.")
+            return redirect(url_for('rides.reserveRide')) 
 
         #dont allow to book ride if they already have booked the same ride
         previousReservationBool = False
@@ -123,7 +135,7 @@ def find_rides():
         db.session.commit()
         flash("Successfully booked.")
     print("end of find rides")
-    return render_template('find-rides.html', form=form, reserveForm = reserveForm)
+    return render_template('find-rides.html', form=form, reserveForm = reserveForm, errors=errors)
 
 
 @bp.route('/list-rides', methods=['GET','POST'])
@@ -319,6 +331,7 @@ def editInfo():
 
         #CHECKS
         #check if password and confirm password equal
+        #return error to tempplate, define error at first 
         if newpassword != confirmpassword:
             flash("Confirm password and new password must match.")
             return redirect(url_for('rides.account'))
