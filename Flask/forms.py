@@ -147,10 +147,10 @@ class ListRideFormFactory(FlaskForm):
 
 class EditInfoFactory(FlaskForm):
     phone_number = IntegerField("Phone Number:", validators = [Optional()])
-    affiliation = SelectField("Affiliation:", choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
-    school = SelectField("School:", choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity'), ('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')])
-    password = StringField("New password or enter current password to make changes:", validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('confirmPassword'), InputRequired(message='Must enter password to make changes')])
-    confirmPassword = StringField("Confirm Password:", validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('password'), InputRequired(message='Must confirm password')])
+    #affiliation = SelectField("Affiliation:", choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
+    #school = SelectField("School:", choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity'), ('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')])
+    password = PasswordField("New password or enter current password to make changes:", validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('confirmPassword'), InputRequired(message='Must enter password to make changes')])
+    confirmPassword = PasswordField("Confirm Password:", validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100'), EqualTo('password'), InputRequired(message='Must confirm password')])
     submit = SubmitField("Save")
 
 class RideNumberFactory(FlaskForm):
@@ -159,16 +159,16 @@ class RideNumberFactory(FlaskForm):
 
 class EditRideFactory(FlaskForm):
     #date = DateField("Departure Date:",  format='%Y-%m-%d', validators=[DateRange(min = datetime.date.today())])
-    earliest_departure = TimeField("Earliest Time of Departure:", validators = [Optional()])# format='%H:%M')
-    latest_departure = TimeField("Latest Time of Departure:", validators = [Optional()]) #format='%H:%M')  #validators=[GreaterThan('earliest_departure')],
+    earliest_departure = TimeField("Earliest Time of Departure:", validators = [Optional()], format='%H:%M:%S')
+    latest_departure = TimeField("Latest Time of Departure:", validators = [Optional()], format='%H:%M:%S')  #validators=[GreaterThan('earliest_departure')],
     #seats_available = IntegerField("Number of Seats Available:")
-    gas_price = DecimalField("Gas Price:", places=2, rounding=None)
-    comments = StringField("Comments:")
+    gas_price = DecimalField("Gas Price:", places=2, rounding=None, validators=[Optional()])
+    comments = StringField("Comments:", validators=[Optional()])
     cancel = SelectField("Would you like to cancel this ride?", choices = [('No', 'No'), ('Yes', 'Yes')])
     submit = SubmitField("Save")
 
 class EditReservationFactory(FlaskForm):
-    spots_needed = IntegerField("Spots Needed:")
+    spots_needed = IntegerField("Spots Needed:", validators = [InputRequired(message='You must enter spots needed')])
     cancel = SelectField("Would you like to cancel your reservation for this ride?", choices = [('No', 'No'), ('Yes', 'Yes')])
     submit = SubmitField("Save")
 

@@ -67,9 +67,14 @@ def find_rides():
             results = [x.__dict__ for x in results]
             print('we are hereeeeeeee')
             return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results)
-    
-    print(reserveForm.validate_on_submit())
-    print(reserveForm.errors)
+
+        if form.is_submitted() and not form.validate():
+            print("IN RIDES AND DIDNT VALIDATE")
+            flash("Please enter a date after today's date.")
+            return redirect(url_for('rides.find_rides'))
+
+    #print(reserveForm.validate_on_submit())
+    #print(reserveForm.errors)
     #note- I changed this to be request.form because it works for me - grace
     
     if reserveForm.validate_on_submit():
@@ -293,8 +298,8 @@ def editInfo():
     if form.validate_on_submit():
         newphone_number=request.form['phone_number']
         #note should I update so they can choose affiliation and school?
-        newaffiliation=request.form['affiliation']
-        newschool=request.form['school']
+        #newaffiliation=request.form['affiliation']
+        #newschool=request.form['school']
         #dont need to check if equal to confirm because form does that for me
         newpassword=request.form['password']
         if newpassword != user.password:
@@ -302,13 +307,10 @@ def editInfo():
 
         user_edit = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).one()
         user_edit.phone_number = newphone_number
-        user_edit.affiliation = newaffiliation
-        user_edit.school = newschool
+        #user_edit.affiliation = newaffiliation
+        #user_edit.school = newschool
         user_edit.password = newpassword
         db.session.commit()
-        print("NEW PASS next try")
-        print(request.form['password'])
-        print("="*50)
         flash("User information updated.")
         return redirect(url_for('rides.account'))
     
@@ -338,15 +340,6 @@ def editRides():
             validRideNo = True
 
     
-    print("FORM ERRORS")
-    print(form.errors)
-    #pdb.set_trace()
-    if form.is_submitted():
-        print("FORM submitted")
-
-    if form.validate():
-        print("FORM valid")
-
     if form.validate_on_submit():
         ride = rideToEdit
         print(rideToEdit.comments)
@@ -354,17 +347,14 @@ def editRides():
         #figure out who the edits affect
         reservesAffected = models.Reserve.query.filter_by(ride_no=rideToEdit.ride_no)
         netIDsAffected = None
-
         #for reservation in reservesAffected:
             #netIDsAffected.append(reservation.rider_netid)
-
         #could I check net ids affected with??
         #ADD BACK IN LATER
         #if (netIDsAffected != None):
             #for netidAffected in netIDsAffected:
                 #session['netidAffected']
                 #flash("One of your reserved rides has changed")
-
         #print(netIDsAffected.first())
 
         rideNumber = rideToEdit.ride_no
@@ -384,6 +374,15 @@ def editRides():
             newlatest_departure = request.form['latest_departure']
             newgas_price = request.form['gas_price']
             newcomments = request.form['comments']
+
+            if newgas_price == '':
+                newgas_price = None
+            if newcomments=='':
+                newcomments = None
+            
+            if newgas_price != None and float(newgas_price) < 0:
+                flash("Gas price must be positive")
+                return redirect(url_for('rides.account'))
             edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).one()
             edit_ride.gas_price = newgas_price
             edit_ride.comments = newcomments
