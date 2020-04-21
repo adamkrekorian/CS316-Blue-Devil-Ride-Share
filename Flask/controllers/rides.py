@@ -9,6 +9,9 @@ from database import db
 import pdb
 from sqlalchemy.orm import sessionmaker
 
+#graces imports
+import datetime
+
 
 #app = Flask(__name__)
 #app.secret_key = 's3cr3t' #change this?
@@ -35,10 +38,12 @@ def home_page():
 @bp.route('/find-rides', methods=('GET', 'POST'))
 def find_rides():
     form = forms.SearchFormFactory()
-    errors = []
+    #errors = [] cant redirect after using- need to return template
     results = []
-    reserveForm = None #should remove
+    reserveForm = forms.ReserveRideFormFactory() #should remove
     print("in find rides")
+    print("="*20)
+    readyToReserve = False
 
     if 'logged_in' not in session:
         if session['logged_in']==False:
@@ -57,14 +62,22 @@ def find_rides():
             date = request.form['date']
             spots_needed = request.form['spots_needed']
 
+            print("data gathered")
+            print("="*50)
+            print(origin_city)
+            print(destination)
+            print(date)
+            print(spots_needed)
+
             if origin_city == destination:
-                print("HEREEEE")
-                errors.append("Origin and destination cannot be the same.") #not printing
+                print("HEREEEE WHERE ORIGIN AND DESTINATION EQUAL")
+                #errors.append("Origin and destination cannot be the same.") #not printing
+                flash("Origin and destination cannot be the same.")
                 return redirect(url_for('rides.find_rides'))
-            #write function to see if date is less than todays date
-            #if date<
-                #errors.append("Date entered must be after today's date.")
-                #return redirect(url_for('rides.find_ride'))
+
+            if date < str(datetime.date.today()):
+                flash("Date entered must be after today's date.")
+                return redirect(url_for('rides.find_rides'))
 
             resultsTemp = None
             if destination == "Search All":
@@ -78,7 +91,6 @@ def find_rides():
                     .filter(models.Ride.destination == destination) \
                     .filter(models.Ride.date == date) \
                     .filter(models.Ride.seats_available >= spots_needed).all()
-
             myRides = db.session.query(models.Ride).filter(models.Ride.driver_netid == session['netid'])
             myRidesNumbers = []
             for ride in myRides:
@@ -86,20 +98,29 @@ def find_rides():
             for ride in resultsTemp:
                 if not (ride.ride_no in myRidesNumbers):
                     results.append(ride)
+
+            print("PRINTING RESULTS")
+            for result in results:
+                print(result.ride_no)
+            print("DONE PRINTING RESULTS")
                 
             results = [x.__dict__ for x in results] #what does this do?
-            print('we are hereeeeeeee')
-            return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results, errors=errors)
-
-    
-    return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results, errors=errors) #REMOVE PROB
+            #print('we are hereeeeeeee')
+            #print("and here's what is in errors")
+            #print(errors[0])
+            #print("that's what was in errors")
+            return render_template('find-rides.html', form=form, reserveForm=reserveForm, results=results, readyToReserve=readyToReserve)
+        #technically don't need if form always validating on submit
+        return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results) 
 
 #RETURN RENDER TEMPLATE
 @bp.route('/reserve-rides', methods=('GET', 'POST'))      
 def reserveRide():
+    print("in reserve rides")
+    print("="*20)
     reserveForm = forms.ReserveRideFormFactory()
-    errors = None
-    form = None #should remove
+    form = forms.SearchFormFactory()
+    #errors = [] add into return statement too
 
     if reserveForm.validate_on_submit():
         print("reserve form valid and submit")
@@ -110,9 +131,10 @@ def reserveRide():
         edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideno).one()
         #dont allow to book ride if requesting more spots than there is available
         if spots_needed > edit_ride.seats_available:
-            #flash("Not enough spots in this ride as you changed spots needed from your initial request.")
-            errors.append("Not enough spots in this ride as you changed spots needed from your initial request.")
-            return redirect(url_for('rides.reserveRide')) 
+            flash("Not enough spots in this ride as you changed spots needed from your initial request.")
+            return redirect(url_for('rides.find_rides'))
+            #errors.append("Not enough spots in this ride as you changed spots needed from your initial request.")- ideal
+            #return render_template('find-rides.html', form=form, reserveForm = reserveForm, errors=errors)
 
         #dont allow to book ride if they already have booked the same ride
         previousReservationBool = False
@@ -135,7 +157,7 @@ def reserveRide():
         db.session.commit()
         flash("Successfully booked.")
     print("end of find rides")
-    return render_template('find-rides.html', form=form, reserveForm = reserveForm, errors=errors)
+    return render_template('find-rides.html', form=form, reserveForm = reserveForm)
 
 
 @bp.route('/list-rides', methods=['GET','POST'])

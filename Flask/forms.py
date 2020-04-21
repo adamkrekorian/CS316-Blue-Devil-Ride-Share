@@ -146,7 +146,6 @@ class ListRideFormFactory(FlaskForm):
     comments = StringField("Comments:")
     submit = SubmitField("Submit")
 
-#NOTE: how do I make it yell at people if password isn't equal to confirm password?- how to flash the message?
 
 class EditInfoFactory(FlaskForm):
     phone_number = IntegerField("Phone Number:") # validators = [Length(min=5, max=100, message='not long enough')])- do later
