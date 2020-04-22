@@ -504,7 +504,7 @@ def editReservation():
 
 @bp.route('/riders-netids', methods=('GET', 'POST'))
 def Riders_Netids():
-    form = forms.RideNumberFactory()
+    form = forms.RideNetIdNumberFactory()
     validRideNo = False
     ride = None
     reservations = None

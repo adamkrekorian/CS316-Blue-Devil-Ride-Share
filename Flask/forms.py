@@ -103,7 +103,7 @@ class GreaterThan(object):  # --> Change to 'GreaterThan'
 
             
 class RegisterFormFactory(FlaskForm):
-    netid = StringField("NetID:", validators = [InputRequired(message='You must enter your NetID'), Length(min=4, max=7, message='Your NetID must be between 4 to 7 characters')])#  Regexp('^[a-zA-Z0-9]$', message = 'Please enter a valid netid')])
+    netid = StringField("NetID:", validators = [InputRequired(message='You must enter your NetID'), Length(min=4, max=7, message='Your NetID must be between 4 to 7 characters'), Regexp('^[a-zA-Z]{2,3}\d{2,3}$', message = 'Please enter a valid netid.')])
     name = StringField("Name:", validators = [InputRequired(message='You must enter your name'), Length(min=5, max=50, message='Your name must be between 5 to 50 characters')])
     duke_email = StringField("Duke Email:", validators = [InputRequired(message='You must enter your Duke email'), Email(message='You must enter a valid email address'), Length(min=10, max=256, message='Your email must be between 10 to 256 characters'), Regexp('^[a-zA-Z0-9]+@duke.edu$', message = 'Please enter a valid Duke email address')])
     #phone number should be a string field so you can check it's length
@@ -151,7 +151,6 @@ class ListRideFormFactory(FlaskForm):
     comments = StringField("Comments:")
     submit = SubmitField("Submit")
 
-
 class EditInfoFactory(FlaskForm):
     phone_number = IntegerField("Phone Number:") # validators = [Length(min=7, max=10, message='not long enough')])- do later
     #affiliation = SelectField("Affiliation:", choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
@@ -163,8 +162,12 @@ class EditInfoFactory(FlaskForm):
     submit = SubmitField("Save")
 
 class RideNumberFactory(FlaskForm):
-    ride_no = IntegerField("Ride number of ride you would like to edit", validators = [InputRequired(message='You must enter a ride number')])
+    ride_no = IntegerField("Ride number of ride you would like to edit:", validators = [InputRequired(message='You must enter a ride number')])
     submit = SubmitField("Enter")
+
+class RideNetIdNumberFactory(FlaskForm):
+    ride_no = IntegerField("Ride number of ride you would like to search:", validators = [InputRequired(message='You must enter a ride number')])
+    submit = SubmitField("Enter")    
 
 class EditRideFactory(FlaskForm):
     #date = DateField("Departure Date:",  format='%Y-%m-%d', validators=[DateRange(min = datetime.date.today())])
