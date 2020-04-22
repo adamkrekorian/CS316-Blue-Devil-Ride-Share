@@ -3,15 +3,25 @@ from flask import Flask, render_template, redirect, url_for, request, session, f
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
-from sqlalchemy import distinct, update
+from sqlalchemy import distinct, update, create_engine
 from datetime import date
 from database import db
 import pdb
+import os
 from sqlalchemy.orm import sessionmaker
 
 #graces imports
 import datetime
 
+#prepared statements
+engine = create_engine('postgresql://rideshare:{}@vcm-13365.vm.duke.edu/production'.format(os.environ['DBPASSWORD']))
+conn = engine.connect()
+
+#search prepared statements
+conn.execute('''PREPARE SearchAll AS SELECT * FROM Ride WHERE origin = $1 AND date = $2 and seats_available >= $3;''')
+conn.execute('''PREPARE Search AS SELECT * FROM Ride WHERE origin = $1 AND destination = $2 AND date = $3 and seats_available >= $4;''')
+
+#
 
 #app = Flask(__name__)
 #app.secret_key = 's3cr3t' #change this?
@@ -81,16 +91,11 @@ def find_rides():
 
             resultsTemp = None
             if destination == "Search All":
-                resultsTemp = db.session.query(models.Ride) \
-                    .filter(models.Ride.origin == origin_city) \
-                    .filter(models.Ride.date == date) \
-                    .filter(models.Ride.seats_available >= spots_needed).all()
+                resultsTemp = conn.execute('EXECUTE SearchAll(%s,%s,%s)',\
+                    (origin_city, date, spots_needed))
             else:
-                resultsTemp = db.session.query(models.Ride) \
-                    .filter(models.Ride.origin == origin_city) \
-                    .filter(models.Ride.destination == destination) \
-                    .filter(models.Ride.date == date) \
-                    .filter(models.Ride.seats_available >= spots_needed).all()
+                resultsTemp = resultsTemp = conn.execute('EXECUTE Search(%s,%s,%s,%s)',\
+                    (origin_city, destination, date, spots_needed))
             myRides = db.session.query(models.Ride).filter(models.Ride.driver_netid == session['netid'])
             myRidesNumbers = []
             for ride in myRides:
@@ -98,13 +103,14 @@ def find_rides():
             for ride in resultsTemp:
                 if not (ride.ride_no in myRidesNumbers):
                     results.append(ride)
+                    print(ride)
 
             print("PRINTING RESULTS")
             for result in results:
                 print(result.ride_no)
             print("DONE PRINTING RESULTS")
                 
-            results = [x.__dict__ for x in results] #what does this do?
+            #results = [x.__dict__ for x in results] #what does this do?
             #print('we are hereeeeeeee')
             #print("and here's what is in errors")
             #print(errors[0])
