@@ -9,11 +9,29 @@
         <div class="col-sm-8 text-left"> 
             <center>
             <h1>Create an Account</h1>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+            <h3><b><font color="red"> {{ message }}</font></b></h3>
+            {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+            
             {% for message in form.name.errors %}
                <div>{{ message }}</div>
             {% endfor %}
       
             {% for message in form.duke_email.errors %}
+               <div>{{ message }}</div>
+            {% endfor %}
+
+            {% for message in form.netid.errors %}
+               <div>{{ message }}</div>
+            {% endfor %}
+
+            {% for message in form.password.errors %}
                <div>{{ message }}</div>
             {% endfor %}
             <form action = "/rides/sign-up" onsubmit="return validateForm();" method="post">

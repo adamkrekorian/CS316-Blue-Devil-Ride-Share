@@ -31,6 +31,9 @@
             <h1>Edit a Ride</h1>
             <hr>
             <center>
+              {% for message in form.gas_price.errors %}
+              <div>{{ message }}</div>
+           {% endfor %}
               
               <form action = "/rides/edit-list-ride"  onsubmit="return validateForm();" method="post">
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>

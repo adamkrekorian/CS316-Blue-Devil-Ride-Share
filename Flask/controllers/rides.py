@@ -217,27 +217,7 @@ def list_rides():
 @bp.route('/sign-up', methods=['GET','POST'])
 def sign_up():
     form = forms.RegisterFormFactory()
-    #if 'driver' in session:
-    #    driver = models.Driver.query.filter_by(netid=session['netid']).first()
-    #if 'logged_in' in session and 'driver' in session:
-    #    if session['logged_in'] == True and session['driver']==False:
-    #        flash("You are signed in but not yet a driver. Redirecting you to driver registration.") #These flash messages aren't displaying on the site
-    #        return redirect(url_for('rides.register_driver', form=forms.RegisterDriverFormFactory()))
-    #if 'logged_in' in session and 'driver' in session:
-    #    if session['logged_in'] and session['driver']:
-    #        flash("You are signed in and already registered as a driver. Redirecting you to list a ride.")
-    #        return redirect(url_for('rides.list_rides'))
-    #else:
-        
-        #print(form.errors)
 
-        #if form.is_submitted():
-            #print("submitted")
-
-        #if form.validate():
-            #print("valid")
-
-        #print(form.errors)
     if form.validate_on_submit():
         netid = request.form['netid']
         name = request.form['name']
@@ -246,6 +226,14 @@ def sign_up():
         password = request.form['password']
         affiliation = request.form['affiliation_sel']
         school = request.form['school']
+
+        if len(str(phone_number))<6 or len(str(phone_number))>10:
+            flash("Your phone number must be at least 6 characters and no more than 10.")
+            return redirect(url_for('rides.sign_up'))
+        existingUsers = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == netid)
+        if existingUsers.first() != None:
+            flash("An account with this netid already exists. Please log in.")
+            return redirect(url_for('rides.log_in'))
 
         register = models.Rideshare_user(netid=netid, name=name, duke_email=duke_email, phone_number=phone_number, password=password, affiliation=affiliation, school=school)
         db.session.add(register)
@@ -258,18 +246,13 @@ def sign_up():
 @bp.route('/register-driver', methods=['GET','POST'])
 def register_driver():
     form = forms.RegisterDriverFormFactory()
-    driver = models.Driver.query.filter_by(netid=session['netid']).first()
+    driver = models.Driver.query.filter_by(netid=session['netid']).first() #dont need
+    #should never happen
     if 'logged_in' in session and driver:
         if session['logged_in']:
             flash("You are already a driver. Redirecting you to list a ride.")
         return redirect(url_for('rides.list_rides'))
-    print(form.errors)
 
-    if form.is_submitted():
-        print("submitted")
-
-    if form.validate():
-        print("valid")
 
     print(form.errors)
     if form.validate_on_submit():
@@ -277,8 +260,9 @@ def register_driver():
         license_no = request.form['license_no']
         license_plate_no = request.form['license_plate_no']
         plate_state = request.form['plate_state']
+
         register = models.Driver(netid=netid, license_no=license_no, license_plate_no=license_plate_no, plate_state=plate_state)
-        session['driver'] = True
+        session['driver'] = True # what does this do?
         db.session.add(register)
         db.session.commit()
         return redirect(url_for('rides.list_rides'))
@@ -357,16 +341,9 @@ def editInfo():
         newpassword=request.form['password']
         confirmpassword = request.form['confirmPassword']
 
-        #CHECKS
-        #check if password and confirm password equal
-        #return error to tempplate, define error at first 
-        if newpassword != confirmpassword:
-            flash("Confirm password and new password must match.")
-            return redirect(url_for('rides.account'))
-
-        #check if password in range
-        if len(newpassword)<5 or len(newpassword)>100:
-            flash("New password must be at least 5 characters and no more than 100.")
+        #should be validator when phone number is a string
+        if len(str(newphone_number))<6 or len(str(newphone_number))>10:
+            flash("Your phone number must be at least 6 characters and no more than 10.")
             return redirect(url_for('rides.account'))
 
         if newpassword != user.password:
@@ -581,22 +558,15 @@ def editRideTime():
         rideNumber = rideToEditTime.ride_no
         newearliest_departure = request.form['earliest_departure']
         newlatest_departure = request.form['latest_departure']
+        if str(newlatest_departure) < str(newearliest_departure):
+            flash("Must make latest time of depature after earliest time of departure. Changes not saved.")
+            return redirect(url_for('rides.account'))
         edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).one()
         edit_ride.earliest_time = newearliest_departure
         edit_ride.latest_time = newlatest_departure
         db.session.commit()
         flash("Ride time updated.")
         return redirect(url_for('rides.account'))
-    else:
-        #is passes this if statement means that they hit only error which is making latest departure time before earliest depature time
-        if not validatingRideNo and form.is_submitted():
-            print("SECOND TIME")
-            flash("Must make latest time of depature after earliest time of departure.")
-            return redirect(url_for('rides.account'))
-
-
-
-    print("leaving function")
 
     return render_template('edit-ride-time.html', form=form, formRideNo=formRideNo, validRideNo = validRideNo, ride=ride)
 

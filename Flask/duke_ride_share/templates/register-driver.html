@@ -18,6 +18,14 @@
             </ul>
             {% endif %}
             {% endwith %}
+
+            {% for message in form.license_no.errors %}
+            <div>{{ message }}</div>
+         {% endfor %}
+   
+         {% for message in form.license_plate_no.errors %}
+            <div>{{ message }}</div>
+         {% endfor %}
             
             <form action = "/rides/register-driver"  onsubmit="return validateForm();" method="post">
                    <div style = font-size:14px; font-weight:bold; margin-left:150px;>

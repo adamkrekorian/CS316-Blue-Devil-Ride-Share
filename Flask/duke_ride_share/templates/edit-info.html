@@ -9,6 +9,15 @@
         <div class="col-sm-8 text-left"> 
             <center>
             <h1>Edit Information</h1>
+
+            {% for message in form.password.errors %}
+            <div>{{ message }}</div>
+         {% endfor %}
+   
+         {% for message in form.confirmPassword.errors %}
+            <div>{{ message }}</div>
+         {% endfor %}
+
             <!--action URL? maybe add center tag-->
             <form action = "/rides/edit-info"  onsubmit="return validateForm();" method="post">
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>
@@ -16,14 +25,8 @@
 
                 {{ form.phone_number.label }}<br>
                 {{ form.phone_number(value=user.phone_number)}}
-                {% if form.phone_number.errors %}
-                 <ul class="errors">{% for error in form.phone_number.errors %}<li>{{ error }}</li>{% endfor %}</ul>
-                {% endif %}
                 <br>
-                
-                {{ form.affiliation.label }}<br>
-                {{ form.affiliation(value=user.affiliation)}}
-                <br>
+
 
                 {{ form.password.label }}<br>
                 {{ form.password }}
