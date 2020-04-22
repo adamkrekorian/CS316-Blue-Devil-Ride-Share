@@ -15,13 +15,13 @@ CREATE TABLE Driver
  plate_state VARCHAR(3) NOT NULL);
 
 CREATE TABLE Ride
-(ride_no SERIAL PRIMARY KEY,
+(ride_no SERIAL NOT NULL UNIQUE PRIMARY KEY,
  origin VARCHAR(100) NOT NULL,
  destination VARCHAR(100) NOT NULL CHECK(destination <> origin), -- check this -- if this doesnt work make a trigger
  driver_netid VARCHAR(7) NOT NULL REFERENCES Driver(netid),
  date DATE NOT NULL, 
- earliest_time TIME CHECK(earliest_time < latest_time),
- latest_time TIME CHECK (latest_time > earliest_time),
+ earliest_time TIME CHECK(earliest_time <= latest_time),
+ latest_time TIME CHECK (latest_time >= earliest_time),
  seats_available INTEGER NOT NULL, 
  gas_price INTEGER,
  comments VARCHAR(500));
@@ -97,26 +97,7 @@ CREATE TRIGGER TG_No_time_given
   EXECUTE PROCEDURE TF_No_time_given();
 
 ------
--- commented out because this should happen in app.py
--- CREATE FUNCTION TF_Seats_left() RETURNS TRIGGER AS $$
--- BEGIN
---   UPDATE Ride
---   SET seats_available = ((SELECT seats_available FROM Ride
---     WHERE NEW.ride_no = ride_no) - NEW.seats_needed)
---   WHERE Ride.ride_no = NEW.ride_no;
---   RETURN NEW;
--- END;
--- $$ LANGUAGE plpgsql;
 
--- CREATE TRIGGER TG_Seats_left
---   AFTER INSERT OR UPDATE ON Reserve
---   FOR EACH ROW
---   EXECUTE PROCEDURE TF_Seats_left();
-
-------
-
-
-------
 
 CREATE FUNCTION TF_One_res_per_date() RETURNS TRIGGER AS $$
 BEGIN
@@ -177,3 +158,15 @@ CREATE TRIGGER TG_One_drive_per_day
   BEFORE INSERT ON Ride
   FOR EACH ROW
   EXECUTE PROCEDURE TF_One_drive_per_day();
+
+-- Indexes
+
+CREATE INDEX idx_reserve_ride_no
+ON reserve(ride_no);
+
+CREATE INDEX idx_ride_driver_netid
+ON ride(driver_netid);
+
+CREATE INDEX idx_reserve_rider_netid
+ON reserve(rider_netid);
+
