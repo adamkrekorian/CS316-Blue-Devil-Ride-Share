@@ -8,6 +8,12 @@
             <!-- empty left sidebar -->
         </div>
         <div class="col-sm-8 text-left"> 
+
+            <center>
+                {% for message in form.gas_price.errors %}
+                <div>{{ message }}</div>
+             {% endfor %}
+          
           {% if validRideNo == False %}
             <h1>Enter Ride Number</h1>
             <center>
@@ -30,10 +36,6 @@
           {% if validRideNo %}
             <h1>Edit a Ride</h1>
             <hr>
-            <center>
-              {% for message in form.gas_price.errors %}
-              <div>{{ message }}</div>
-           {% endfor %}
               
               <form action = "/rides/edit-list-ride"  onsubmit="return validateForm();" method="post">
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>

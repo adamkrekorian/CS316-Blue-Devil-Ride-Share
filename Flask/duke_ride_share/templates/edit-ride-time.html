@@ -8,6 +8,22 @@
             <!-- empty left sidebar -->
         </div>
         <div class="col-sm-8 text-left"> 
+
+            <center>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                <h3><b> {{ message }}</b></h3>
+                {% endfor %}
+                </ul>
+                {% endif %}
+                {% endwith %}
+             
+                {% for message in form.latest_departure.errors %}
+            <div><b>{{ message }}</b></div>
+         {% endfor %}
+
           {% if validRideNo == False %}
             <h1>Enter Ride Number</h1>
             <center>
@@ -30,21 +46,6 @@
           {% if validRideNo %}
             <h1>Edit a Ride</h1>
             <hr>
-            
-            <center>
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                <ul class=flashes>
-                {% for message in messages %}
-                <h3><b> {{ message }}</b></h3>
-                {% endfor %}
-                </ul>
-                {% endif %}
-                {% endwith %}
-             
-                {% for message in form.latest_departure.errors %}
-            <div><b>{{ message }}</b></div>
-         {% endfor %}
 
               <form action = "/rides/edit-ride-time"  onsubmit="return validateForm();" method="post">
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>
