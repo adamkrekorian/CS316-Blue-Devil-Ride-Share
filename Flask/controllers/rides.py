@@ -399,8 +399,8 @@ def editInfo():
     
     return render_template('edit-info.html', user=user, debug=True, form=form, driver=driver)
     
-@bp.route('/edit-list-ride', methods=('GET', 'POST'))
-def editRides():
+@bp.route('/edit-list-ride-rideNo-Check', methods=('GET', 'POST'))
+def editRidesRideNoCheck():
     form = forms.EditRideFactory()
     formRideNo = forms.RideNumberFactory()
     #cancelForm = forms.CancelRideFactory()
@@ -421,6 +421,16 @@ def editRides():
         else: 
             print(ride.earliest_time)
             validRideNo = True
+
+    return render_template('edit-list-ride.html', form=form, formRideNo=formRideNo, validRideNo = validRideNo, ride=ride)
+
+@bp.route('/edit-list-ride', methods=('GET', 'POST'))
+def editRides():
+    form = forms.EditRideFactory()
+    formRideNo = forms.RideNumberFactory()
+    #cancelForm = forms.CancelRideFactory()
+    validRideNo = True
+    ride = None
     
     if form.validate_on_submit():
         ride = rideToEdit
@@ -559,15 +569,18 @@ def Riders_Netids():
 
     return render_template('riders-netids.html', form=form, validRideNo = validRideNo, reservations=reservations, rideNumber=rideNumber)
 
-@bp.route('/edit-ride-time', methods=('GET', 'POST'))
-def editRideTime():
+@bp.route('/edit-ride-time-rideNo-check', methods=('GET', 'POST'))
+def editRideTimeRideNoCheck():
     form = forms.EditRideTimeFactory()
     formRideNo = forms.RideNumberFactory()
     validRideNo = False
     ride = None
     validatingRideNo = False
+
+    print("in edit ride time ride no check")
     
     if formRideNo.validate_on_submit():
+        print("ride check validated")
         validatingRideNo = True
         rideNumber = request.form['ride_no']
         global rideToEditTime
@@ -587,15 +600,27 @@ def editRideTime():
             return redirect(url_for('rides.account')) 
         else:
             validRideNo = True
+    print("leaving valid ride number project")
+    print(validRideNo)
+
+    return render_template('edit-ride-time.html', form=form, formRideNo=formRideNo, validRideNo = validRideNo, ride=ride)
+
+@bp.route('/edit-ride-time', methods=('GET', 'POST'))
+def editRideTimeRide():
+    form = forms.EditRideTimeFactory()
+    formRideNo = forms.RideNumberFactory()
+    validRideNo = True
+    ride = None
+    print("in edit ride time ride")
 
     if form.validate_on_submit():
         ride = rideToEditTime
         rideNumber = rideToEditTime.ride_no
         newearliest_departure = request.form['earliest_departure']
         newlatest_departure = request.form['latest_departure']
-        if newlatest_departure < newearliest_departure:
-            flash("Must make latest time of depature after earliest time of departure. Changes not saved.")
-            return redirect(url_for('rides.account'))
+        #if newlatest_departure < newearliest_departure:
+           # flash("Must make latest time of depature after earliest time of departure. Changes not saved.")
+            #return redirect(url_for('rides.editRideTimeRide'))
         edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).one()
         edit_ride.earliest_time = newearliest_departure
         edit_ride.latest_time = newlatest_departure

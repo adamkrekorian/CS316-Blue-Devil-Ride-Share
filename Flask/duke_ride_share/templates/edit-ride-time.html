@@ -27,7 +27,7 @@
           {% if validRideNo == False %}
             <h1>Enter Ride Number</h1>
             <center>
-            <form action = "/rides/edit-ride-time"  onsubmit="return validateForm();" method="post">
+            <form action = "/rides/edit-ride-time-rideNo-check"  onsubmit="return validateForm();" method="post">
               <div style = font-size:14px; font-weight:bold; margin-left:150px;>
               {{ formRideNo.csrf_token }}
              

@@ -13,11 +13,21 @@
                 {% for message in form.gas_price.errors %}
                 <div>{{ message }}</div>
              {% endfor %}
+
+             {% with messages = get_flashed_messages() %}
+             {% if messages %}
+             <ul class=flashes>
+             {% for message in messages %}
+             <h3><b> {{ message }}</b></h3>
+             {% endfor %}
+             </ul>
+             {% endif %}
+             {% endwith %}
           
           {% if validRideNo == False %}
             <h1>Enter Ride Number</h1>
             <center>
-            <form action = "/rides/edit-list-ride"  onsubmit="return validateForm();" method="post">
+            <form action = "/rides/edit-list-ride-rideNo-Check"  onsubmit="return validateForm();" method="post">
               <div style = font-size:14px; font-weight:bold; margin-left:150px;>
               {{ formRideNo.csrf_token }}
              
@@ -34,7 +44,7 @@
 
           {% endif %}
           {% if validRideNo %}
-            <h1>Edit a Ride</h1>
+            <h1>Edit a Ride Time</h1>
             <hr>
               
               <form action = "/rides/edit-list-ride"  onsubmit="return validateForm();" method="post">

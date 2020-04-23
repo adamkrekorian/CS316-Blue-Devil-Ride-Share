@@ -192,7 +192,7 @@ class EditRideFactory(FlaskForm):
     #earliest_departure = TimeField("Earliest Time of Departure:", validators = [Optional()], format='%H:%M:%S')
     #latest_departure = TimeField("Latest Time of Departure:", validators = [Optional()], format='%H:%M:%S')  #validators=[GreaterThan('earliest_departure')],
     #seats_available = IntegerField("Number of Seats Available:")
-    gas_price = DecimalField("Gas Price:", places=2, rounding=None, validators=[Optional(), NumberRange(min=0, message='Gas price must be a positive number.')])
+    gas_price = DecimalField("Gas Price:", places=2, rounding=None, validators=[NumberRange(min=0, message='Gas price must be a positive number.')])
     comments = StringField("Comments:", validators=[Optional()])
     cancel = SelectField("Would you like to cancel this ride?", choices = [('No', 'No'), ('Yes', 'Yes')])
     submit = SubmitField("Save")
