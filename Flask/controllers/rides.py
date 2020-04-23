@@ -156,13 +156,10 @@ def reserveRide():
             #return render_template('find-rides.html', form=form, reserveForm = reserveForm, errors=errors)
 
         #dont allow to book ride if they already have booked the same ride
-        previousReservationBool = False
-        previousReservationTemp = models.Reserve.query.filter_by(ride_no = rideno)
-        for rev in previousReservationTemp:
-            if rev.rider_netid == session['netid']:
-                previousReservationBool = True
-        if previousReservationBool == True:
-            flash("You have already reserved this ride.")
+        previousReservationTemp = None
+        previousReservationTemp = db.session.query(models.Reserve).filter(models.Reserve.ride_no == rideno).filter(models.Reserve.rider_netid == session['netid']).first()
+        if previousReservationTemp != None:
+            flash("You have already reserved this ride. Please edit your number of spots in the account page.")
             return redirect(url_for('rides.find_rides')) 
         print(edit_ride.seats_available - spots_needed) 
 
@@ -356,33 +353,48 @@ def account():
 def editInfo():
     user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
     form = forms.EditInfoFactory()
+    print("HEREEE")
     driver = models.Driver.query.filter_by(netid=session['netid']).first()
-
+    print("HEREEE2")
     if form.validate_on_submit():
+        print("form validated")
         newphone_number=request.form['phone_number']
         #note should I update so they can choose affiliation and school?
         #newaffiliation=request.form['affiliation']
         #newschool=request.form['school']
         #dont need to check if equal to confirm because form does that for me
-        plateNum = request.form['license_plate_no']
-        plateState = request.form['plate_state']
+        if driver !=None:
+            plateNum = request.form['license_plate_no']
+            plateState = request.form['plate_state']
+        else:
+            plateNum=None
+            plateState=None
         currentpassword = request.form['currentPassword']
         newpassword=request.form['password']
         confirmpassword = request.form['confirmPassword']
-
+        print("starting ifs")
         #should be validator when phone number is a string
         if len(str(newphone_number))<6 or len(str(newphone_number))>10:
             flash("Your phone number must be at least 6 characters and no more than 10.")
             return redirect(url_for('rides.editInfo'))
-
+        if plateNum!=None and (len(plateNum)<2 or len(plateNum)>10):
+            flash("Your plate number must be at least 2 characters and no more than 10.")
+            return redirect(url_for('rides.editInfo'))
+        #if platenum is null and driver
+        
         if currentpassword != user.password:
             flash("Password doesn't match current password. Changes could not be made.")
             return redirect(url_for('rides.editInfo'))
         
-
+        print("ending ifs")
         user_edit = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).one()
-       
+        driver_edit = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
+        print("="*30)
+        print(driver_edit == None)
         #if new password field wasn't empty then new password is equal to confirm password- only update password in this case
+        if plateNum == None and driver_edit !=None:
+            flash("Must enter plate number")
+            return redirect(url_for('rides.editInfo'))
         if newpassword != '':
             print("new password is not null")
             if len(newpassword)<5 or len(newpassword)>100:
@@ -394,7 +406,15 @@ def editInfo():
         #can just do this even if they do not make any changes
         user_edit.phone_number = newphone_number
         db.session.commit()
-        driver_edit = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).one()
+        
+        if driver_edit == None:
+            flash("User information updated.")
+            return redirect(url_for('rides.account')) 
+
+        driver_edit.license_plate_no = plateNum
+        if plateState != 'No Change':
+            driver_edit.plate_state = plateState
+        db.session.commit()
         driver_edit.license_plate_no = plateNum
         if plateState != 'No Change':
             driver_edit.plate_state = plateState
@@ -534,11 +554,16 @@ def editReservation():
         #not cancelling-edit reservation
         else:
             updatedSpots = int(request.form['spots_needed'])
+            print(updatedSpots)
             newSpots = updatedSpots - reservationToEdit.seats_needed
+            print("NEW SPOTS")
+            print(newSpots)
+            print("AVAIL")
+            print(ride.seats_available)
             if (updatedSpots > ride.seats_available):
                 flash("Not enough room in the ride for spots needed. Reservation not updated.")
                 return redirect(url_for('rides.account'))
-            reservation_edit = db.session.query(models.Reserve).filter(models.Reserve.ride_no == rideNumber).one()
+            reservation_edit = db.session.query(models.Reserve).filter(models.Reserve.ride_no == rideNumber).filter(models.Reserve.rider_netid == session['netid']).first()
             reservation_edit.seats_needed = updatedSpots
             db.session.commit()
             flash("Reservation updated.")

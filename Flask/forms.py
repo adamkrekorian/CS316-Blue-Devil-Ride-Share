@@ -148,7 +148,7 @@ class SearchFormFactory(FlaskForm):
     date = DateField("Departure Date:", validators=[InputRequired(message='Please enter desired departure date')], format='%Y-%m-%d')
     # earliest_departure = TimeField("Earliest Time of Departure:", validators=[InputRequired(message='Please enter the earliest time of departure')], format='%H:%M')
     # latest_departure = TimeField("Latest Time of Departure:", validators=[InputRequired(message='Please enter the latest time of departure'), GreaterThan('earliest_departure')], format='%H:%M')
-    spots_needed = IntegerField("Spots Needed:", validators=[InputRequired(message='Please enter spots needed')])
+    spots_needed = IntegerField("Spots Needed:", validators=[InputRequired(message='Please enter spots needed')], default=1)
     submit = SubmitField("Search")
                                         
 class ListRideFormFactory(FlaskForm):
@@ -170,7 +170,8 @@ class EditInfoFactory(FlaskForm):
     phone_number = IntegerField("Phone Number:") # validators = [Length(min=7, max=10, message='not long enough')])- do later
     #affiliation = SelectField("Affiliation:", choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
     #school = SelectField("School:", choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity'), ('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')])
-    license_plate_no = StringField("License Plate Number", validators = [Length(min=2, max=10, message='You must enter a license plate number between 2 to 10 characters')])
+    #license_plate_no = StringField("License Plate Number", validators = [Length(min=2, max=10, message='You must enter a license plate number between 2 to 10 characters')])
+    license_plate_no = StringField("License Plate Number")
     plate_state = SelectField("State", choices = [('No Change', 'No Change'), ('AL', 'AL'), ('AK', 'AK'), ('AZ', 'AZ'), ('AR', 'AR'), ('CA', 'CA'), ('CO', 'CO'), ('CT', 'CT'), ('DE', 'DE'), ('FL', 'FL'), ('GA', 'GA'), ('HI', 'HI'), ('ID', 'ID'), ('IL', 'IL'), ('IN', 'IN'), ('IA', 'IA'), ('KS', 'KS'), ('KY', 'KY'), ('LA', 'LA'), ('ME', 'ME'), ('MD', 'MD'), ('MA', 'MA'), ('MI', 'MI'), ('MN', 'MN'), ('MS', 'MS'), ('MO', 'MO'), ('MT', 'MT'), ('NE', 'NE'), ('NV', 'NV'), ('NH', 'NH'), ('NJ', 'NJ'), ('NM', 'NM'), ('NY', 'NY'), ('NC', 'NC'), ('ND', 'ND'), ('OH', 'OH'), ('OK', 'OK'), ('OR', 'OR'), ('PA', 'PA'), ('RI', 'RI'), ('SC', 'SC'), ('SD', 'SD'), ('TN', 'TN'), ('TX', 'TX'), ('UT', 'UT'), ('VT', 'VT'), ('VA', 'VA'), ('WA', 'WA'), ('WV', 'WV'), ('WI', 'WI'), ('WY', 'WY'), ('GU', 'GU'), ('PR', 'PR'), ('VI', 'VI')], default = 'No Change')
     currentPassword = PasswordField("Current password needed to make changes", validators = [InputRequired(message='Must enter password to confirm changes')])
     password = PasswordField("New password:") # validators = [Length(min=5, max=100, message='Your password must be at least 5 characters and no more than 100')])
