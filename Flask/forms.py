@@ -101,7 +101,21 @@ class GreaterThan(object):  # --> Change to 'GreaterThan'
 
             raise ValidationError(message % d)
 
-            
+def school_choices(affiliation):
+    """
+    return a list containing school choices based on the given affiliation
+
+    used to limit the choice of schools to those related to the current affiliation
+    """
+    if affiliation == 'Undergraduate':
+        choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity')]
+        return(choices)
+    elif affiliation == 'Graduate':
+        choices = [('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')]
+        return(choices)
+    else:
+        return [('Please select your affiliation.')]
+ 
 class RegisterFormFactory(FlaskForm):
     netid = StringField("NetID:", validators = [InputRequired(message='You must enter your NetID'), Length(min=4, max=7, message='Your NetID must be between 4 to 7 characters'), Regexp('^[a-zA-Z]{2,3}\d{2,3}$', message = 'Please enter a valid netid.')])
     name = StringField("Name:", validators = [InputRequired(message='You must enter your name'), Length(min=5, max=50, message='Your name must be between 5 to 50 characters')])
@@ -112,6 +126,7 @@ class RegisterFormFactory(FlaskForm):
     confirm_password = PasswordField("Confirm Password:", validators = [InputRequired(message='You must confirm your password')])
     affiliation_sel = SelectField("Affiliation:", validators = [InputRequired(message='You must select your affiliation')], choices = [('Graduate', 'Graduate'), ('Undergraduate', 'Undergraduate')])
     school = SelectField("School:", validators = [InputRequired(message='You must enter your school')], choices = [('Pratt', 'Pratt'), ('Trinity', 'Trinity'), ('Fuqua', 'Fuqua'), ('Law', 'Law'), ('Medicine', 'Medicine'), ('Nicholas', 'Nicholas'), ('Nursing', 'Nursing'), ('Other', 'Other')])
+    #school = SelectField("School:", validators = [InputRequired(message='You must enter your school')], choices = school_choices(affiliation_sel))
     submit = SubmitField("Submit")      
 
 class RegisterDriverFormFactory(FlaskForm):
@@ -147,7 +162,7 @@ class ListRideFormFactory(FlaskForm):
     earliest_departure = TimeField("Earliest Time of Departure:", validators=[InputRequired(message='Please enter the earliest time of departure')], format='%H:%M')
     latest_departure = TimeField("Latest Time of Departure:", validators=[InputRequired(message='Please enter the latest time of departure'), GreaterThan('earliest_departure')], format='%H:%M')
     seats_available = IntegerField("Number of Seats Available:", validators = [InputRequired(message='You must enter the number of seats available')])
-    gas_price = DecimalField("Gas Price:", places=2, rounding=None, validators=[Optional()])
+    gas_price = DecimalField("Gas Price:", places=2, rounding=None, validators=[Optional(), NumberRange(min=0, message='Gas price must be a positive number.')])
     comments = StringField("Comments:")
     submit = SubmitField("Submit")
 
@@ -177,7 +192,7 @@ class EditRideFactory(FlaskForm):
     #earliest_departure = TimeField("Earliest Time of Departure:", validators = [Optional()], format='%H:%M:%S')
     #latest_departure = TimeField("Latest Time of Departure:", validators = [Optional()], format='%H:%M:%S')  #validators=[GreaterThan('earliest_departure')],
     #seats_available = IntegerField("Number of Seats Available:")
-    gas_price = DecimalField("Gas Price:", places=2, rounding=None, validators=[Optional()])
+    gas_price = DecimalField("Gas Price:", places=2, rounding=None, validators=[Optional(), NumberRange(min=0, message='Gas price must be a positive number.')])
     comments = StringField("Comments:", validators=[Optional()])
     cancel = SelectField("Would you like to cancel this ride?", choices = [('No', 'No'), ('Yes', 'Yes')])
     submit = SubmitField("Save")

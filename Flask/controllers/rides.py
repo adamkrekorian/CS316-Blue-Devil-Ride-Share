@@ -462,9 +462,6 @@ def editRides():
             if newcomments=='':
                 newcomments = None
             
-            if newgas_price != None and float(newgas_price) < 0:
-                flash("Gas price must be positive")
-                return redirect(url_for('rides.account'))
             edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).one()
             edit_ride.gas_price = newgas_price
             edit_ride.comments = newcomments
