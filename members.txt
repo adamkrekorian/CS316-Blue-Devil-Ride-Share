@@ -1,3 +1,18 @@
+
+FINAL SUBMISSION:
+
+Meredith Brown -
+
+Grace Llwellyn - 
+
+Adam Krekorian - 
+
+Isabel Shiff - 
+
+Calleigh Smith - Calleigh has acted as the group's project manager, where she has coordinated group meeting, allocated work load, and kept track of the group's progress throughout the semester. Calleigh was responsible for the database and dataset. She set up an appointment with Danai Adkisson at the Technology Engagement Center, where she was joined by Grace Llewellyn, to create a group VM which hosts the Postgres Rideshare database that has all of our project’s tables. She also simulated all of the data that resides in the database with careful attention to accuracy. Calleigh wrote the initial version of the “load.sql” file, which inserts some sample data into the Rideshare database.  Calleigh created the E/R diagram for the database design and the related associations. Calleigh was responsible for creating the Sign-Up page for new users, the Sign-Up page for drivers, the Login page, and the List Rides page. Calleigh dealt with the deployment of our website. She met with Danai Adkisson multiple times to prepare the folders and files for deployment, and when that was complete, she and Danai successfully deployed the site using a docker on the group's shared VM. Since Calleigh was responsible for setting up the database and deploying the site on the group's VM, she wrote the "readme.txt" file which explains how to access the database and deploy the website. Calleigh was in charge of updating and organizing the progress report throughout the course of the project. Calleigh created the final presentation to accompany the project demo.  As a team member, Calleigh has attended every private group meeting throughout the semester, frequently and proactively sought help from Danai Adkisson at the Technology Engagement Center, helped her teammates debug various pages of the website, and answered conceptual questions about Flask/PostgreSQL/deployment.
+
+______________________________________________________________________________________
+
 MILESTONE 2:
 
 Meredith Brown - Meredith helped Grace with the Accounts page to connect it to the home page and get it initially running. Additionally, she attended two meetings with Danai Adkisson, one in person and one via Zoom, to contribute to the group’s progress towards completion of MS2. After experiencing technical issues, she further emailed with Danai to get all of the group’s code running on her computer. Likewise, she attended all private group meetings to discuss progress on the project. Meredith also added additional data to the database for better testing results. Once the code for MS2 was completed, Meredith wrote a script with Adam for the 5 minute video of the website, which she then filmed and narrated. Likewise, Meredith updated the test-sample.sql statements to more accurately reflect the data in the database, and she ran these statements over the database to produce the test-sample.out file. 
