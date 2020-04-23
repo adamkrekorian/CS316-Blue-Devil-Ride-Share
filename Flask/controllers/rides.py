@@ -24,6 +24,9 @@ conn.execute('''PREPARE Search (varchar, varchar, date, integer) AS SELECT * FRO
 #list prepared statements -- doesnt work
 #conn.execute('''PREPARE List (varchar, varchar, varchar, date, time, time, integer, integer, varchar) AS INSERT INTO Ride VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9);''')
 
+#account prepared statements
+conn.execute('''PREPARE RidesListed (varchar) AS SELECT * FROM Ride WHERE driver_netid = $1 ORDER BY date DESC;''')
+conn.execute('''PREPARE Reservations (varchar) AS SELECT * FROM Reserve R1, Ride R2 WHERE R1.rider_netid = $1 ORDER BY date DESC;''')
 
 #app = Flask(__name__)
 #app.secret_key = 's3cr3t' #change this?
@@ -302,7 +305,17 @@ def log_out():
 def account():
     
     user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
-    ridesListed = models.Ride.query.filter_by(driver_netid=session['netid']).order_by(models.Ride.date.desc())
+    #ridesListed = models.Ride.query.filter_by(driver_netid=session['netid']).order_by(models.Ride.date.desc())
+    ridesL = conn.execute('EXECUTE RidesListed(%s)', (session['netid']))
+
+    ridesListed = []
+    row = ridesL.fetchone()
+    while row is not None:
+        row = ridesL.fetchone()
+        ridesListed.append(row)
+    
+    #reservations = conn.execute('EXECUTE Reservations(%s)', (user_netid))
+
     #ridesReservedTemp = models.Reserve.query.filter_by(rider_netid=session['netid']).order_by(models.Reserve.ride_no.desc())
     #reservations = models.Reserve.query.join(models.Ride).filter_by(models.Reserve.ride_no=models.Ride.ride_no).filter_by(models.Reserve.rider_netid=session['netid'])
     #reservationsTemp = models.Ride.query.join(models.Ride.ride_no == models.Reserve.ride_no)
@@ -322,8 +335,8 @@ def account():
     #SORT rides listed and rides reserved by date- really hard
 
     driver = models.Driver.query.filter_by(netid=session['netid']).first()
-    if ridesListed.first()==None:
-        ridesListed = None
+    #if ridesListed.first()==None:
+        #ridesListed = None
     if reservations.first() == None:
         reservations = None
 
