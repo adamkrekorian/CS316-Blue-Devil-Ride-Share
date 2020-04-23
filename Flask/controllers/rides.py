@@ -18,10 +18,12 @@ engine = create_engine('postgresql://rideshare:{}@vcm-13365.vm.duke.edu/producti
 conn = engine.connect()
 
 #search prepared statements
-conn.execute('''PREPARE SearchAll AS SELECT * FROM Ride WHERE origin = $1 AND date = $2 and seats_available >= $3;''')
-conn.execute('''PREPARE Search AS SELECT * FROM Ride WHERE origin = $1 AND destination = $2 AND date = $3 and seats_available >= $4;''')
+conn.execute('''PREPARE SearchAll (varchar, date, integer) AS SELECT * FROM Ride WHERE origin = $1 AND date = $2 and seats_available >= $3;''')
+conn.execute('''PREPARE Search (varchar, varchar, date, integer) AS SELECT * FROM Ride WHERE origin = $1 AND destination = $2 AND date = $3 and seats_available >= $4;''')
 
-#
+#list prepared statements -- doesnt work
+#conn.execute('''PREPARE List (varchar, varchar, varchar, date, time, time, integer, integer, varchar) AS INSERT INTO Ride VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9);''')
+
 
 #app = Flask(__name__)
 #app.secret_key = 's3cr3t' #change this?
@@ -94,7 +96,7 @@ def find_rides():
                 resultsTemp = conn.execute('EXECUTE SearchAll(%s,%s,%s)',\
                     (origin_city, date, spots_needed))
             else:
-                resultsTemp = resultsTemp = conn.execute('EXECUTE Search(%s,%s,%s,%s)',\
+                resultsTemp = conn.execute('EXECUTE Search(%s,%s,%s,%s)',\
                     (origin_city, destination, date, spots_needed))
             myRides = db.session.query(models.Ride).filter(models.Ride.driver_netid == session['netid'])
             myRidesNumbers = []
