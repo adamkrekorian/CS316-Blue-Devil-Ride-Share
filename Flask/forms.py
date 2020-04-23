@@ -194,7 +194,11 @@ class ReserveRideFormFactory(FlaskForm):
     submit = SubmitField("Request Ride")
 
 class EditRideTimeFactory(FlaskForm):
-    earliest_departure = TimeField("Earliest Time of Departure:", validators = [InputRequired(message=' ')], format='%H:%M')
+    #earliest_departure = TimeField("Earliest Time of Departure:", validators = [InputRequired(message=' ')], format='%H:%M')
     #latest_departure = TimeField("Latest Time of Departure:", validators = [InputRequired(message='You must enter the latest time of departure'), GreaterThan('earliest_departure')], format='%H:%M')
-    latest_departure = TimeField("Latest Time of Departure:", validators = [InputRequired(message=' '), GreaterThan('earliest_departure')], format='%H:%M')
+    #latest_departure = TimeField("Latest Time of Departure:", validators = [InputRequired(message=' '), GreaterThan('earliest_departure')], format='%H:%M')
+    
+    earliest_departure = TimeField("Earliest Time of Departure:", validators=[InputRequired(message=' ')], format='%H:%M')
+    latest_departure = TimeField("Latest Time of Departure:", validators=[InputRequired(message=' '), GreaterThan('earliest_departure')], format='%H:%M')
+ 
     submit = SubmitField("Save")

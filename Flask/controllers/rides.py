@@ -596,7 +596,7 @@ def editRideTime():
         rideNumber = rideToEditTime.ride_no
         newearliest_departure = request.form['earliest_departure']
         newlatest_departure = request.form['latest_departure']
-        if str(newlatest_departure) < str(newearliest_departure):
+        if newlatest_departure < newearliest_departure:
             flash("Must make latest time of depature after earliest time of departure. Changes not saved.")
             return redirect(url_for('rides.account'))
         edit_ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).one()
