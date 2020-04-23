@@ -103,6 +103,7 @@ def find_rides():
                     (origin_city, destination, date, spots_needed))
             myRides = db.session.query(models.Ride).filter(models.Ride.driver_netid == session['netid'])
             myRidesNumbers = []
+            #could be simplified 
             for ride in myRides:
                 myRidesNumbers.append(ride.ride_no)
             for ride in resultsTemp:
@@ -174,49 +175,41 @@ def reserveRide():
 @bp.route('/list-rides', methods=['GET','POST'])
 def list_rides():
     form = forms.ListRideFormFactory()
-    driver = models.Driver.query.filter_by(netid=session['netid']).first()
-    if 'logged_in' in session and not driver:
-        if session['logged_in']:
-            flash("You are signed in but not yet a driver. Redirecting you to driver registration.") #These flash messages aren't displaying on the site
-            return redirect(url_for('rides.register_driver', form=forms.RegisterDriverFormFactory()))
-    if 'logged_in' not in session:
-        if session['logged_in']==False:
-            flash("You are not logged in. Redirecting you to log in.")
-            return redirect(url_for('rides.log_in'))
-    if 'logged_in' in session and session['logged_in']==False:
-        flash("You are not logged in. Redirecting you to log in.")
-        return redirect(url_for('rides.log_in'))     
-    else:
-        print(form.errors)
+    driver = models.Driver.query.filter_by(netid=session['netid']).first()   
 
-        if form.is_submitted():
-            print("submitted")
+    if form.validate_on_submit():
+        driver_netid = session['netid']
+        destination = request.form['destination']
+        origin_city = request.form['origin_city']
+        date = request.form['date']
+        #could simplify this with a where statement 
+        myRides = db.session.query(models.Ride).filter(models.Ride.driver_netid == session['netid'])
+        for ride in myRides:
+            if str(date) == str(ride.date):
+                flash("You already are driving a ride on this day.")
+                return redirect(url_for('rides.list_rides'))
+        #should have join here like prepared statement in accounts- get list of reservations with date then do:
+        #myReservations = ?? prepared statement
+        #for ride in myReservations:
+            #if date == ride.date:
+                #flash("You already have a reservation on this day.")
+                #return redirect(url_for('rides.list_rides'))
 
-        if form.validate():
-            print("valid")
-        
-
-        print(form.errors)
-        if form.validate_on_submit():
-            driver_netid = request.form['driver_netid']
-            destination = request.form['destination']
-            origin_city = request.form['origin_city']
-            date = request.form['date']
-            earliest_departure = request.form['earliest_departure']
-            latest_departure = request.form['latest_departure']
-            seats_available = request.form['seats_available']
-            gas_price = request.form['gas_price']
-            if gas_price == '':
-                gas_price = None
-            comments = request.form['comments']
-            if comments=='':
-                comments = None
-            session['driver'] = True
-            newride = models.Ride(driver_netid=driver_netid, destination=destination, origin=origin_city, date=date, earliest_time=earliest_departure, latest_time=latest_departure, seats_available=seats_available, gas_price=gas_price, comments=comments)
-            db.session.add(newride)
-            db.session.commit()
-
-            return redirect(url_for('rides.home_page'))
+        earliest_departure = request.form['earliest_departure']
+        latest_departure = request.form['latest_departure']
+        seats_available = request.form['seats_available']
+        gas_price = request.form['gas_price']
+        if gas_price == '':
+            gas_price = None
+        comments = request.form['comments']
+        if comments=='':
+            comments = None
+        session['driver'] = True
+        newride = models.Ride(driver_netid=driver_netid, destination=destination, origin=origin_city, date=date, earliest_time=earliest_departure, latest_time=latest_departure, seats_available=seats_available, gas_price=gas_price, comments=comments)
+        db.session.add(newride)
+        db.session.commit()
+        flash("Ride successfully listed.")
+        return redirect(url_for('rides.list_rides'))
     return render_template('list-rides.html', form=form)
 
 @bp.route('/sign-up', methods=['GET','POST'])
@@ -354,6 +347,7 @@ def account():
 def editInfo():
     user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
     form = forms.EditInfoFactory()
+    driver = models.Driver.query.filter_by(netid=session['netid']).first()
 
     if form.validate_on_submit():
         newphone_number=request.form['phone_number']
@@ -361,28 +355,49 @@ def editInfo():
         #newaffiliation=request.form['affiliation']
         #newschool=request.form['school']
         #dont need to check if equal to confirm because form does that for me
+        plateNum = request.form['license_plate_no']
+        plateState = request.form['plate_state']
+        currentpassword = request.form['currentPassword']
         newpassword=request.form['password']
         confirmpassword = request.form['confirmPassword']
 
         #should be validator when phone number is a string
         if len(str(newphone_number))<6 or len(str(newphone_number))>10:
             flash("Your phone number must be at least 6 characters and no more than 10.")
-            return redirect(url_for('rides.account'))
+            return redirect(url_for('rides.editInfo'))
 
-        if newpassword != user.password:
-            flash("Password updated.") 
-        #can just do this even if they do not make any changes
+        if currentpassword != user.password:
+            flash("Password doesn't match current password. Changes could not be made.")
+            return redirect(url_for('rides.editInfo'))
+        
+
         user_edit = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).one()
+       
+        #if new password field wasn't empty then new password is equal to confirm password- only update password in this case
+        if newpassword != '':
+            print("new password is not null")
+            if len(newpassword)<5 or len(newpassword)>100:
+                flash("Your new password must be at least 5 characters and no more than 100")
+                return redirect(url_for('rides.editInfo'))
+            if newpassword != user.password:
+                flash("Password updated.") 
+            user_edit.password = newpassword
+        #can just do this even if they do not make any changes
         user_edit.phone_number = newphone_number
+        db.session.commit()
+        driver_edit = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).one()
+        driver_edit.license_plate_no = plateNum
+        if plateState != 'No Change':
+            driver_edit.plate_state = plateState
+        db.session.commit()
         #user_edit.affiliation = newaffiliation
         #user_edit.school = newschool
-        user_edit.password = newpassword
-        db.session.commit()
+        
         flash("User information updated.")
         return redirect(url_for('rides.account'))
 
     
-    return render_template('edit-info.html', user=user, debug=True, form=form)
+    return render_template('edit-info.html', user=user, debug=True, form=form, driver=driver)
     
 @bp.route('/edit-list-ride', methods=('GET', 'POST'))
 def editRides():

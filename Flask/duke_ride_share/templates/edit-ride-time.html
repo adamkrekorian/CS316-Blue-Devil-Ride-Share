@@ -30,8 +30,11 @@
           {% if validRideNo %}
             <h1>Edit a Ride</h1>
             <hr>
+            
             <center>
-              
+              {% for message in form.latest_departure.errors %}
+            <div><b>{{ message }}</b></div>
+         {% endfor %}
               <form action = "/rides/edit-ride-time"  onsubmit="return validateForm();" method="post">
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>
                 {{ form.csrf_token }}

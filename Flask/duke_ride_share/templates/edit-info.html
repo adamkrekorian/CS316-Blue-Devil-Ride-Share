@@ -10,6 +10,16 @@
             <center>
             <h1>Edit Information</h1>
 
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+            <h4><b> {{ message }}</b></h4>
+            {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
             {% for message in form.password.errors %}
             <div>{{ message }}</div>
          {% endfor %}
@@ -18,16 +28,34 @@
             <div>{{ message }}</div>
          {% endfor %}
 
+         {% for message in form.license_plate_no.errors %}
+         <div>{{ message }}</div>
+      {% endfor %}
+
             <!--action URL? maybe add center tag-->
             <form action = "/rides/edit-info"  onsubmit="return validateForm();" method="post">
                 <div style = font-size:14px; font-weight:bold; margin-left:150px;>
                 {{ form.csrf_token }}
 
+                {% if driver %}
+                {{ form.license_plate_no.label }}<br>
+                {{ form.license_plate_no(value=driver.license_plate_no)}}
+                <br>
+
+                {{ form.plate_state.label }}<br>
+                {{ form.plate_state }}
+                <br>
+                {% endif %}
+
                 {{ form.phone_number.label }}<br>
                 {{ form.phone_number(value=user.phone_number)}}
                 <br>
 
+                {{ form.currentPassword.label }}<br>
+                {{ form.currentPassword}}
+                <br>
 
+                
                 {{ form.password.label }}<br>
                 {{ form.password }}
                 <br>
