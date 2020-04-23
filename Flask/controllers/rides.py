@@ -26,7 +26,7 @@ conn.execute('''PREPARE Search (varchar, varchar, date, integer) AS SELECT * FRO
 
 #account prepared statements
 conn.execute('''PREPARE RidesListed (varchar) AS SELECT * FROM Ride WHERE driver_netid = $1 ORDER BY date DESC;''')
-conn.execute('''PREPARE Reservations (varchar) AS SELECT * FROM Reserve R1, Ride R2 WHERE R1.rider_netid = $1 ORDER BY date DESC;''')
+conn.execute('''PREPARE Reservations (varchar) AS SELECT * FROM Reserve R1, Ride R2 WHERE R1.rider_netid = $1 AND R1.ride_no = R2.ride_no ORDER BY date DESC;''')
 
 #app = Flask(__name__)
 #app.secret_key = 's3cr3t' #change this?
@@ -310,16 +310,24 @@ def account():
 
     ridesListed = []
     row = ridesL.fetchone()
+    ridesListed.append(row)
     while row is not None:
         row = ridesL.fetchone()
         ridesListed.append(row)
     
-    #reservations = conn.execute('EXECUTE Reservations(%s)', (user_netid))
+    res = conn.execute('EXECUTE Reservations(%s)', (session['netid']))
+
+    reservations = []
+    row = res.fetchone()
+    reservations.append(row)
+    while row is not None:
+        row = res.fetchone()
+        reservations.append(row)
 
     #ridesReservedTemp = models.Reserve.query.filter_by(rider_netid=session['netid']).order_by(models.Reserve.ride_no.desc())
     #reservations = models.Reserve.query.join(models.Ride).filter_by(models.Reserve.ride_no=models.Ride.ride_no).filter_by(models.Reserve.rider_netid=session['netid'])
     #reservationsTemp = models.Ride.query.join(models.Ride.ride_no == models.Reserve.ride_no)
-    reservations = db.session.query(models.Reserve).join(models.Ride).add_columns(models.Ride.comments, models.Ride.origin, models.Ride.date, models.Ride.destination, models.Ride.driver_netid, models.Ride.earliest_time, models.Ride.latest_time, models.Ride.seats_available, models.Ride.gas_price, models.Reserve.rider_netid, models.Reserve.ride_no, models.Reserve.note, models.Reserve.seats_needed).filter(models.Reserve.rider_netid == session['netid']).order_by(models.Ride.date.desc())
+    #reservations = db.session.query(models.Reserve).join(models.Ride).add_columns(models.Ride.comments, models.Ride.origin, models.Ride.date, models.Ride.destination, models.Ride.driver_netid, models.Ride.earliest_time, models.Ride.latest_time, models.Ride.seats_available, models.Ride.gas_price, models.Reserve.rider_netid, models.Reserve.ride_no, models.Reserve.note, models.Reserve.seats_needed).filter(models.Reserve.rider_netid == session['netid']).order_by(models.Ride.date.desc())
     #reservations = []
 
     #for ride in reservationsTemp:
@@ -335,10 +343,10 @@ def account():
     #SORT rides listed and rides reserved by date- really hard
 
     driver = models.Driver.query.filter_by(netid=session['netid']).first()
-    #if ridesListed.first()==None:
-        #ridesListed = None
-    if reservations.first() == None:
-        reservations = None
+    # if ridesListed.first()==None:
+    #     ridesListed = None
+    # if reservations.first() == None:
+    #     reservations = None
 
     return render_template('account.html', user=user, driver=driver, ridesListed=ridesListed, reservations=reservations)
 
