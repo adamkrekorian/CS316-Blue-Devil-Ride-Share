@@ -16,12 +16,12 @@ We created our tables by copying and pasting our create.sql file into the comman
 
 To deploy the website:
 
-Access the group VM above (password available upon request - please contact calleigh.smith@duke.edu). On that VM is a docker that runs our website. We requested an alias for our site through Duke's Colab: bluedevilrideshare.colab.duke.edu.
+Access the group VM above (password available upon request - please contact calleigh.smith@duke.edu). On that VM is a docker that runs our website. We requested an alias for our site through Duke's Colab: bluedevilrideshare.colab.duke.edu
 
 When you are in the VM, navigate to the "Flask" folder:
 /home/vcm/CS316-Blue-Devil-Ride-Share/Flask
 
-Once you are in the Flask folder, to deploy the website, use the following commands:
+Once you are in the Flask folder, to redeploy the website, use the following commands:
 
 $ docker-compose down
 $ git pull
