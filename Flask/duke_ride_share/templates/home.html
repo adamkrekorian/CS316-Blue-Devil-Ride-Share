@@ -61,6 +61,15 @@
       </div>-->
       <div class="col-sm-10 text-left"> 
         <h1>Welcome to Blue Devil Rideshare!</h1>
+        {% with messages = get_flashed_messages() %}
+             {% if messages %}
+             <ul class=flashes>
+             {% for message in messages %}
+             <h3><b> {{ message }}</b></h3>
+             {% endfor %}
+             </ul>
+             {% endif %}
+             {% endwith %}
         <p>Our mission at Blue Devil Rideshare is to explore outside of the Duke bubble. Sometimes you might need to go off campus, whether you're going home for break or looking for a fun adventure closeby, and we have got you covered. We aim to make it easy for Duke students to coordinate rides. If you're a driver, you can easily post your planned rides. If you're a rider, you can search for rides based on origin, destination, date, and gas price. We believe that our ridesharing service allows Duke students to make new friends, travel to some new or familiar places, and save the environment by cutting carbon emissions in the process. Sign up for Blue Devil Rideshare today to start exploring!</p>
         <hr>
         <img src="../static/img/newCarpoolWorld.jpg" height= "10%" width= "40%" alt = "Carpool of Group"></img>

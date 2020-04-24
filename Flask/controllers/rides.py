@@ -173,8 +173,8 @@ def reserveRide():
 @bp.route('/list-rides', methods=['GET','POST'])
 def list_rides():
     form = forms.ListRideFormFactory()
-    #driver = models.Driver.query.filter_by(netid=session['netid']).first() 
-    driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()  
+    driver = models.Driver.query.filter_by(netid=session['netid']).first() 
+    #driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()  
     #list prepared statements
     
     if form.validate_on_submit():
@@ -213,7 +213,7 @@ def list_rides():
         db.session.commit()
         db.session.execute('DEALLOCATE List')
         flash("Ride successfully listed.")
-        return redirect(url_for('rides.list_rides'))
+        return redirect(url_for('rides.home_page'))
     return render_template('list-rides.html', form=form)
 
 @bp.route('/sign-up', methods=['GET','POST'])
@@ -248,8 +248,8 @@ def sign_up():
 @bp.route('/register-driver', methods=['GET','POST'])
 def register_driver():
     form = forms.RegisterDriverFormFactory()
-    #driver = models.Driver.query.filter_by(netid=session['netid']).first() #dont need
-    driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
+    driver = models.Driver.query.filter_by(netid=session['netid']).first() #dont need
+    #driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
     if form.validate_on_submit():
         netid = session['netid']
         license_no = request.form['license_no']
@@ -270,15 +270,16 @@ def log_in():
     if request.method == 'POST':
         netid = request.form.get('netid')
         password = request.form.get('password')
-        #user = models.Rideshare_user.query.filter_by(netid=netid).first()
-        user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
+        user = models.Rideshare_user.query.filter_by(netid=netid).first()
+        #user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
+
         if not user or not (user.password==password):
             error = 'Invalid Credentials. Please try again.'
         else:
             session['logged_in'] = True
             session['netid'] = netid
-            #driver = models.Driver.query.filter_by(netid=session['netid']).first()
-            driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
+            driver = models.Driver.query.filter_by(netid=session['netid']).first()
+            #driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
             if not driver:
                 session['driver'] = False
             else:
