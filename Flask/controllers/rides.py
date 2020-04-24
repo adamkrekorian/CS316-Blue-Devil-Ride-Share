@@ -98,7 +98,7 @@ def find_rides():
                 #     .filter(models.Ride.destination == destination)\
                 #     .filter(models.Ride.date == date)\
                 #     .filter(models.Ride.seats_available >= spots_needed)
-                resultsTemp = db.session.execute('EXECUTE Search(:origin_city, :date, :spots_needed)',\
+                resultsTemp = db.session.execute('EXECUTE Search(:origin_city, :destination, :date, :spots_needed)',\
                     {"origin_city":origin_city, "destination":destination, "date":date, "spots_needed":spots_needed})
                 db.session.execute('DEALLOCATE SearchALL')
                 db.session.execute('DEALLOCATE Search')
