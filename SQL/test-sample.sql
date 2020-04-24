@@ -26,11 +26,11 @@ FROM Ride
 WHERE destination = 'New York, NY' AND origin = 'Durham, NC'
 ORDER BY gas_price asc;
 
--- Rides from Durham, NC with a Graduate student as a driver
+-- Rides from Durham, NC with a Graduate Fuqua student as a driver
 
 SELECT *
 FROM Ride R, rideshare_user U
-WHERE R.driver_netid = U.netid AND R.origin = 'Durham, NC' AND U.affiliation = 'Graduate';
+WHERE R.driver_netid = U.netid AND R.origin = 'Durham, NC' AND U.affiliation = 'Graduate' AND U.school = 'Fuqua';
 
 -- Rides from Charlotte to Durham
 
@@ -45,22 +45,21 @@ FROM Ride
 WHERE destination = 'Philadelphia, PA' AND origin = 'Durham, NC'
 ORDER BY earliest_time asc;
 
--- Rides with one seat available
+-- Rides by Meredith 
 
 SELECT *
 FROM Ride
-WHERE seats_available = 1;
+WHERE driver_netid = 'mjb128';
  
--- Rides to New Orleans with a Undergraduate student as a driver ordered by most seats available
+-- Rides to Durham with a Undergraduate Pratt student as a driver ordered by most seats available
 
 SELECT *
 FROM Ride R, rideshare_user U
-WHERE R.driver_netid = U.netid AND R.destination = 'New Orleans, LA' AND R.origin = 'Durham, NC' AND U.affiliation = 'Undergraduate'
+WHERE R.driver_netid = U.netid AND R.destination = 'Durham, NC' AND U.affiliation = 'Undergraduate' AND U.school = 'Pratt'
 ORDER BY R.seats_available desc;
 
-
--- Rides to Miami after May 4th leaving no late than 7 pm
+-- Rides after May 4th leaving no later than 7 pm to New York City
 
 SELECT *
 FROM Ride
-WHERE destination = 'Miami, FL' AND origin = 'Durham, NC' AND date > '2020-05-04' AND latest_time < '19:00:00';
+WHERE date > '2020-05-04' AND latest_time < '19:00:00' AND destination = 'New York, NY';

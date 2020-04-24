@@ -1,0 +1,198 @@
+--SQL Queries
+--Specific Examples:
+--Rides to DC
+SELECT *
+FROM Ride
+WHERE destination = 'Washington, DC' AND origin = 'Durham, NC';
+ ride_no |   origin   |  destination   | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |                              comments              $
+---------+------------+----------------+--------------+------------+---------------+-------------+-----------------+-----------+----------------------------------------------------$
+      46 | Durham, NC | Washington, DC | cas175       | 2020-01-19 | 15:00:00      | 15:20:00    |               4 |           |
+      72 | Durham, NC | Washington, DC | mlr87        | 2020-08-30 | 00:00:00      | 23:59:00    |               2 |        60 | no space for extra luggage
+    1397 | Durham, NC | Washington, DC | dtw112       | 2021-03-20 | 10:53:07      | 19:07:20    |               4 |     35.56 |
+    4124 | Durham, NC | Washington, DC | rtj567       | 2020-06-21 | 09:18:59      | 18:27:50    |               4 |    118.21 | Integer pede justo, lacinia eget, tincidunt eget, t$
+(4 rows)
+
+--Rides to Charlotte with 2 seats available
+SELECT *
+FROM Ride
+WHERE destination = 'Charlotte, NC' AND origin = 'Durham, NC' AND seats_available >= 2;
+ ride_no |   origin   |  destination  | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price | comments
+---------+------------+---------------+--------------+------------+---------------+-------------+-----------------+-----------+----------
+      35 | Durham, NC | Charlotte, NC | agk19        | 2020-07-04 | 16:00:00      | 16:15:00    |               6 |        15 |
+(1 row)
+
+-- Rides after May 6th leaving in the afternoon
+SELECT *
+FROM Ride
+WHERE origin = 'Durham, NC' AND date > '2020-05-05' AND earliest_time > '12:00:00';
+ ride_no |   origin   |   destination    | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |               comments
+---------+------------+------------------+--------------+------------+---------------+-------------+-----------------+-----------+---------------------------------------
+      35 | Durham, NC | Charlotte, NC    | agk19        | 2020-07-04 | 16:00:00      | 16:15:00    |               6 |        15 |
+      36 | Durham, NC | Chicago, IL      | ijs5         | 2020-06-20 | 17:00:00      | 23:40:00    |               2 |           | searching for fellow deep dish lovers
+      40 | Durham, NC | New York, NY     | agk19        | 2020-12-25 | 20:00:00      | 23:59:00    |               3 |           | Long drive home
+      47 | Durham, NC | Detroit, MI      | ijs5         | 2020-09-05 | 21:00:00      | 21:45:00    |               1 |       100 | I can drop off at the Motown Museum
+      53 | Durham, NC | Aspen, CO        | cas175       | 2020-06-06 | 14:00:00      | 22:00:00    |               3 |        20 | test
+      41 | Durham, NC | Philadelphia, PA | gal16        | 2020-07-07 | 21:00:00      | 21:45:00    |               0 |        50 |
+      73 | Durham, NC | New York, NY     | cas175       | 2021-01-01 | 18:00:00      | 19:00:00    |               1 |       100 |
+    4174 | Durham, NC | Albuquerque, NM  | cas175       | 2021-02-02 | 14:45:00      | 15:18:00    |               2 |         5 |
+    4175 | Durham, NC | Aspen, CO        | cas175       | 2020-10-23 | 17:00:00      | 18:00:00    |               3 |       100 |
+    4180 | Durham, NC | Houston, TX      | cas175       | 2020-12-25 | 14:30:00      | 17:30:00    |               1 |        10 |
+(10 rows)
+
+-- Rides to New York with cheapest gas cost first
+SELECT *
+FROM Ride
+WHERE destination = 'New York, NY' AND origin = 'Durham, NC'
+ORDER BY gas_price asc;
+ ride_no |   origin   | destination  | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |         comments
+---------+------------+--------------+--------------+------------+---------------+-------------+-----------------+-----------+---------------------------
+      55 | Durham, NC | New York, NY | gal16        | 2020-06-08 | 02:00:00      | 03:00:00    |               1 |         5 | Big apple
+      73 | Durham, NC | New York, NY | cas175       | 2021-01-01 | 18:00:00      | 19:00:00    |               1 |       100 |
+    1679 | Durham, NC | New York, NY | pum270       | 2020-09-26 | 01:58:50      | 13:07:13    |               4 |    112.67 | In blandit ultrices enim.
+    1291 | Durham, NC | New York, NY | kiv114       | 2021-02-16 | 10:53:07      | 12:18:22    |               3 |    177.38 | Donec dapibus.
+      40 | Durham, NC | New York, NY | agk19        | 2020-12-25 | 20:00:00      | 23:59:00    |               3 |           | Long drive home
+(5 rows)
+
+-- Rides from Durham, NC with a Graduate Fuqua student as a driver
+SELECT *
+FROM Ride R, rideshare_user U
+WHERE R.driver_netid = U.netid AND R.origin = 'Durham, NC' AND U.affiliation = 'Graduate' AND U.school = 'Fuqua';
+ ride_no |   origin   |     destination      | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |             comments             | netid  |  $
+---------+------------+----------------------+--------------+------------+---------------+-------------+-----------------+-----------+----------------------------------+--------+--$
+     237 | Durham, NC | Albuquerque, NM      | qni695       | 2021-04-07 | 07:30:57      | 13:05:07    |               4 |    182.37 | Morbi porttitor lorem id ligula. | qni695 | Y$
+     321 | Durham, NC | San Diego, CA        | spg577       | 2020-05-20 | 07:47:45      | 22:59:55    |               3 |    140.46 |                                  | spg577 | H$
+     484 | Durham, NC | Louisville, KY       | oxb138       | 2021-01-03 | 05:52:41      | 23:31:32    |               1 |    163.48 | Morbi porttitor lorem id ligula. | oxb138 | P$
+     540 | Durham, NC | Miami, FL            | ivr940       | 2021-04-19 | 06:37:08      | 22:26:45    |               4 |     18.44 |                                  | ivr940 | B$
+     763 | Durham, NC | Asheville, NC        | njx106       | 2021-01-21 | 06:43:23      | 19:39:07    |               4 |    169.92 |                                  | njx106 | C$
+    1314 | Durham, NC | Tulsa, OK            | mga464       | 2021-01-20 | 01:54:26      | 16:11:39    |               3 |    176.78 | Donec vitae nisi.                | mga464 | R$
+    1928 | Durham, NC | El Paso, TX          | hyi594       | 2021-01-15 | 01:15:12      | 18:42:58    |               1 |    133.84 | Sed accumsan felis.              | hyi594 | N$
+    2663 | Durham, NC | Colorado Springs, CO | gjn588       | 2021-04-23 | 06:12:01      | 13:07:19    |               3 |    177.23 |                                  | gjn588 | H$
+    2718 | Durham, NC | High Point, NC       | qdc071       | 2020-12-06 | 06:21:49      | 13:32:48    |               4 |      39.9 |                                  | qdc071 | D$
+    3588 | Durham, NC | Jacksonville, FL     | kjc710       | 2021-03-30 | 10:48:42      | 23:27:46    |               3 |      64.6 |                                  | kjc710 | O$
+    4182 | Durham, NC | Raleigh, NC          | apb123       | 2020-05-05 | 08:00:00      | 20:00:00    |               4 |        65 | let's go!                        | apb123 | A$
+(11 rows)
+
+-- Rides from Charlotte to Durham
+SELECT *
+FROM Ride
+WHERE destination = 'Durham, NC' AND origin = 'Charlotte, NC';
+ ride_no |    origin     | destination | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price | comments
+---------+---------------+-------------+--------------+------------+---------------+-------------+-----------------+-----------+----------
+      26 | Charlotte, NC | Durham, NC  | ijs5         | 2020-10-04 | 09:00:00      | 23:59:00    |               0 |        10 |
+    1512 | Charlotte, NC | Durham, NC  | rtj567       | 2020-09-30 | 00:17:01      | 22:04:22    |               4 |     59.89 |
+(2 rows)
+
+-- Rides from Durham to Philadelphia sorted by earliest departure
+SELECT *
+FROM Ride
+WHERE destination = 'Philadelphia, PA' AND origin = 'Durham, NC'
+ORDER BY earliest_time asc;
+ ride_no |   origin   |   destination    | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price | comments
+---------+------------+------------------+--------------+------------+---------------+-------------+-----------------+-----------+----------
+      41 | Durham, NC | Philadelphia, PA | gal16        | 2020-07-07 | 21:00:00      | 21:45:00    |               0 |        50 |
+(1 row)
+
+-- Rides by Meredith
+SELECT *
+FROM Ride
+WHERE driver_netid = 'mjb128';
+ ride_no |     origin     |   destination   | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |                                               $
+---------+----------------+-----------------+--------------+------------+---------------+-------------+-----------------+-----------+-----------------------------------------------$
+      17 | New York, NY   | Durham, NC      | mjb128       | 2020-01-02 | 00:01:00      | 23:59:00    |               2 |        50 | going to 360 East 88th Street
+      32 | Washington, DC | Durham, NC      | mjb128       | 2020-03-29 | 14:00:00      | 15:00:00    |               5 |        50 |
+      34 | Durham, NC     | Miami, FL       | mjb128       | 2020-05-05 | 15:00:00      | 15:01:00    |               5 |       100 | to sunnier days
+      43 | Durham, NC     | Phoenix, AZ     | mjb128       | 2020-01-06 | 23:00:00      | 23:10:00    |               1 |       250 | Road trip
+      49 | Durham, NC     | Nashville, TN   | mjb128       | 2020-11-04 | 00:00:00      | 12:00:00    |               2 |        60 | Searching for good music
+      18 | New York, NY   | Durham, NC      | mjb128       | 2020-01-03 | 02:00:00      | 05:00:00    |               2 |        75 | no pets please
+      19 | Raleigh, NC    | Durham, NC      | mjb128       | 2020-01-01 | 03:00:00      | 08:00:00    |               5 |         5 | do not have much room in trunk
+     294 | Arlington, TX  | Miami, FL       | mjb128       | 2020-08-08 | 06:16:52      | 21:48:20    |               4 |      64.9 | Nullam porttitor lacus at turpis.
+    1818 | Columbus, OH   | Wichita, KS     | mjb128       | 2021-02-13 | 04:02:31      | 19:46:48    |               3 |     96.03 | Nulla tellus.
+    3652 | Mesa, AZ       | New Orleans, LA | mjb128       | 2020-10-31 | 05:34:52      | 19:39:09    |               1 |     84.45 | In tempor, turpis nec euismod scelerisque, qua$
+(10 rows)
+
+-- Rides to Durham with a Undergraduate Pratt student as a driver ordered by most seats available
+SELECT *
+FROM Ride R, rideshare_user U
+WHERE R.driver_netid = U.netid AND R.destination = 'Durham, NC' AND U.affiliation = 'Undergraduate' AND U.school = 'Pratt'
+ORDER BY R.seats_available desc;
+ ride_no |        origin        | destination | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |                          comments           $
+---------+----------------------+-------------+--------------+------------+---------------+-------------+-----------------+-----------+---------------------------------------------$
+    1129 | Baltimore, MD        | Durham, NC  | bwi934       | 2020-12-30 | 07:06:08      | 23:47:22    |               4 |    134.94 |                                             $
+    3740 | city                 | Durham, NC  | zos325       | 2020-11-22 | 00:16:35      | 18:46:27    |               4 |    167.54 |                                             $
+    3049 | Chicago, IL          | Durham, NC  | alj835       | 2020-11-20 | 04:20:53      | 21:15:56    |               4 |     79.97 |                                             $
+    2109 | High Point, NC       | Durham, NC  | uiz435       | 2020-12-07 | 02:42:53      | 21:40:59    |               4 |    129.31 |                                             $
+    3011 | New York, NY         | Durham, NC  | qxw665       | 2020-10-04 | 00:38:48      | 12:44:18    |               4 |    172.15 | Nam nulla.                                  $
+    2211 | Las Vegas, NV        | Durham, NC  | ovc90        | 2020-08-07 | 04:40:45      | 23:54:00    |               4 |    156.69 | Integer tincidunt ante vel ipsum.           $
+      24 | Myrtle Beach, SC     | Durham, NC  | agk19        | 2020-05-01 | 07:00:00      | 07:45:00    |               4 |        25 | yay                                         $
+     804 | Cary, NC             | Durham, NC  | svw301       | 2021-02-23 | 04:49:52      | 12:11:17    |               4 |    176.89 | Vivamus vel nulla eget eros elementum pellen$
+     986 | Long Beach, CA       | Durham, NC  | ehp255       | 2021-03-29 | 07:25:10      | 13:07:40    |               4 |    136.33 |                                             $
+    1092 | Myrtle Beach, SC     | Durham, NC  | yls389       | 2020-06-22 | 09:14:52      | 22:50:06    |               4 |     37.87 |                                             $
+    4078 | Mesa, AZ             | Durham, NC  | lct83        | 2020-11-25 | 04:49:59      | 23:13:58    |               3 |      2.39 | Proin eu mi.                                $
+     645 | Myrtle Beach, SC     | Durham, NC  | uvt132       | 2020-09-08 | 11:47:50      | 23:56:18    |               3 |    115.25 | Quisque id justo sit amet sapien dignissim v$
+    1247 | Colorado Springs, CO | Durham, NC  | ehz420       | 2020-11-11 | 03:45:28      | 21:12:09    |               3 |     66.97 |                                             $
+    1628 | Los Angeles, CA      | Durham, NC  | ufh037       | 2021-01-29 | 04:36:14      | 21:37:31    |               3 |    190.46 | Proin interdum mauris non ligula pellentesqu$
+    2288 | city                 | Durham, NC  | cfa464       | 2021-04-21 | 09:13:02      | 18:58:43    |               3 |     24.82 |                                             $
+    2428 | Dallas, TX           | Durham, NC  | mko306       | 2020-11-28 | 07:02:43      | 20:58:04    |               3 |     97.55 | Nulla tellus.                               $
+    2971 | El Paso, TX          | Durham, NC  | ohv698       | 2020-11-14 | 08:01:34      | 20:30:53    |               3 |    123.66 | Etiam faucibus cursus urna.                 $
+      78 | Baltimore, MD        | Durham, NC  | afk11        | 2021-05-08 | 11:00:00      | 12:00:00    |               2 |        20 |                                             $
+      68 | Asheville, NC        | Durham, NC  | srj99        | 2020-08-30 | 20:30:00      | 23:59:00    |               2 |        60 | going home                                  $
+     616 | Houston, TX          | Durham, NC  | axq244       | 2021-01-21 | 09:28:14      | 20:00:58    |               2 |      28.7 | Donec quis orci eget orci vehicula condiment$
+    3657 | Greensboro, NC       | Durham, NC  | mwe93        | 2021-02-04 | 10:58:51      | 18:15:07    |               2 |     66.98 |                                             $
+    3525 | Kansas City, MO      | Durham, NC  | tku785       | 2020-06-17 | 10:06:51      | 14:47:12    |               1 |    199.23 |                                             $
+      23 | Detroit, MI          | Durham, NC  | agk19        | 2020-02-14 | 06:00:00      | 06:01:00    |               1 |        50 | going to 2636 McAlpine                      $
+      25 | Los Angeles, CA      | Durham, NC  | agk19        | 2020-08-22 | 08:00:00      | 10:00:00    |               1 |       200 | long ride, need help                        $
+    2148 | Denver, CO           | Durham, NC  | oiw648       | 2020-06-29 | 01:39:05      | 19:20:25    |               1 |    151.77 | Nullam sit amet turpis elementum ligula vehi$
+(25 rows)
+
+-- Rides after May 4th leaving no later than 7 pm to New York City
+SELECT *
+FROM Ride
+WHERE date > '2020-05-04' AND latest_time < '19:00:00' AND destination = 'New York, NY';
+ ride_no |        origin        | destination  | driver_netid |    date    | earliest_time | latest_time | seats_available | gas_price |                              comments      $
+---------+----------------------+--------------+--------------+------------+---------------+-------------+-----------------+-----------+--------------------------------------------$
+      55 | Durham, NC           | New York, NY | gal16        | 2020-06-08 | 02:00:00      | 03:00:00    |               1 |         5 | Big apple
+      94 | Sacramento, CA       | New York, NY | fve453       | 2020-12-28 | 03:44:14      | 15:37:17    |               3 |     31.75 |
+     153 | Winston-Salem, NC    | New York, NY | ink427       | 2020-10-16 | 05:29:15      | 15:44:30    |               3 |    101.83 | Proin interdum mauris non ligula pellentesq$
+     178 | Colorado Springs, CO | New York, NY | duk889       | 2021-01-07 | 00:05:22      | 16:54:54    |               4 |     75.57 |
+     412 | San Diego, CA        | New York, NY | xbj545       | 2020-10-06 | 01:41:22      | 17:31:35    |               4 |     112.7 | Integer pede justo, lacinia eget, tincidunt$
+     468 | El Paso, TX          | New York, NY | leo398       | 2020-10-18 | 04:53:30      | 14:18:18    |               3 |     105.2 | Vivamus vel nulla eget eros elementum pelle$
+     590 | Charlotte, NC        | New York, NY | jbn157       | 2021-03-02 | 03:48:07      | 17:58:18    |               4 |    172.62 |
+     665 | Memphis, TN          | New York, NY | uge421       | 2020-07-24 | 06:53:34      | 16:46:33    |               1 |     45.03 |
+     699 | Greenville, NC       | New York, NY | dyr338       | 2020-06-25 | 05:26:56      | 14:09:03    |               1 |     44.49 |
+     958 | High Point, NC       | New York, NY | tmn375       | 2021-04-24 | 09:34:49      | 16:06:45    |               4 |    140.26 | Pellentesque eget nunc.
+    1002 | Nashville, TN        | New York, NY | wpb037       | 2020-07-11 | 02:08:45      | 17:34:48    |               3 |    116.57 |
+    1058 | Memphis, TN          | New York, NY | sup607       | 2020-10-18 | 06:20:45      | 13:51:35    |               4 |    169.47 | Maecenas leo odio, condimentum id, luctus n$
+    1118 | Jacksonville, FL     | New York, NY | zhb791       | 2021-02-16 | 00:27:05      | 14:48:34    |               4 |     178.7 |
+    1136 | Aspen, CO            | New York, NY | zpc018       | 2021-02-23 | 06:04:33      | 18:23:48    |               4 |        73 | Pellentesque at nulla.
+    1144 | Kansas City, MO      | New York, NY | ysz518       | 2021-01-31 | 03:43:15      | 18:56:22    |               4 |     83.16 |
+    1291 | Durham, NC           | New York, NY | kiv114       | 2021-02-16 | 10:53:07      | 12:18:22    |               3 |    177.38 | Donec dapibus.
+    1464 | Houston, TX          | New York, NY | dif4         | 2020-06-01 | 08:56:33      | 15:10:46    |               3 |     66.42 |
+    1468 | Louisville, KY       | New York, NY | alx392       | 2020-06-16 | 09:50:39      | 12:39:07    |               2 |     59.61 |
+    1679 | Durham, NC           | New York, NY | pum270       | 2020-09-26 | 01:58:50      | 13:07:13    |               4 |    112.67 | In blandit ultrices enim.
+    1711 | Seattle, WA          | New York, NY | xcf577       | 2020-06-21 | 09:56:22      | 18:06:00    |               4 |    112.21 |
+    1742 | Nashville, TN        | New York, NY | fwk879       | 2021-03-20 | 06:52:38      | 18:51:08    |               2 |     84.21 | Vivamus vel nulla eget eros elementum pelle$
+    1820 | Fresno, CA           | New York, NY | lgc139       | 2020-06-25 | 00:48:40      | 17:54:28    |               4 |     85.37 |
+    2022 | Louisville, KY       | New York, NY | fbt838       | 2021-04-23 | 01:45:26      | 17:22:52    |               4 |     99.91 | Proin at turpis a pede posuere nonummy.
+    2055 | Minneapolis, MN      | New York, NY | xbz255       | 2020-07-19 | 11:26:36      | 17:14:51    |               4 |    100.14 | Aenean fermentum.
+    2059 | Dallas, TX           | New York, NY | pfl609       | 2021-02-01 | 10:33:27      | 18:46:53    |               2 |    169.01 |
+    2126 | Los Angeles, CA      | New York, NY | khs11        | 2021-01-04 | 02:22:34      | 12:33:32    |               4 |     27.01 |
+    2504 | Houston, TX          | New York, NY | cio48        | 2021-03-22 | 08:58:47      | 18:51:24    |               3 |    101.67 | Aenean sit amet justo.
+    2666 | Washington, DC       | New York, NY | zcl69        | 2021-04-12 | 05:16:10      | 15:02:09    |               3 |     66.44 |
+    2807 | Tulsa, OK            | New York, NY | fwk879       | 2020-05-10 | 11:35:29      | 12:50:09    |               4 |    155.32 |
+    2808 | Greensboro, NC       | New York, NY | qxw665       | 2020-10-18 | 07:46:00      | 16:09:57    |               2 |     92.31 | Duis mattis egestas metus.
+    2939 | city                 | New York, NY | hgr149       | 2020-09-14 | 04:13:54      | 16:48:09    |               4 |     61.88 | Pellentesque viverra pede ac diam.
+    2955 | San Francisco, CA    | New York, NY | ule479       | 2020-06-09 | 03:54:00      | 13:28:06    |               1 |      95.7 |
+    2969 | Long Beach, CA       | New York, NY | bfp830       | 2020-09-11 | 08:50:41      | 14:01:44    |               2 |    127.24 |
+    2988 | Wilmington, NC       | New York, NY | hqr352       | 2021-04-02 | 08:25:51      | 12:32:43    |               1 |     158.1 |
+    3199 | Oakland, CA          | New York, NY | ytc82        | 2021-01-16 | 01:19:17      | 17:01:07    |               4 |     24.52 | Praesent lectus.
+    3423 | Sacramento, CA       | New York, NY | xbp692       | 2020-06-20 | 03:06:45      | 16:10:27    |               4 |    153.65 |
+    3478 | Chicago, IL          | New York, NY | tnx906       | 2020-06-01 | 11:01:34      | 17:50:16    |               3 |      91.3 | Nullam sit amet turpis elementum ligula veh$
+    3517 | Winston-Salem, NC    | New York, NY | qax497       | 2020-05-15 | 02:09:09      | 18:04:28    |               4 |     72.19 |
+    3612 | Milwaukee, WI        | New York, NY | hkd22        | 2020-06-21 | 03:11:24      | 17:41:09    |               2 |     27.41 |
+    3669 | Long Beach, CA       | New York, NY | eid62        | 2020-08-01 | 06:10:46      | 13:50:41    |               4 |    180.54 |
+    3748 | Columbus, OH         | New York, NY | iqp816       | 2020-08-24 | 03:13:35      | 17:36:48    |               3 |      1.48 |
+    3894 | Long Beach, CA       | New York, NY | his666       | 2021-01-20 | 10:13:28      | 12:26:05    |               2 |    169.46 |
+    3934 | San Jose, CA         | New York, NY | obq22        | 2020-11-16 | 11:35:56      | 17:16:23    |               3 |     114.3 |
+    4051 | Greensboro, NC       | New York, NY | khs11        | 2020-10-13 | 06:00:06      | 18:22:27    |               4 |    108.69 |
+    4140 | Washington, DC       | New York, NY | tdx580       | 2020-05-11 | 08:34:42      | 13:51:30    |               4 |     35.37 | In hac habitasse platea dictumst.
+(45 rows)
