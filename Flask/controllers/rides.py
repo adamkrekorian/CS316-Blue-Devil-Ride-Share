@@ -13,19 +13,6 @@ from sqlalchemy.orm import sessionmaker
 #graces imports
 import datetime
 
-#prepared statements
-#engine = create_engine('postgresql://rideshare:{}@vcm-13365.vm.duke.edu/production'.format(os.environ['DBPASSWORD']))
-#conn = engine.connect()
-
-#search prepared statements
-#db.session.execute('''PREPARE SearchAll (varchar, date, integer) AS SELECT * FROM Ride WHERE origin = $1 AND date = $2 and seats_available >= $3;''')
-#db.session.execute('''PREPARE Search (varchar, varchar, date, integer) AS SELECT * FROM Ride WHERE origin = $1 AND destination = $2 AND date = $3 and seats_available >= $4;''')
-#list prepared statements -- doesnt work
-#db.session.execute('''PREPARE List (varchar, varchar, varchar, date, time, time, integer, integer, varchar) AS INSERT INTO Ride VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9);''')
-#account prepared statements
-#db.session.execute('''PREPARE RidesPosted (varchar) AS SELECT * FROM Ride WHERE driver_netid = $1 ORDER BY date DESC;''')
-#db.session.execute('''PREPARE Reservations (varchar) AS SELECT * FROM Reserve R1, Ride R2 WHERE R1.rider_netid = $1 AND R1.ride_no = R2.ride_no ORDER BY date DESC;''')
-#db.session.commit()
 #app = Flask(__name__)
 #app.secret_key = 's3cr3t' #change this?
 #app.config.from_object('config')
@@ -57,6 +44,7 @@ def find_rides():
     print("in find rides")
     print("="*20)
     readyToReserve = False
+    #search prepared statements
 
     if 'logged_in' not in session:
         if session['logged_in']==False:
@@ -69,6 +57,8 @@ def find_rides():
 
     else:
         if form.validate_on_submit():
+            db.session.execute('''PREPARE SearchAll (varchar, date, integer) AS SELECT * FROM Ride WHERE origin = $1 AND date = $2 and seats_available >= $3;''')
+            db.session.execute('''PREPARE Search (varchar, varchar, date, integer) AS SELECT * FROM Ride WHERE origin = $1 AND destination = $2 AND date = $3 and seats_available >= $4;''')
             print("find form valid and submitted")
             origin_city = request.form['origin_city']
             destination = request.form['destination']
@@ -94,20 +84,24 @@ def find_rides():
 
             resultsTemp = None
             if destination == "Search All":
-                resultsTemp = db.session.query(models.Ride)\
-                    .filter(models.Ride.origin == origin_city)\
-                    .filter(models.Ride.date == date)\
-                    .filter(models.Ride.seats_available >= spots_needed)
-                #resultsTemp = db.session.execute('EXECUTE SearchAll(:origin_city, :date, :spots_needed)',\
-                    #{"origin_city":origin_city, "date":date, "spots_needed":spots_needed})
+                # resultsTemp = db.session.query(models.Ride)\
+                #     .filter(models.Ride.origin == origin_city)\
+                #     .filter(models.Ride.date == date)\
+                #     .filter(models.Ride.seats_available >= spots_needed)
+                resultsTemp = db.session.execute('EXECUTE SearchAll(:origin_city, :date, :spots_needed)',\
+                    {"origin_city":origin_city, "date":date, "spots_needed":spots_needed})
+                db.session.execute('DEALLOCATE SearchALL')
+                db.session.execute('DEALLOCATE Search')
             else:
-                resultsTemp = db.session.query(models.Ride)\
-                    .filter(models.Ride.origin == origin_city)\
-                    .filter(models.Ride.destination == destination)\
-                    .filter(models.Ride.date == date)\
-                    .filter(models.Ride.seats_available >= spots_needed)
-                #resultsTemp = db.session.execute('EXECUTE SearchAll(:origin_city, :date, :spots_needed)',\
-                    #{"origin_city":origin_city, "destination":destination, "date":date, "spots_needed":spots_needed})
+                # resultsTemp = db.session.query(models.Ride)\
+                #     .filter(models.Ride.origin == origin_city)\
+                #     .filter(models.Ride.destination == destination)\
+                #     .filter(models.Ride.date == date)\
+                #     .filter(models.Ride.seats_available >= spots_needed)
+                resultsTemp = db.session.execute('EXECUTE SearchAll(:origin_city, :date, :spots_needed)',\
+                    {"origin_city":origin_city, "destination":destination, "date":date, "spots_needed":spots_needed})
+                db.session.execute('DEALLOCATE SearchALL')
+                db.session.execute('DEALLOCATE Search')
             myRides = db.session.query(models.Ride).filter(models.Ride.driver_netid == session['netid'])
             myRidesNumbers = []
             #could be simplified 
@@ -122,8 +116,7 @@ def find_rides():
             for result in results:
                 print(result.ride_no)
             print("DONE PRINTING RESULTS")
-                
-            results = [x.__dict__ for x in results] #what does this do?
+            #results = [x.__dict__ for x in results] #what does this do?
             #print('we are hereeeeeeee')
             #print("and here's what is in errors")
             #print(errors[0])
@@ -131,6 +124,7 @@ def find_rides():
             return render_template('find-rides.html', form=form, reserveForm=reserveForm, results=results, readyToReserve=readyToReserve)
         #technically don't need if form always validating on submit
         return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results) 
+
 
 #RETURN RENDER TEMPLATE
 @bp.route('/reserve-rides', methods=('GET', 'POST'))      
@@ -180,8 +174,10 @@ def reserveRide():
 def list_rides():
     form = forms.ListRideFormFactory()
     driver = models.Driver.query.filter_by(netid=session['netid']).first()   
-
+    #list prepared statements
+    
     if form.validate_on_submit():
+        db.session.execute('''PREPARE List (varchar, varchar, varchar, date, time, time, integer, float, varchar) AS INSERT INTO Ride VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9);''')
         driver_netid = session['netid']
         destination = request.form['destination']
         origin_city = request.form['origin_city']
@@ -209,11 +205,12 @@ def list_rides():
         if comments=='':
             comments = None
         session['driver'] = True
-        #newride = db.session.execute('EXECUTE List(:origin_city, :destination, :driver_netid, :date, :earliest_departure, :latest_departure, :seats_available, :gas_price, :comments)',\
-                #{"origin_city":origin_city, "destination":destination, "driver_netid":driver_netid, "date":date, "earliest_departure":earliest_departure, "latest_departure":latest_departure, "seats_available":seats_available, "gas_price":gas_price, "comments":comments})
-        newride = models.Ride(driver_netid=driver_netid, destination=destination, origin=origin_city, date=date, earliest_time=earliest_departure, latest_time=latest_departure, seats_available=seats_available, gas_price=gas_price, comments=comments)
-        db.session.add(newride)
+        newride = db.session.execute('EXECUTE List(:origin_city, :destination, :driver_netid, :date, :earliest_departure, :latest_departure, :seats_available, :gas_price, :comments)',\
+                {"origin_city":origin_city, "destination":destination, "driver_netid":driver_netid, "date":date, "earliest_departure":earliest_departure, "latest_departure":latest_departure, "seats_available":seats_available, "gas_price":gas_price, "comments":comments})
+        #newride = models.Ride(driver_netid=driver_netid, destination=destination, origin=origin_city, date=date, earliest_time=earliest_departure, latest_time=latest_departure, seats_available=seats_available, gas_price=gas_price, comments=comments)
+        #db.session.add(newride)
         db.session.commit()
+        db.session.execute('DEALLOCATE List')
         flash("Ride successfully listed.")
         return redirect(url_for('rides.list_rides'))
     return render_template('list-rides.html', form=form)
@@ -302,31 +299,34 @@ def log_out():
 
 @bp.route('/account', methods=('GET', 'POST'))
 def account():
-    
+    #account prepared statements
+    db.session.execute('''PREPARE RidesPosted (varchar) AS SELECT * FROM Ride WHERE driver_netid = $1 ORDER BY date DESC;''')
+    db.session.execute('''PREPARE Reservations (varchar) AS SELECT * FROM Reserve R1, Ride R2 WHERE R1.rider_netid = $1 AND R1.ride_no = R2.ride_no ORDER BY date DESC;''')
+
     user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
-    ridesListed = models.Ride.query.filter_by(driver_netid=session['netid']).order_by(models.Ride.date.desc())
-    # ridesL = db.session.execute('EXECUTE RidesPosted(:driver_netid)', {"driver_netid":session['netid']})
+    #ridesListed = models.Ride.query.filter_by(driver_netid=session['netid']).order_by(models.Ride.date.desc())
+    ridesL = db.session.execute('EXECUTE RidesPosted(:driver_netid)', {"driver_netid":session['netid']})
 
-    # ridesListed = []
-    # row = ridesL.fetchone()
-    # ridesListed.append(row)
-    # while row is not None:
-    #     row = ridesL.fetchone()
-    #     ridesListed.append(row)
+    ridesListed = []
+    row = ridesL.fetchone()
+    ridesListed.append(row)
+    while row is not None:
+        row = ridesL.fetchone()
+        ridesListed.append(row)
     
-    # res = db.session.execute('EXECUTE Reservations(:driver_netid)', {"driver_netid":session['netid']})
+    res = db.session.execute('EXECUTE Reservations(:driver_netid)', {"driver_netid":session['netid']})
 
-    # reservations = []
-    # row = res.fetchone()
-    # reservations.append(row)
-    # while row is not None:
-    #     row = res.fetchone()
-    #     reservations.append(row)
+    reservations = []
+    row = res.fetchone()
+    reservations.append(row)
+    while row is not None:
+        row = res.fetchone()
+        reservations.append(row)
 
     #ridesReservedTemp = models.Reserve.query.filter_by(rider_netid=session['netid']).order_by(models.Reserve.ride_no.desc())
     #reservations = models.Reserve.query.join(models.Ride).filter_by(models.Reserve.ride_no=models.Ride.ride_no).filter_by(models.Reserve.rider_netid=session['netid'])
     #reservationsTemp = models.Ride.query.join(models.Ride.ride_no == models.Reserve.ride_no)
-    reservations = db.session.query(models.Reserve).join(models.Ride).add_columns(models.Ride.comments, models.Ride.origin, models.Ride.date, models.Ride.destination, models.Ride.driver_netid, models.Ride.earliest_time, models.Ride.latest_time, models.Ride.seats_available, models.Ride.gas_price, models.Reserve.rider_netid, models.Reserve.ride_no, models.Reserve.note, models.Reserve.seats_needed).filter(models.Reserve.rider_netid == session['netid']).order_by(models.Ride.date.desc())
+    #reservations = db.session.query(models.Reserve).join(models.Ride).add_columns(models.Ride.comments, models.Ride.origin, models.Ride.date, models.Ride.destination, models.Ride.driver_netid, models.Ride.earliest_time, models.Ride.latest_time, models.Ride.seats_available, models.Ride.gas_price, models.Reserve.rider_netid, models.Reserve.ride_no, models.Reserve.note, models.Reserve.seats_needed).filter(models.Reserve.rider_netid == session['netid']).order_by(models.Ride.date.desc())
     #reservations = []
 
     #for ride in reservationsTemp:
@@ -342,11 +342,12 @@ def account():
     #SORT rides listed and rides reserved by date- really hard
 
     driver = models.Driver.query.filter_by(netid=session['netid']).first()
-    if ridesListed.first()==None:
-        ridesListed = None
-    if reservations.first() == None:
-        reservations = None
-
+    # if ridesListed.first()==None:
+    #     ridesListed = None
+    # if reservations.first() == None:
+    #     reservations = None
+    db.session.execute('DEALLOCATE RidesPosted')
+    db.session.execute('DEALLOCATE Reservations')
     return render_template('account.html', user=user, driver=driver, ridesListed=ridesListed, reservations=reservations)
 
 @bp.route('/edit-info', methods=('GET', 'POST'))
