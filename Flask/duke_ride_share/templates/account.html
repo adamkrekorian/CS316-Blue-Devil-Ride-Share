@@ -36,7 +36,7 @@
                 <li>License Plate State: {{driver.plate_state}}</li>
                 {% endif %}
                 
-                <div> {% if ridesListed %}
+                <div> {% if ridesListed[0]!=None %}
                     <h4><b> Rides Posted by you: </b></h4>
                     <table style="width: 85%">
                         <tr style="border: 1px solid black;">
@@ -66,14 +66,14 @@
                     </table>
                 </div>
                 {% endif %}
-                {% if ridesListed == None %}
+                {% if ridesListed[0] == None %}
                 <div>
                     <h4><b>No rides listed</b></h4>
                 </div>
                 {% endif %}
         <br>
 
-            <div> {% if reservations %}
+            <div> {% if reservations[0]!=None %}
                 <h4><b> Rides Reserved by you: </b></h4>
                 <table style="width: 85%">
                     <tr style="border: 1px solid black;">
@@ -109,7 +109,7 @@
                 </table>
             </div>
             {% endif %}
-            {% if reservations == None %}
+            {% if reservations[0] == None %}
             <div>
                 <h4><b>No rides reserved</b></h4>
             </div>

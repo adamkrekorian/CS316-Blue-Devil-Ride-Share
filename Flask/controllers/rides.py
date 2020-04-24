@@ -173,7 +173,8 @@ def reserveRide():
 @bp.route('/list-rides', methods=['GET','POST'])
 def list_rides():
     form = forms.ListRideFormFactory()
-    driver = models.Driver.query.filter_by(netid=session['netid']).first()   
+    #driver = models.Driver.query.filter_by(netid=session['netid']).first() 
+    driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()  
     #list prepared statements
     
     if form.validate_on_submit():
@@ -247,15 +248,8 @@ def sign_up():
 @bp.route('/register-driver', methods=['GET','POST'])
 def register_driver():
     form = forms.RegisterDriverFormFactory()
-    driver = models.Driver.query.filter_by(netid=session['netid']).first() #dont need
-    #should never happen
-    if 'logged_in' in session and driver:
-        if session['logged_in']:
-            flash("You are already a driver. Redirecting you to list a ride.")
-        return redirect(url_for('rides.list_rides'))
-
-
-    print(form.errors)
+    #driver = models.Driver.query.filter_by(netid=session['netid']).first() #dont need
+    driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
     if form.validate_on_submit():
         netid = session['netid']
         license_no = request.form['license_no']
@@ -276,13 +270,15 @@ def log_in():
     if request.method == 'POST':
         netid = request.form.get('netid')
         password = request.form.get('password')
-        user = models.Rideshare_user.query.filter_by(netid=netid).first()
+        #user = models.Rideshare_user.query.filter_by(netid=netid).first()
+        user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
         if not user or not (user.password==password):
             error = 'Invalid Credentials. Please try again.'
         else:
             session['logged_in'] = True
             session['netid'] = netid
-            driver = models.Driver.query.filter_by(netid=session['netid']).first()
+            #driver = models.Driver.query.filter_by(netid=session['netid']).first()
+            driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
             if not driver:
                 session['driver'] = False
             else:
@@ -303,7 +299,8 @@ def account():
     db.session.execute('''PREPARE RidesPosted (varchar) AS SELECT * FROM Ride WHERE driver_netid = $1 ORDER BY date DESC;''')
     db.session.execute('''PREPARE Reservations (varchar) AS SELECT * FROM Reserve R1, Ride R2 WHERE R1.rider_netid = $1 AND R1.ride_no = R2.ride_no ORDER BY date DESC;''')
 
-    user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
+    #user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
+    user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
     #ridesListed = models.Ride.query.filter_by(driver_netid=session['netid']).order_by(models.Ride.date.desc())
     ridesL = db.session.execute('EXECUTE RidesPosted(:driver_netid)', {"driver_netid":session['netid']})
 
@@ -341,7 +338,8 @@ def account():
     #ridesReservedFinal = ridesReserved.order_by(models.Ride.date.desc())
     #SORT rides listed and rides reserved by date- really hard
 
-    driver = models.Driver.query.filter_by(netid=session['netid']).first()
+    #driver = models.Driver.query.filter_by(netid=session['netid']).first()
+    driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
     # if ridesListed.first()==None:
     #     ridesListed = None
     # if reservations.first() == None:
@@ -352,13 +350,12 @@ def account():
 
 @bp.route('/edit-info', methods=('GET', 'POST'))
 def editInfo():
-    user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
+    #user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
+    user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
     form = forms.EditInfoFactory()
-    print("HEREEE")
-    driver = models.Driver.query.filter_by(netid=session['netid']).first()
-    print("HEREEE2")
+    #driver = models.Driver.query.filter_by(netid=session['netid']).first()
+    driver = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
     if form.validate_on_submit():
-        print("form validated")
         newphone_number=request.form['phone_number']
         #note should I update so they can choose affiliation and school?
         #newaffiliation=request.form['affiliation']
@@ -517,7 +514,8 @@ def editRides():
 
 @bp.route('/edit-reservation', methods=('GET', 'POST'))
 def editReservation():
-    user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
+    #user = models.Rideshare_user.query.filter_by(netid=session['netid']).first()
+    user = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).first()
     form = forms.EditReservationFactory()
     formRideNo = forms.RideNumberFactory()
     reservation = None
@@ -540,8 +538,7 @@ def editReservation():
         cancel = request.form['cancel']
         newSpots = 0
         rideNumber = reservationToEdit.ride_no
-        ride = db.session.query(models.Ride) \
-                    .filter(models.Ride.ride_no == rideNumber).first()
+        ride = db.session.query(models.Ride).filter(models.Ride.ride_no == rideNumber).first()
 
         if cancel == "Yes":
             #how to delete a ride?
