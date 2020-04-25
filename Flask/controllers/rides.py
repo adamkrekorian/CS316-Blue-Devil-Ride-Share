@@ -9,8 +9,6 @@ from database import db
 import pdb
 import os
 from sqlalchemy.orm import sessionmaker
-
-#graces imports
 import datetime
 
 #app = Flask(__name__)
@@ -33,14 +31,14 @@ bp = Blueprint('rides', __name__, url_prefix = '/rides', template_folder = 'temp
 def home_page():
     if 'driver' in session:
         print(session['driver'])
-    return render_template('home.html')# are going to have to set some values here equal to something like in beers- to return values?
+    return render_template('home.html')
 
 @bp.route('/find-rides', methods=('GET', 'POST'))
 def find_rides():
     form = forms.SearchFormFactory()
     #errors = [] cant redirect after using- need to return template
     results = []
-    reserveForm = forms.ReserveRideFormFactory() #should remove
+    reserveForm = forms.ReserveRideFormFactory() 
     print("in find rides")
     print("="*20)
     readyToReserve = False
@@ -73,8 +71,6 @@ def find_rides():
             print(spots_needed)
 
             if origin_city == destination:
-                print("HEREEEE WHERE ORIGIN AND DESTINATION EQUAL")
-                #errors.append("Origin and destination cannot be the same.") #not printing
                 flash("Origin and destination cannot be the same.")
                 return redirect(url_for('rides.find_rides'))
 
@@ -117,10 +113,6 @@ def find_rides():
                 print(result.ride_no)
             print("DONE PRINTING RESULTS")
             #results = [x.__dict__ for x in results] #what does this do?
-            #print('we are hereeeeeeee')
-            #print("and here's what is in errors")
-            #print(errors[0])
-            #print("that's what was in errors")
             return render_template('find-rides.html', form=form, reserveForm=reserveForm, results=results, readyToReserve=readyToReserve)
         #technically don't need if form always validating on submit
         return render_template('find-rides.html', form=form, reserveForm = reserveForm, results = results) 
@@ -371,7 +363,6 @@ def editInfo():
         currentpassword = request.form['currentPassword']
         newpassword=request.form['password']
         confirmpassword = request.form['confirmPassword']
-        print("starting ifs")
         #should be validator when phone number is a string
         if len(str(newphone_number))<6 or len(str(newphone_number))>10:
             flash("Your phone number must be at least 6 characters and no more than 10.")
@@ -384,18 +375,15 @@ def editInfo():
         if currentpassword != user.password:
             flash("Password doesn't match current password. Changes could not be made.")
             return redirect(url_for('rides.editInfo'))
-        
-        print("ending ifs")
+
         user_edit = db.session.query(models.Rideshare_user).filter(models.Rideshare_user.netid == session['netid']).one()
         driver_edit = db.session.query(models.Driver).filter(models.Driver.netid == session['netid']).first()
-        print("="*30)
-        print(driver_edit == None)
+
         #if new password field wasn't empty then new password is equal to confirm password- only update password in this case
         if plateNum == None and driver_edit !=None:
             flash("Must enter plate number")
             return redirect(url_for('rides.editInfo'))
         if newpassword != '':
-            print("new password is not null")
             if len(newpassword)<5 or len(newpassword)>100:
                 flash("Your new password must be at least 5 characters and no more than 100")
                 return redirect(url_for('rides.editInfo'))
@@ -544,21 +532,13 @@ def editReservation():
         if cancel == "Yes":
             #how to delete a ride?
             newSpots = reservationToEdit.seats_needed*-1
-            print("PRINTING NEW SPOTS")
-            print(newSpots)
             db.session.delete(reservationToEdit)
             db.session.commit()
-            print("reservation cancelled")
             flash("Reservation cancelled.")
         #not cancelling-edit reservation
         else:
             updatedSpots = int(request.form['spots_needed'])
-            print(updatedSpots)
             newSpots = updatedSpots - reservationToEdit.seats_needed
-            print("NEW SPOTS")
-            print(newSpots)
-            print("AVAIL")
-            print(ride.seats_available)
             if (updatedSpots > ride.seats_available):
                 flash("Not enough room in the ride for spots needed. Reservation not updated.")
                 return redirect(url_for('rides.account'))
